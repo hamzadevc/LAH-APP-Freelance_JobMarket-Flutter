@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "879633480212",
+    "firebase_url": "https://jobportal-e73b7.firebaseio.com",
+    "project_id": "jobportal-e73b7",
+    "storage_bucket": "jobportal-e73b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:879633480212:android:f055788209ee6d72b90501",
+        "android_client_info": {
+          "package_name": "com.flashsol.job_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "879633480212-vqefqgqvuiebafejqcdf59preaf5hlhm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJVRU56AzvnCsvUwIu-_ThiBerwhTQxVs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "879633480212-vqefqgqvuiebafejqcdf59preaf5hlhm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
