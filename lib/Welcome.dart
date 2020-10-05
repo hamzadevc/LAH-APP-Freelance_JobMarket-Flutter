@@ -590,15 +590,15 @@ Container(
 
                   Container(
 
-                    height: 50,
+                    height: 70,
 
-                    width: 50,
+                    width: 70,
 
                     decoration: BoxDecoration(
 
                       image: DecorationImage(
 
-                        image: NetworkImage('https://lh3.googleusercontent.com/proxy/39OLGaL3MS7C43_o9wKnZG0N3B_kmsuA3zgeE8j42QOhnz2boChf3gpa5Od1oL1Oy5wU3JNUYHFQ994DdvxQHTTDcyGz0zF1vJYFCOW4Do51sEWQkoo5tFftqeKeJioCaw'),
+                        image: NetworkImage('https://pngimg.com/uploads/google/google_PNG19642.png'),
 
                         fit: BoxFit.fitWidth,
 
@@ -781,15 +781,15 @@ Container(
 
                   Container(
 
-                    height: 50,
+                    height: 70,
 
-                    width: 50,
+                    width: 70,
 
                     decoration: BoxDecoration(
 
                       image: DecorationImage(
 
-                        image: NetworkImage('https://lh3.googleusercontent.com/proxy/39OLGaL3MS7C43_o9wKnZG0N3B_kmsuA3zgeE8j42QOhnz2boChf3gpa5Od1oL1Oy5wU3JNUYHFQ994DdvxQHTTDcyGz0zF1vJYFCOW4Do51sEWQkoo5tFftqeKeJioCaw'),
+                        image: NetworkImage('https://pngimg.com/uploads/google/google_PNG19642.png'),
 
                         fit: BoxFit.fitWidth,
 
@@ -970,15 +970,15 @@ Container(
 
                   Container(
 
-                    height: 50,
+                    height: 70,
 
-                    width: 50,
+                    width: 70,
 
                     decoration: BoxDecoration(
 
                       image: DecorationImage(
 
-                        image: NetworkImage('https://lh3.googleusercontent.com/proxy/39OLGaL3MS7C43_o9wKnZG0N3B_kmsuA3zgeE8j42QOhnz2boChf3gpa5Od1oL1Oy5wU3JNUYHFQ994DdvxQHTTDcyGz0zF1vJYFCOW4Do51sEWQkoo5tFftqeKeJioCaw'),
+                        image: NetworkImage('https://pngimg.com/uploads/google/google_PNG19642.png'),
 
                         fit: BoxFit.fitWidth,
 
@@ -1159,15 +1159,15 @@ Container(
 
                   Container(
 
-                    height: 50,
+                    height: 70,
 
-                    width: 50,
+                    width: 70,
 
                     decoration: BoxDecoration(
 
                       image: DecorationImage(
 
-                        image: NetworkImage('https://lh3.googleusercontent.com/proxy/39OLGaL3MS7C43_o9wKnZG0N3B_kmsuA3zgeE8j42QOhnz2boChf3gpa5Od1oL1Oy5wU3JNUYHFQ994DdvxQHTTDcyGz0zF1vJYFCOW4Do51sEWQkoo5tFftqeKeJioCaw'),
+                        image: NetworkImage('https://pngimg.com/uploads/google/google_PNG19642.png'),
 
                         fit: BoxFit.fitWidth,
 
