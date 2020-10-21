@@ -321,7 +321,7 @@ elevation: 10,
                     flex: 1,
                     child: Container(
                       child: CircleAvatar(child:
-                      Image.network('https://icons-for-free.com/iconfiles/png/512/Google-1320568266385361674.png'),
+                      Image.network(CRUD.imgUrl),
                         radius: 25,
                         backgroundColor: Colors.transparent,
                       ),

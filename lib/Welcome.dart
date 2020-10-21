@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -519,35 +518,53 @@ onPressed: (){
                  ),
                ),
 
-Container(
+StreamBuilder(
+    stream:  Firestore.instance.collection("Company")
+        .snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        for (int index = 0; index < snapshot.data.documents.length; index++) {
+          String CName = snapshot.data.documents[index]['name'];
 
-  height: 190,
+          String Cimg = snapshot.data.documents[index]['img'];
 
-  child: ListView(
+          return Container(
 
-    physics: BouncingScrollPhysics(),
+            height: 190,
 
-    scrollDirection: Axis.horizontal,
+            child: ListView.builder(
 
-    children: [
+              physics: BouncingScrollPhysics(),
+
+              scrollDirection: Axis.horizontal,
+
+    itemCount: jobs.length,
+    itemBuilder: (BuildContext ctxt, int index) {
+      String companyID=jobs[index].data['c_id'];
+
+      String jobTitle=jobs[index].data['job_title'];
+
+      String location=jobs[index].data['location'];
+
+      String qualification=jobs[index].data['qualification'];
+
+      String description=jobs[index].data['description'];
+
+      String type=jobs[index].data['type'];
+
+      String doc_id=jobs[index].documentID.toString();
 
 
-
-
-
-
-
-      GestureDetector(
+     return  GestureDetector(
 
         onTap: () {
+          //    Navigator.push(
 
-//    Navigator.push(
+          //    context,
 
-//    context,
+          //    MaterialPageRoute(builder: (context) => JobDetail(job: job)),
 
-//    MaterialPageRoute(builder: (context) => JobDetail(job: job)),
-
-//    );
+          //    );
 
         },
 
@@ -579,13 +596,11 @@ Container(
             children: [
 
 
-
               Row(
 
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                 children: [
-
 
 
                   Container(
@@ -598,7 +613,8 @@ Container(
 
                       image: DecorationImage(
 
-                        image: NetworkImage('https://pngimg.com/uploads/google/google_PNG19642.png'),
+                        image: NetworkImage(
+                            Cimg),
 
                         fit: BoxFit.fitWidth,
 
@@ -613,7 +629,6 @@ Container(
                     ),
 
                   ),
-
 
 
                   Container(
@@ -632,11 +647,12 @@ Container(
 
                     child: Padding(
 
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4,),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 4,),
 
                       child: Text(
 
-                        "Full-time",
+                        type,
 
                         style: TextStyle(
 
@@ -654,11 +670,9 @@ Container(
                   ),
 
 
-
                 ],
 
               ),
-
 
 
               Expanded(
@@ -672,22 +686,20 @@ Container(
                   children: [
 
 
-
                     Text(
 
-                      "Graphic Designer",
+                      jobTitle,
 
                       style: TextStyle(
 
-                        fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.bold,
 
-                        fontSize: 16,
-                        color: Colors.white
+                          fontSize: 16,
+                          color: Colors.white
 
                       ),
 
                     ),
-
 
 
                     SizedBox(
@@ -697,29 +709,26 @@ Container(
                     ),
 
 
-
                     Text(
 
-                      r"$" + "78"+ "/h",
+                      r"$" + "78" + "/h",
 
                       style: TextStyle(
 
-                        fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.bold,
 
-                        fontSize: 24,
+                          fontSize: 24,
                           color: Colors.white
                       ),
 
                     ),
 
 
-
                   ],
 
                 ),
 
               )
-
 
 
             ],
@@ -728,579 +737,23 @@ Container(
 
         ),
 
-      ),
-      GestureDetector(
+      );
+    }
 
-        onTap: () {
 
-//    Navigator.push(
 
-//    context,
 
-//    MaterialPageRoute(builder: (context) => JobDetail(job: job)),
-
-//    );
-
-        },
-
-        child: Container(
-
-          width: 200,
-
-          decoration: BoxDecoration(
-
-            color: Colors.white,
-
-            borderRadius: BorderRadius.all(
-
-              Radius.circular(10),
 
             ),
 
-          ),
-
-          padding: EdgeInsets.all(16),
-
-          margin: EdgeInsets.only(right: 16),
-
-          child: Column(
-
-            crossAxisAlignment: CrossAxisAlignment.start,
-
-            children: [
-
-
-
-              Row(
-
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                children: [
-
-
-
-                  Container(
-
-                    height: 70,
-
-                    width: 70,
-
-                    decoration: BoxDecoration(
-
-                      image: DecorationImage(
-
-                        image: NetworkImage('https://pngimg.com/uploads/google/google_PNG19642.png'),
-
-                        fit: BoxFit.fitWidth,
-
-                      ),
-
-                      borderRadius: BorderRadius.all(
-
-                        Radius.circular(10),
-
-                      ),
-
-                    ),
-
-                  ),
-
-
-
-                  Container(
-
-                    decoration: BoxDecoration(
-
-                      color: Colors.grey[200],
-
-                      borderRadius: BorderRadius.all(
-
-                        Radius.circular(10),
-
-                      ),
-
-                    ),
-
-                    child: Padding(
-
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4,),
-
-                      child: Text(
-
-                        "Full-time",
-
-                        style: TextStyle(
-
-                          fontWeight: FontWeight.bold,
-
-                          fontSize: 14,
-
-                        ),
-
-                      ),
-
-                    ),
-
-                  ),
-
-
-
-                ],
-
-              ),
-
-
-
-              Expanded(
-
-                child: Column(
-
-                  crossAxisAlignment: CrossAxisAlignment.start,
-
-                  mainAxisAlignment: MainAxisAlignment.end,
-
-                  children: [
-
-
-
-                    Text(
-
-                      "Graphic Designer",
-
-                      style: TextStyle(
-
-                        fontWeight: FontWeight.bold,
-
-                        fontSize: 16,
-
-                      ),
-
-                    ),
-
-
-
-                    SizedBox(
-
-                      height: 8,
-
-                    ),
-
-
-
-                    Text(
-
-                      r"$" + "78"+ "/h",
-
-                      style: TextStyle(
-
-                        fontWeight: FontWeight.bold,
-
-                        fontSize: 24,
-
-                      ),
-
-                    ),
-
-
-
-                  ],
-
-                ),
-
-              )
-
-
-
-            ],
-
-          ),
-
-        ),
-
-      ),
-      GestureDetector(
-
-        onTap: () {
-
-//    Navigator.push(
-
-//    context,
-
-//    MaterialPageRoute(builder: (context) => JobDetail(job: job)),
-
-//    );
-
-        },
-
-        child: Container(
-
-          width: 200,
-
-          decoration: BoxDecoration(
-
-            color: Colors.white,
-
-            borderRadius: BorderRadius.all(
-
-              Radius.circular(10),
-
-            ),
-
-          ),
-
-          padding: EdgeInsets.all(16),
-
-          margin: EdgeInsets.only(right: 16),
-
-          child: Column(
-
-            crossAxisAlignment: CrossAxisAlignment.start,
-
-            children: [
-
-
-
-              Row(
-
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                children: [
-
-
-
-                  Container(
-
-                    height: 70,
-
-                    width: 70,
-
-                    decoration: BoxDecoration(
-
-                      image: DecorationImage(
-
-                        image: NetworkImage('https://pngimg.com/uploads/google/google_PNG19642.png'),
-
-                        fit: BoxFit.fitWidth,
-
-                      ),
-
-                      borderRadius: BorderRadius.all(
-
-                        Radius.circular(10),
-
-                      ),
-
-                    ),
-
-                  ),
-
-
-
-                  Container(
-
-                    decoration: BoxDecoration(
-
-                      color: Colors.grey[200],
-
-                      borderRadius: BorderRadius.all(
-
-                        Radius.circular(10),
-
-                      ),
-
-                    ),
-
-                    child: Padding(
-
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4,),
-
-                      child: Text(
-
-                        "Full-time",
-
-                        style: TextStyle(
-
-                          fontWeight: FontWeight.bold,
-
-                          fontSize: 14,
-
-                        ),
-
-                      ),
-
-                    ),
-
-                  ),
-
-
-
-                ],
-
-              ),
-
-
-
-              Expanded(
-
-                child: Column(
-
-                  crossAxisAlignment: CrossAxisAlignment.start,
-
-                  mainAxisAlignment: MainAxisAlignment.end,
-
-                  children: [
-
-
-
-                    Text(
-
-                      "Graphic Designer",
-
-                      style: TextStyle(
-
-                        fontWeight: FontWeight.bold,
-
-                        fontSize: 16,
-
-                      ),
-
-                    ),
-
-
-
-                    SizedBox(
-
-                      height: 8,
-
-                    ),
-
-
-
-                    Text(
-
-                      r"$" + "78"+ "/h",
-
-                      style: TextStyle(
-
-                        fontWeight: FontWeight.bold,
-
-                        fontSize: 24,
-
-                      ),
-
-                    ),
-
-
-
-                  ],
-
-                ),
-
-              )
-
-
-
-            ],
-
-          ),
-
-        ),
-
-      ),
-      GestureDetector(
-
-        onTap: () {
-
-//    Navigator.push(
-
-//    context,
-
-//    MaterialPageRoute(builder: (context) => JobDetail(job: job)),
-
-//    );
-
-        },
-
-        child: Container(
-
-          width: 200,
-
-          decoration: BoxDecoration(
-
-            color: Colors.white,
-
-            borderRadius: BorderRadius.all(
-
-              Radius.circular(10),
-
-            ),
-
-          ),
-
-          padding: EdgeInsets.all(16),
-
-          margin: EdgeInsets.only(right: 16),
-
-          child: Column(
-
-            crossAxisAlignment: CrossAxisAlignment.start,
-
-            children: [
-
-
-
-              Row(
-
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                children: [
-
-
-
-                  Container(
-
-                    height: 70,
-
-                    width: 70,
-
-                    decoration: BoxDecoration(
-
-                      image: DecorationImage(
-
-                        image: NetworkImage('https://pngimg.com/uploads/google/google_PNG19642.png'),
-
-                        fit: BoxFit.fitWidth,
-
-                      ),
-
-                      borderRadius: BorderRadius.all(
-
-                        Radius.circular(10),
-
-                      ),
-
-                    ),
-
-                  ),
-
-
-
-                  Container(
-
-                    decoration: BoxDecoration(
-
-                      color: Colors.grey[200],
-
-                      borderRadius: BorderRadius.all(
-
-                        Radius.circular(10),
-
-                      ),
-
-                    ),
-
-                    child: Padding(
-
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4,),
-
-                      child: Text(
-
-                        "Full-time",
-
-                        style: TextStyle(
-
-                          fontWeight: FontWeight.bold,
-
-                          fontSize: 14,
-
-                        ),
-
-                      ),
-
-                    ),
-
-                  ),
-
-
-
-                ],
-
-              ),
-
-
-
-              Expanded(
-
-                child: Column(
-
-                  crossAxisAlignment: CrossAxisAlignment.start,
-
-                  mainAxisAlignment: MainAxisAlignment.end,
-
-                  children: [
-
-
-
-                    Text(
-
-                      "Graphic Designer",
-
-                      style: TextStyle(
-
-                        fontWeight: FontWeight.bold,
-
-                        fontSize: 16,
-
-                      ),
-
-                    ),
-
-
-
-                    SizedBox(
-
-                      height: 8,
-
-                    ),
-
-
-
-                    Text(
-
-                      r"$" + "78"+ "/h",
-
-                      style: TextStyle(
-
-                        fontWeight: FontWeight.bold,
-
-                        fontSize: 24,
-
-                      ),
-
-                    ),
-
-
-
-                  ],
-
-                ),
-
-              )
-
-
-
-            ],
-
-          ),
-
-        ),
-
-      ),
-
-    ],
-
-  ),
-
+          );
+        }
+      }
+else{
+  CircularProgressIndicator();
+      }
+
+    }
 ),
 
 
@@ -1325,7 +778,7 @@ Container(
                Container(
                  height: 500,
                  child: ListView.builder(
-
+physics: BouncingScrollPhysics(),
                  itemCount: jobs.length,
     itemBuilder: (BuildContext ctxt, int index) {
     //  String docID = jobs[index].documentID.toString();

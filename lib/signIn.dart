@@ -20,7 +20,7 @@ class _SignInState extends State<SignIn> {
   @override
   void initState() {
     // TODO: implement initState
-  //  loggedinuser();
+    loggedinuser();
     super.initState();
   }
 

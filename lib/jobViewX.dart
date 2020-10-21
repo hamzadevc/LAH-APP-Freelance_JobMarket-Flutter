@@ -75,8 +75,8 @@ class _JobViewXState extends State<JobViewX> {
 
               Center(
                 child: Container(
-                  height: 135,
-                  width: 135,
+                  height: 50,
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(widget.cimg),
