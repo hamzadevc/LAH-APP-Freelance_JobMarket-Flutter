@@ -15,7 +15,10 @@ class CRUD{
   static String country="Enter Country";
   static String city="Enter City";
   static String address="Enter Address";
-  static String dob="Enter Date of Birth";
+  static String dob="Enter AGE";
+  static String CardNo="Enter Card No";
+  static String Cvv="e.g 822";
+  static String expiry="e.g 8/22";
   static String type="";
 
 
@@ -52,7 +55,7 @@ class CRUD{
     country="Enter Country";
     city="Enter City";
     address="Enter Address";
-    dob="Enter Date of Birth";
+    dob="Enter AGE";
     myuserid="";
   }
 
@@ -98,6 +101,9 @@ class CRUD{
         'city':city,
         'img':imgUrl,
         'dob':dob,
+        'card_no':CardNo,
+        'cvv':Cvv,
+        'expiry':expiry,
 
 
       }).then((value) {
@@ -131,6 +137,10 @@ class CRUD{
       'city':city,
       'img':imgUrl,
       'dob':dob,
+      'card_no':CardNo,
+      'cvv':Cvv,
+      'expiry':expiry,
+
 
 
     }).then((value) {
@@ -163,6 +173,9 @@ class CRUD{
       city=userDocument['city'];
       address=userDocument['address'];
       dob=userDocument['dob'];
+      CardNo=userDocument['card_no'];
+      Cvv=userDocument['cvv'];
+      expiry=userDocument['expiry'];
 
       print(name);
     });

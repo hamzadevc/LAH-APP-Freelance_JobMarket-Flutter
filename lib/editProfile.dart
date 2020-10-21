@@ -227,7 +227,7 @@ class _EditProfileState extends State<EditProfile>
                                       },
                                       decoration: const InputDecoration(
                                           hintText: "Enter Email ID"),
-                                      enabled: !_status,
+                                      enabled: false,
                                     ),
                                   ),
                                 ],
@@ -284,7 +284,7 @@ class _EditProfileState extends State<EditProfile>
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       new Text(
-                                        'DOB',
+                                        'AGE',
                                         style: TextStyle(
                                             fontSize: 16.0,
                                             fontWeight: FontWeight.bold),
@@ -301,13 +301,15 @@ class _EditProfileState extends State<EditProfile>
                                 children: <Widget>[
                                   new Flexible(
                                     child: new TextField(
+
                                       controller: TextEditingController()
                                         ..text = CRUD.dob,
+                                      keyboardType: TextInputType.number,
                                       onChanged: (value) {
                                         CRUD.dob = value;
                                       },
                                       decoration: const InputDecoration(
-                                          hintText: "Enter Date of Birth"),
+                                          hintText: "E.g 18"),
                                       enabled: !_status,
                                     ),
                                   ),
@@ -353,6 +355,54 @@ class _EditProfileState extends State<EditProfile>
                                   ),
                                 ],
                               )),
+
+
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  left: 25.0, right: 25.0, top: 25.0),
+                              child: new Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  new Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      new Text(
+                                        'Bank Card Number',
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  left: 25.0, right: 25.0, top: 2.0),
+                              child: new Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  new Flexible(
+                                    child: new TextField(
+                                      controller: TextEditingController()
+                                        ..text = CRUD.CardNo,
+                                      onChanged: (value) {
+                                        CRUD.CardNo = value;
+                                      },
+                                      decoration: const InputDecoration(
+                                          hintText: "Card No"),
+                                      enabled: !_status,
+                                    ),
+                                  ),
+                                ],
+                              )),
+
+
+
+
+
+
                           Padding(
                               padding: EdgeInsets.only(
                                   left: 25.0, right: 25.0, top: 25.0),
@@ -422,6 +472,86 @@ class _EditProfileState extends State<EditProfile>
                                   ),
                                 ],
                               )),
+
+
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  left: 25.0, right: 25.0, top: 25.0),
+                              child: new Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                      child: new Text(
+                                        'CVV',
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    flex: 2,
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      child: new Text(
+                                        'Expiry',
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    flex: 2,
+                                  ),
+                                ],
+                              )),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  left: 25.0, right: 25.0, top: 2.0),
+                              child: new Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Flexible(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(right: 10.0),
+                                      child: new TextField(
+                                        controller: TextEditingController()
+                                          ..text = CRUD.Cvv,
+                                        onChanged: (value) {
+                                          CRUD.Cvv = value;
+                                        },
+                                        decoration: const InputDecoration(
+                                            hintText: "Enter CVV"),
+                                        enabled: !_status,
+                                      ),
+                                    ),
+                                    flex: 2,
+                                  ),
+                                  Flexible(
+                                    child: new TextField(
+                                      controller: TextEditingController()
+                                        ..text = CRUD.expiry,
+                                      onChanged: (value) {
+                                        CRUD.expiry = value;
+                                      },
+                                      decoration: const InputDecoration(
+                                          hintText: "Enter Expiry"),
+                                      enabled: !_status,
+                                    ),
+                                    flex: 2,
+                                  ),
+                                ],
+                              )),
+
+
+
+
+
+
+
+
+
                           !_status ? _getActionButtons() : new Container(),
                         ],
                       ),

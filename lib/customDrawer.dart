@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:job_application/editProfile.dart';
-import 'dart:io';
-
-import 'package:job_application/profile.dart';
-
+import 'package:job_application/wallet.dart';
 import 'CRUD.dart';
 
 class CustomDrawer {
@@ -83,9 +80,18 @@ class CustomDrawer {
                 ),
                 _buildDivider(),
 
-                _buildRow(
-                  Icons.help,
-                  "Tutorial",
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Wallet()),
+                    );
+
+                  },
+                  child: _buildRow(
+                    Icons.attach_money,
+                    "Wallet",
+                  ),
                 ),
 
                 _buildDivider(),
