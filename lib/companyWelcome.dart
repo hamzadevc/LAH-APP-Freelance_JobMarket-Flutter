@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_application/CRUD.dart';
@@ -20,6 +21,17 @@ class _CWelcomeState extends State<CWelcome> {
       color: Colors.blueAccent,fontWeight: FontWeight.bold);
   TextStyle infoStyle=TextStyle(fontSize: 15,fontWeight: FontWeight.bold,
       color: Colors.white);
+
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    CRUD.fetchProfileData();
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -216,15 +228,66 @@ class _CWelcomeState extends State<CWelcome> {
 
           body: TabBarView(
             children: <Widget>[
-              Container(
-//                child: Center(
-//                  child:FloatingActionButton(child:
-//
-//                    Text("Apply"),
-//
-//                  backgroundColor: Colors.red,
-//                  )
-//                ),
+              StreamBuilder(
+    stream:  Firestore.instance.collection("jobs").where('c_id',isEqualTo: CRUD.myuserid)
+        .snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+
+    for (int index = 0; index < snapshot.data.documents.length; index++) {
+      String title = snapshot.data.documents[index]['job_title'];
+
+      String docid=snapshot.data.documents[index].documentID;
+
+
+     return
+
+       StreamBuilder(
+    stream:  Firestore.instance.collection("jobs").document(docid).collection('Applicants')
+        .snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+     
+       return ListView.separated(
+           separatorBuilder: (context, index) {
+             return Divider();
+           },
+        padding: EdgeInsets.all(10),
+    physics: BouncingScrollPhysics(),
+    itemCount: snapshot.data.documents.length,
+    itemBuilder: (BuildContext ctxt, int index) {
+      String applicantName = snapshot.data.documents[index]['employee_name'];
+
+      return ListTile(
+        title: Text(applicantName),
+        subtitle: Text(title),
+        trailing: Icon(Icons.message),
+      );
+    }
+
+        );
+    }
+      else{
+        return Text('No Applicant');
+      }
+
+
+    }
+
+       );
+    }
+
+
+
+
+      }
+
+else
+  {
+    return CircularProgressIndicator();
+  }
+
+    }
               ),
 
               Stack(children: <Widget>[
@@ -234,22 +297,47 @@ class _CWelcomeState extends State<CWelcome> {
 
 
 
-                ListView(
-                  padding: EdgeInsets.all(10),
-                  physics: BouncingScrollPhysics(),
-                  children: <Widget>[
-                    JobCard(),
-                    JobCard(),
-                    JobCard(),
-                    JobCard(),
-                    JobCard(),
+                StreamBuilder(
+    stream:  Firestore.instance.collection("jobs").where('c_id',isEqualTo: CRUD.myuserid)
+        .snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        return ListView.builder(
+            padding: EdgeInsets.all(10),
+            physics: BouncingScrollPhysics(),
+        itemCount: snapshot.data.documents.length,
+    itemBuilder: (BuildContext ctxt, int index) {
 
-                  ],
+      String title = snapshot.data.documents[index]['job_title'];
+      String type = snapshot.data.documents[index]['type'];
+
+
+      return JobCard(title,type);
+    }
+
+
+
+
+
+        );
+      }
+
+      else{
+        return Center(
+          child: Text('LOADING',
+            style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
+
+          ),
+        );
+      }
+
+    }
+
 
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 50,right: 20),
+                  padding: const EdgeInsets.only(bottom:30,right: 20),
                   child: Align(
 
                     alignment: Alignment.bottomRight,
@@ -283,11 +371,12 @@ elevation: 10,
     );
   }
 
-  Widget JobCard() {
+  Widget JobCard(title,type) {
     return Container(
       //padding: EdgeInsets.only(top: 100,bottom: 100),
-      padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 6),
+      padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 6),
       child: Card(
+
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -298,7 +387,7 @@ elevation: 10,
 // crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
 
-            Text("Google",style: Companystyle,
+            Text(CRUD.name,style: Companystyle,
               textAlign: TextAlign.left,),
             SizedBox(height: 8,),
             Padding(
@@ -310,7 +399,7 @@ elevation: 10,
                   Expanded(
                     flex: 2,
                     child: Container(
-                      child: Text("Flutter Developer is resquired",style: jobTitlestyle,
+                      child: Text(title,style: jobTitlestyle,
 
 
                       ),
@@ -347,7 +436,7 @@ elevation: 10,
                 Text(" |  "),
 
 
-                Text("Contract",textAlign: TextAlign.left,)
+                Text(type,textAlign: TextAlign.left,)
               ],),
 
             Row(
@@ -363,25 +452,27 @@ elevation: 10,
 
                   ),
                 ),
-                Flexible(
+//                Flexible(
+//
+//                  child: FlatButton(
+//                    splashColor: Colors.blueAccent,
+//                    shape:   RoundedRectangleBorder(
+//                      borderRadius: BorderRadius.circular(15.0),
+//                    ),
+//                    onPressed: ()
+//                    {
+////                      Navigator.push(
+////                        context,
+////                        MaterialPageRoute(builder: (context) => JobView()),
+////                      );
+//                    },
+//                    color: Colors.black,
+//                    child:
+//                    Text("Edit ",style: infoStyle,),
+//                  ),
+//                ),
 
-                  child: FlatButton(
-                    splashColor: Colors.blueAccent,
-                    shape:   RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    onPressed: ()
-                    {
-//                      Navigator.push(
-//                        context,
-//                        MaterialPageRoute(builder: (context) => JobView()),
-//                      );
-                    },
-                    color: Colors.black,
-                    child:
-                    Text("Edit ",style: infoStyle,),
-                  ),
-                ),
+
                 Flexible(
 
                   child:

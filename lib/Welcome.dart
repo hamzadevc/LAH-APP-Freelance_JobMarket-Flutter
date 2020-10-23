@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/countdown_timer.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:job_application/CRUD.dart';
 import 'package:job_application/jobView.dart';
 import 'package:job_application/questions.dart';
 
@@ -17,13 +18,26 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
-
+  var x;
 String ApplicationStatus="In Progress";
 
 
   StreamSubscription<QuerySnapshot>subscription;
 
   List<DocumentSnapshot>jobs;
+  
+  
+  StreamSubscription<QuerySnapshot>subscriptionforApplicants;
+
+  List<DocumentSnapshot>applicants;
+
+
+  final CollectionReference collectionReferenceApplicants=
+  Firestore.instance.collection("jobs").document().collection('Applicants');
+
+
+
+
 //
 //  final CollectionReference collectionReference=
 //  Firestore.instance.collection("posts").document(CRUD.id)
@@ -32,13 +46,21 @@ String ApplicationStatus="In Progress";
   Firestore.instance.collection("jobs");
 
 
-
+  Future<int> countDocuments(doc_id) async {
+    QuerySnapshot _myDoc = await Firestore.instance.collection('jobs').document(doc_id).collection('Applicants')
+        .getDocuments();
+    List<DocumentSnapshot> _myDocCount = _myDoc.documents;
+    print(_myDocCount.length);
+    x=_myDocCount.length;
+    return _myDocCount.length;
+    // Count of Documents in Collection
+  }
 
 
   @override
   void dispose() {
     // TODO: implement dispose
-
+subscriptionforApplicants?.cancel();
     subscription?.cancel();
     super.dispose();
 
@@ -49,6 +71,19 @@ String ApplicationStatus="In Progress";
     // TODO: implement initState
 
     super.initState();
+
+
+
+
+    subscriptionforApplicants=collectionReferenceApplicants.
+    where('employee_id',isEqualTo: CRUD.myuserid)
+    .snapshots().listen((datasnapshots) {
+      setState(() {
+        applicants=datasnapshots.documents;
+      });
+    });
+
+
 
     subscription=collectionReference
         .snapshots()
@@ -300,7 +335,9 @@ onPressed: (){
             children: <Widget>[
               Container(
                 child: Center(
-                  child: Column(
+                  child:
+
+                  Column(
                     children: <Widget>[
 //                    Text("Your Countdown",style: TextStyle(fontSize: 30, color: Colors.black),),
 //                      SizedBox(height: 10,),
@@ -316,7 +353,7 @@ onPressed: (){
                       Padding(
                         padding: EdgeInsets.only(right: 32, left: 0, top: 40, bottom: 32),
                         child: Text(
-                          "Your \napplications ("+" 1 " ")",
+                          "Your \napplications ("+' 1 '.toString() +")",
                           style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
@@ -326,130 +363,144 @@ onPressed: (){
                       ),
 
 
-                      Padding(
-                        padding: EdgeInsets.only(right: 32, left: 32, bottom: 8),
-                        child: Column(
-                          children: [
-                        Container(
-                        padding: EdgeInsets.all(24),
-                        margin: EdgeInsets.symmetric(vertical: 4),
+
+      //  String docID = jobs[index].documentID.toString();
+
+//      String title = jobs[index].data['title'];
+//      String price = jobs[index].data['price'];
+      //String job = jobs[index].data['job_title'];
+
+
+
+   Padding(
+        padding: EdgeInsets.only(right: 32, left: 32, bottom: 8),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(24),
+              margin: EdgeInsets.symmetric(vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: Column(
+                children: [
+
+                  Row(
+                    children: [
+
+                      Container(
+                        height: 60,
+                        width: 60,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          image: DecorationImage(
+                            image: NetworkImage('https://lh3.googleusercontent.com/proxy/39OLGaL3MS7C43_o9wKnZG0N3B_kmsuA3zgeE8j42QOhnz2boChf3gpa5Od1oL1Oy5wU3JNUYHFQ994DdvxQHTTDcyGz0zF1vJYFCOW4Do51sEWQkoo5tFftqeKeJioCaw'),
+                            fit: BoxFit.fitWidth,
+                          ),
                           borderRadius: BorderRadius.all(
                             Radius.circular(10),
                           ),
                         ),
-                        child: Column(
-                          children: [
+                      ),
 
-                            Row(
+                      Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 24),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
 
-                                Container(
-                                  height: 60,
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage('https://lh3.googleusercontent.com/proxy/39OLGaL3MS7C43_o9wKnZG0N3B_kmsuA3zgeE8j42QOhnz2boChf3gpa5Od1oL1Oy5wU3JNUYHFQ994DdvxQHTTDcyGz0zF1vJYFCOW4Do51sEWQkoo5tFftqeKeJioCaw'),
-                                      fit: BoxFit.fitWidth,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
+                                Text(
+                                  "Product Designer",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
 
-                                Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 24),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-
-                                          Text(
-                                            "Product Designer",
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-
-                                          Text(
-                                            "Google",
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    )
-                                ),
-
-                                Icon(
-                                  Icons.more_vert,
-                                ),
-
-                              ],
-                            ),
-
-                            SizedBox(
-                              height: 16,
-                            ),
-
-                            Row(
-                              children: [
-
-                                Expanded(
-                                  child: Container(
-                                    height: 45,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        ApplicationStatus,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: ApplicationStatus == "In Progress" ? Colors.green[500] :
-                                          ApplicationStatus == "Completed" ? Colors.red[500] : Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                Expanded(
-                                  child: Container(
-                                    child: Center(
-                                      child: Text(
-                                        r"$" + '88' + "/h",
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                        ),
-                                      ),
-                                    ),
+                                Text(
+                                  "Google",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
                                   ),
                                 ),
 
                               ],
                             ),
+                          )
+                      ),
 
-                          ],
-                        ),
-                      )
-                          ],
+                      Icon(
+                        Icons.more_vert,
+                      ),
 
+                    ],
+                  ),
+
+                  SizedBox(
+                    height: 16,
+                  ),
+
+                  Row(
+                    children: [
+
+                      Expanded(
+                        child: Container(
+                          height: 45,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              ApplicationStatus,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: ApplicationStatus == "In Progress" ? Colors.green[500] :
+                                ApplicationStatus == "Completed" ? Colors.red[500] : Colors.black,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
 
-                  ],),
+                      Expanded(
+                        child: Container(
+                          child: Center(
+                            child: Text(
+                              r"$" + '88' + "/h",
+                              style: TextStyle(
+                                fontSize: 24,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                    ],
+                  ),
+
+                ],
+              ),
+            )
+          ],
+
+        ),
+      ),
+
+
+
+
+
+
+                  ],) ,
                 ),
               ),
                             
@@ -799,7 +850,13 @@ physics: BouncingScrollPhysics(),
 
                                 String doc_id=jobs[index].documentID.toString();
 
+
+                       countDocuments(doc_id);
+
+print(x);
+
                                 print(doc_id);
+
 //
    return   StreamBuilder(
 
@@ -822,7 +879,7 @@ physics: BouncingScrollPhysics(),
                                 print(doc_id);
 
 
-                                  return JobCard(CName,Cimg,jobTitle,type,location,description,qualification,doc_id);
+                                  return JobCard(CName,Cimg,jobTitle,type,location,description,qualification,doc_id,x);
 
 
 
@@ -1133,7 +1190,7 @@ physics: BouncingScrollPhysics(),
     );
   }
 
-  Widget JobCard(cname,cimg,title,type,loc,des,qual,doc_id) {
+  Widget JobCard(cname,cimg,title,type,loc,des,qual,doc_id,appliants) {
     return Container(
       //padding: EdgeInsets.only(top: 100,bottom: 100),
     padding: const EdgeInsets.only(left: 15,right: 15,bottom: 5),
@@ -1217,7 +1274,7 @@ mainAxisAlignment: MainAxisAlignment.center,
                       Radius.circular(10),
                     ),
                   ),
-                  child: Text("Applicants : 6",
+                  child: Text("Applicants : $appliants",
                   style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold),
 
                   ),

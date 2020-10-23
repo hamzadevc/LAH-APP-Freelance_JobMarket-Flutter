@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'CRUD.dart';
@@ -216,31 +220,37 @@ class _JobViewXState extends State<JobViewX> {
                         ),
                       ),
 
-                      Container(
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
+                      InkWell(
+                        onTap: (){
+
+                          uploadCV();
+                        },
+                        child: Container(
+                          height: 45,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
 
-                            Icon(FontAwesomeIcons.fileUpload),
-                            SizedBox(width: 20,),
+                              Icon(FontAwesomeIcons.fileUpload),
+                              SizedBox(width: 20,),
 
-                            Center(
-                              child: Text(
-                                "Upload CV",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                              Center(
+                                child: Text(
+                                  "Upload CV",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
 
@@ -353,6 +363,28 @@ class _JobViewXState extends State<JobViewX> {
 
 
   }
+
+
+
+  void uploadCV()async{
+
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'doc'],
+    );
+    if(result != null) {
+      File file = File(result.files.single.path);
+    } else {
+      // User canceled the picker
+
+
+    }
+
+
+
+  }
+
+
 
   void check() async{
 
