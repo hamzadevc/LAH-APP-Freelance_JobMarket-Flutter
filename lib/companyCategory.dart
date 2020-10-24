@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:job_application/companyCreateJob.dart';
+import 'package:job_application/questions.dart';
 class CompanyCategory extends StatefulWidget {
   @override
   _CompanyCategoryState createState() => _CompanyCategoryState();
@@ -33,7 +34,10 @@ class _CompanyCategoryState extends State<CompanyCategory> {
 
               color: Colors.black,
               onPressed: (){
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Questions()),
+                );
               }
               ,),
             FlatButton(child:
