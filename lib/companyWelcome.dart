@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_application/CRUD.dart';
@@ -14,6 +15,7 @@ class CWelcome extends StatefulWidget {
 }
 
 class _CWelcomeState extends State<CWelcome> {
+
   bool isSearch=false;
   GlobalKey<ScaffoldState> key1 = GlobalKey<ScaffoldState>();
   TextStyle Companystyle=TextStyle(fontSize: 25,fontWeight: FontWeight.bold);
@@ -229,52 +231,118 @@ class _CWelcomeState extends State<CWelcome> {
           body: TabBarView(
             children: <Widget>[
               StreamBuilder(
-    stream:  Firestore.instance.collection("jobs").where('c_id',isEqualTo: CRUD.myuserid)
+    stream:  Firestore.instance.collection("jobs")//.where('c_id',arrayContains: CRUD.myuserid)
         .snapshots(),
     builder: (context, snapshot) {
-      if (snapshot.hasData) {
+      if (snapshot.hasData ) {
+print("ultaaaassaa  "+snapshot.data.documents.length.toString());
 
-    for (int index = 0; index < snapshot.data.documents.length; index++) {
+
+
+     for (int index = 0; index < snapshot.data.documents.length; index++) {
       String title = snapshot.data.documents[index]['job_title'];
+      String cid = snapshot.data.documents[index]['c_id'];
 
       String docid=snapshot.data.documents[index].documentID;
 
+      print(snapshot.data.documents[index]['job_title']);
+     // print(snapshot.data.documents[1]['job_title']);
+      //print(cid);
+    //  print(docid);
 
-     return
+      if(cid!=null)
+      {
+        return StreamBuilder(
+              stream:  Firestore.instance.collection("jobs").document(docid).collection('Applicants')
+                  .snapshots(),
+              builder: (context, snapshot) {
 
-       StreamBuilder(
-    stream:  Firestore.instance.collection("jobs").document(docid).collection('Applicants')
-        .snapshots(),
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-     
-       return ListView.separated(
-           separatorBuilder: (context, index) {
-             return Divider();
-           },
-        padding: EdgeInsets.all(10),
-    physics: BouncingScrollPhysics(),
-    itemCount: snapshot.data.documents.length,
-    itemBuilder: (BuildContext ctxt, int index) {
-      String applicantName = snapshot.data.documents[index]['employee_name'];
+                print("333ultaaaassaa"+snapshot.data.documents.length.toString());
 
-      return ListTile(
-        title: Text(applicantName),
-        subtitle: Text(title),
-        trailing: Icon(Icons.message),
-      );
-    }
 
-        );
-    }
-      else{
-        return Text('No Applicant');
+                if (snapshot.hasData) {
+
+                  return ListView.builder(
+
+//           separatorBuilder: (context, index) {
+//             return Divider();
+//           },
+                      padding: EdgeInsets.all(10),
+                      physics: BouncingScrollPhysics(),
+                      itemCount:snapshot.data.documents.length,
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        String applicantName = snapshot.data.documents[index]['employee_name'];
+
+                        return ListTile(
+                          title: Text(applicantName),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(title),
+
+                              Row(
+
+                                children: <Widget>[
+
+                                  Expanded(
+
+                                    child:   FlatButton(child: Text('Accept',
+                                      style: TextStyle(color: Colors.white),),
+                                      onPressed: ()
+                                      {
+
+                                      },
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+
+                                  SizedBox(width: 5,),
+                                  Expanded(
+                                    child:   FlatButton(child: Text('Decline',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                      onPressed: ()
+                                      {
+
+                                      },
+                                      color: Colors.red,
+                                    ),
+                                  ),
+
+                                  SizedBox(width: 5,),
+
+                                  Expanded(
+                                    child:   FlatButton(child: Text('Mark As Complete',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                      onPressed: ()
+                                      {
+
+                                      },
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+
+                                ],)
+
+                            ],),
+                          trailing: Icon(Icons.message),
+                        );
+                      }
+
+                  );
+                }
+
+                 return Text('No Applicant');
+
+
+
+              }
+
+          );
       }
 
-
-    }
-
-       );
+return Container();
     }
 
 
@@ -287,6 +355,8 @@ else
     return CircularProgressIndicator();
   }
 
+
+return Container();
     }
               ),
 
@@ -373,6 +443,7 @@ elevation: 10,
 
   Widget JobCard(title,type) {
     return Container(
+      height: MediaQuery.of(context).size.height/3.9,
       //padding: EdgeInsets.only(top: 100,bottom: 100),
       padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 6),
       child: Card(

@@ -73,11 +73,7 @@ class CustomDrawer {
                   Icons.message,
                   "Messages",
                 ),
-                _buildDivider(),
-                _buildRow(
-                  Icons.settings,
-                  "Settings",
-                ),
+
                 _buildDivider(),
 
                 InkWell(

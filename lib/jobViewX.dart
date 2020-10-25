@@ -264,45 +264,35 @@ class _JobViewXState extends State<JobViewX> {
               ),
 
               Row(
-                children: [
-
-                  Container(
-                    height: 60,
-                    width: 60,
-                    child: Center(
-                      child: Icon(
-                        Icons.favorite_border,
-                        size: 28,
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(
-                    width: 16,
-                  ),
-
+                children: <Widget>[
                   Expanded(
-                    child: Container(
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.red[500],
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
+                    child: InkWell(
+                      onTap: ()
+                      async{
+                        await ApplyForJob();
+                        check();
+                      },
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.red[500],
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
                         ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          btntxt,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                        child: Center(
+                          child: Text(
+                            btntxt,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-
                 ],
               ),
 

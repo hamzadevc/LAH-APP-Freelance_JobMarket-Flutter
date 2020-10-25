@@ -17,12 +17,22 @@ class _SignInState extends State<SignIn> {
   String email;
   String password;
   final _auth = FirebaseAuth.instance;
+
+
+@override
+  void dispose() {
+    // TODO: implement dispose
+  CRUD.fetchProfileData();
+  super.dispose();
+  }
   @override
   void initState() {
     // TODO: implement initState
     loggedinuser();
     super.initState();
   }
+
+
 
   loggedinuser() async {
     await FirebaseAuth.instance.currentUser().then((firebaseUser) {
@@ -240,8 +250,10 @@ class _SignInState extends State<SignIn> {
                                   if (newuser != null&&newuser.isEmailVerified==true) {
 
                                     CRUD.email=email;
+print("sIrddd"+newuser.uid);
                                     if(CRUD.type=="Employee")
                                     {
+
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -250,6 +262,7 @@ class _SignInState extends State<SignIn> {
                                       );
                                     }
                                     else{
+
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -337,7 +350,18 @@ class _SignInState extends State<SignIn> {
                           ),
                         )),
 
-                    SizedBox(height: 40,),
+                    SizedBox(height: 20,),
+
+                    Center(child: InkWell(
+
+                        onTap: ()
+                        {
+                          _asyncInputDialog(context);
+                        },
+
+                        child: Text('Forgot Password?'))),
+                    SizedBox(height: 20,),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -593,4 +617,91 @@ class _SignInState extends State<SignIn> {
 //      ),
 //    );
   }
+
+
+
+
+  Future<String> _asyncInputDialog(BuildContext context) async {
+    String email = '';
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: false, // dialog is dismissible with a tap on the barrier
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text('Enter Your Email Address',style: TextStyle(color: Colors.black87),),
+          content: new Row(
+            children: <Widget>[
+              new Expanded(
+                  child: new TextField(
+                    style: TextStyle(color: Colors.black87,fontSize: 20),
+                    cursorColor: Colors.black87,
+                    keyboardType: TextInputType.emailAddress,
+                    autofocus: true,
+                    decoration: new InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black87),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      labelText: 'Email : ', hintText: 'xyz@example.com',hintStyle: TextStyle(color: Colors.grey), ),
+                    onChanged: (value) {
+                      email = value;
+                    },
+                  ))
+            ],
+          ),
+          actions: <Widget>[
+
+
+            FlatButton(
+              child: Text('Cancel',),
+              color: Colors.red,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              color: Colors.green,
+              child: Text('Send',),
+              onPressed: () {
+                if(email!=null&&email.contains("@"))
+                {
+                  final _auth=FirebaseAuth.instance;
+                  _auth.sendPasswordResetEmail(email: email).then((onValue){
+                    Fluttertoast.showToast(
+                      msg: "Email Sent",
+                      toastLength: Toast.LENGTH_LONG,
+                    );
+                  });
+
+                  Navigator.of(context).pop();
+
+
+                }
+                else
+                {
+                  Fluttertoast.showToast(
+                    msg: "Email not Valid",
+                    toastLength: Toast.LENGTH_LONG,
+                  );
+                }
+                //Navigator.of(context).pop(newcardNo);
+              },
+            ),
+
+
+
+          ],
+        );
+      },
+    );
+  }
+
+
+
+
+
+
 }

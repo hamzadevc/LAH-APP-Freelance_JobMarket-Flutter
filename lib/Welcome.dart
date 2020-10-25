@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_application/CRUD.dart';
 import 'package:job_application/jobView.dart';
 import 'package:job_application/questions.dart';
+import 'package:job_application/viewJobDetails.dart';
 
 import 'customDrawer.dart';
 import 'jobViewX.dart';
@@ -26,14 +27,9 @@ String ApplicationStatus="In Progress";
 
   List<DocumentSnapshot>jobs;
   
-  
-  StreamSubscription<QuerySnapshot>subscriptionforApplicants;
-
-  List<DocumentSnapshot>applicants;
 
 
-  final CollectionReference collectionReferenceApplicants=
-  Firestore.instance.collection("jobs").document().collection('Applicants');
+
 
 
 
@@ -60,7 +56,7 @@ String ApplicationStatus="In Progress";
   @override
   void dispose() {
     // TODO: implement dispose
-subscriptionforApplicants?.cancel();
+
     subscription?.cancel();
     super.dispose();
 
@@ -74,14 +70,6 @@ subscriptionforApplicants?.cancel();
 
 
 
-
-    subscriptionforApplicants=collectionReferenceApplicants.
-    where('employee_id',isEqualTo: CRUD.myuserid)
-    .snapshots().listen((datasnapshots) {
-      setState(() {
-        applicants=datasnapshots.documents;
-      });
-    });
 
 
 
@@ -353,7 +341,7 @@ onPressed: (){
                       Padding(
                         padding: EdgeInsets.only(right: 32, left: 0, top: 40, bottom: 32),
                         child: Text(
-                          "Your \napplications ("+' 1 '.toString() +")",
+                          "Your \napplications",
                           style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
@@ -371,129 +359,231 @@ onPressed: (){
       //String job = jobs[index].data['job_title'];
 
 
+jobs!=null?
+
 
    Padding(
-        padding: EdgeInsets.only(right: 32, left: 32, bottom: 8),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(24),
-              margin: EdgeInsets.symmetric(vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-              ),
-              child: Column(
-                children: [
+     padding: EdgeInsets.only(right: 32, left: 32, bottom: 8),
+     child: Container(
+       height: MediaQuery.of(context).size.height/2,
+       child: ListView.builder(
+       physics: BouncingScrollPhysics(),
 
-                  Row(
-                    children: [
 
-                      Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage('https://lh3.googleusercontent.com/proxy/39OLGaL3MS7C43_o9wKnZG0N3B_kmsuA3zgeE8j42QOhnz2boChf3gpa5Od1oL1Oy5wU3JNUYHFQ994DdvxQHTTDcyGz0zF1vJYFCOW4Do51sEWQkoo5tFftqeKeJioCaw'),
-                            fit: BoxFit.fitWidth,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                        ),
+
+    itemCount: jobs.length,
+    itemBuilder: (BuildContext ctxt, int index) {
+      String companyID = jobs[index].data['c_id'];
+
+
+
+
+
+      String jobTitle = jobs[index].data['job_title'];
+
+      String location = jobs[index].data['location'];
+
+      String qualification = jobs[index].data['qualification'];
+
+      String description = jobs[index].data['description'];
+
+      String type = jobs[index].data['type'];
+
+      String doc_id = jobs[index].documentID.toString();
+
+
+     return  StreamBuilder(
+    stream:  Firestore.instance.collection("Company").where('id',isEqualTo: companyID)
+        .snapshots(),
+    builder: (context, snapshot) {
+
+
+
+     // print('object'+snapshot.data.documents.length.toString());
+
+    if (snapshot.hasData) {
+
+
+    for (int index = 0; index < snapshot.data.documents.length; index++) {
+      String CName = snapshot.data.documents[index]['name'];
+
+      String Cimg = snapshot.data.documents[index]['img'];
+
+
+      return StreamBuilder(
+          stream: Firestore.instance.collection("jobs").document(doc_id)
+              .collection('Applicants').
+          where('employee_id', isEqualTo: CRUD.myuserid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+
+
+
+
+              for(int i=0; i<snapshot.data.documents.length;i++)
+              {
+
+                String status = snapshot.data.documents[i]['status'];
+
+
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+
+                      context,
+
+                      MaterialPageRoute(builder: (context) =>
+                          ViewJob(
+                              type, location, jobTitle, description,
+                              qualification,Cimg,CName,status)),
+
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(24),
+                    margin: EdgeInsets.symmetric(vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
                       ),
+                    ),
+                    child: Column(
+                      children: [
 
-                      Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                        Row(
+                          children: [
 
-                                Text(
-                                  "Product Designer",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      Cimg)
+                                  ,
+                                  fit: BoxFit.fitWidth,
                                 ),
-
-                                Text(
-                                  "Google",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
-                                  ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
                                 ),
-
-                              ],
-                            ),
-                          )
-                      ),
-
-                      Icon(
-                        Icons.more_vert,
-                      ),
-
-                    ],
-                  ),
-
-                  SizedBox(
-                    height: 16,
-                  ),
-
-                  Row(
-                    children: [
-
-                      Expanded(
-                        child: Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              ApplicationStatus,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: ApplicationStatus == "In Progress" ? Colors.green[500] :
-                                ApplicationStatus == "Completed" ? Colors.red[500] : Colors.black,
                               ),
                             ),
-                          ),
-                        ),
-                      ),
 
-                      Expanded(
-                        child: Container(
-                          child: Center(
-                            child: Text(
-                              r"$" + '88' + "/h",
-                              style: TextStyle(
-                                fontSize: 24,
+                            Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 24),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+
+                                      Text(
+                                        jobTitle,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+
+                                      Text(
+                                        type,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+
+                                    ],
+                                  ),
+                                )
+                            ),
+
+                            Icon(
+                              Icons.more_vert,
+                            ),
+
+                          ],
+                        ),
+
+                        SizedBox(
+                          height: 16,
+                        ),
+
+                        Row(
+                          children: [
+
+                            Expanded(
+                              child: Container(
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    status,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: status == "in progress"
+                                          ? Colors
+                                          .green[500]
+                                          :
+                                      status == "Cancelled"
+                                          ? Colors.red[500]
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+
+                            Expanded(
+                              child: Container(
+                                child: Center(
+                                  child: Text(
+                                    r"$" + '88' + "/h",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ],
                         ),
-                      ),
 
-                    ],
+                      ],
+                    ),
                   ),
+                );
+              }
 
-                ],
-              ),
-            )
-          ],
 
-        ),
-      ),
+            }
+
+            return Container();
+          }
+      );
+    }
+
+    }
+    else{
+      return CircularProgressIndicator();
+    }
+    return Container();
+    }
+     );
+    }
+       ),
+     ),
+   ):
+Center(child: Text('No Applications yet')),
 
 
 
@@ -539,20 +629,20 @@ onPressed: (){
                   ],
                  ),
                ),
-               Padding(
-                 padding: EdgeInsets.symmetric(horizontal: 32, vertical: 10),
-                 child: Wrap(
-                   crossAxisAlignment: WrapCrossAlignment.start,
-                   spacing: 16,
-                   runSpacing: 16,
-                   children: [
-                     buildFilterOption("Developer"),
-                     buildFilterOption("San Francisco"),
-                     buildFilterOption(r"$30 - 50h"),
-                     buildFilterOption("Part-Time"),
-                   ],
-                 ),
-               ),
+//               Padding(
+//                 padding: EdgeInsets.symmetric(horizontal: 32, vertical: 10),
+//                 child: Wrap(
+//                   crossAxisAlignment: WrapCrossAlignment.start,
+//                   spacing: 16,
+//                   runSpacing: 16,
+//                   children: [
+//                     buildFilterOption("Developer"),
+//                     buildFilterOption("San Francisco"),
+//                     buildFilterOption(r"$30 - 50h"),
+//                     buildFilterOption("Part-Time"),
+//                   ],
+//                 ),
+//               ),
 
 
                Padding(
@@ -616,6 +706,21 @@ StreamBuilder(
           //    MaterialPageRoute(builder: (context) => JobDetail(job: job)),
 
           //    );
+
+
+
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => JobViewX(
+                Cimg,CName,type,location,jobTitle,description,qualification,doc_id
+
+
+            )),
+          );
+
+
+
 
         },
 
@@ -803,7 +908,7 @@ StreamBuilder(
 else{
   CircularProgressIndicator();
       }
-
+return Container();
     }
 ),
 
