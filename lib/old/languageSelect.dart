@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/selectionScreen.dart';
+import 'package:job_application/screens/auth/selectionScreen.dart';
 class LanguageSelect extends StatefulWidget {
   @override
   _LanguageSelectState createState() => _LanguageSelectState();

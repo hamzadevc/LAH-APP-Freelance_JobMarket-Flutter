@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/companyCreateJob.dart';
-import 'package:job_application/questions.dart';
+import 'package:job_application/old/companyCreateJob.dart';
+import 'package:job_application/old/questions.dart';
 class CompanyCategory extends StatefulWidget {
   @override
   _CompanyCategoryState createState() => _CompanyCategoryState();

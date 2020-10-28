@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/editProfile.dart';
-import 'package:job_application/wallet.dart';
+import 'package:job_application/old/editProfile.dart';
+import 'package:job_application/old/wallet.dart';
 import 'CRUD.dart';
 
 class CustomDrawer {

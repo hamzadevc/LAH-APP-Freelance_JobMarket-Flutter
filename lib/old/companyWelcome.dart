@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:job_application/CRUD.dart';
-import 'package:job_application/companyCategory.dart';
-import 'package:job_application/companyCreateJob.dart';
-import 'package:job_application/jobView.dart';
+import 'package:job_application/old/CRUD.dart';
+import 'package:job_application/old/companyCreateJob.dart';
+import 'package:job_application/old/jobView.dart';
 
-import 'package:job_application/customDrawer.dart';
+import 'package:job_application/old/customDrawer.dart';
+
+import 'companyCategory.dart';
 
 class CWelcome extends StatefulWidget {
   @override

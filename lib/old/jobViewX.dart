@@ -326,8 +326,8 @@ class _JobViewXState extends State<JobViewX> {
         'employee_name':CRUD.name,
         'email':CRUD.email,
         'phone_number':CRUD.mobileNumber,
-        'employee_CV':""
-
+        'employee_CV':"",
+        'status': 'pending',
 
       }).then((value) {
 

@@ -10,7 +10,7 @@ class ViewJob extends StatefulWidget {
   String qualification;
   String cimg;
   String cname;
-  String status;
+  String status = '';
 
 
   ViewJob(this.type,this.location,this.title,this.description,this.qualification,this.cimg,this.cname,this.status);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/CRUD.dart';
+import 'package:job_application/old/CRUD.dart';
 class Wallet extends StatefulWidget {
   @override
   _WalletState createState() => _WalletState();
