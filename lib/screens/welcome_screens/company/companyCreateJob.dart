@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-import 'CRUD.dart';
+import '../../../modals/user_profile.dart';
+
 class CreateJob extends StatefulWidget {
   @override
   _CreateJobState createState() => _CreateJobState();
@@ -16,28 +16,30 @@ class _CreateJobState extends State<CreateJob>
   String location;
   String type;
   bool showSpinner = false;
- // File _image;
+  // File _image;
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: FlatButton(
-        padding: EdgeInsets.all(15),
-        onPressed: (){
-createJob();
-        },
-child: Text("Create Job",style: TextStyle(color: Colors.white),),
-color: Colors.black,
-      ),
-      backgroundColor: Colors.grey.shade200,
+        bottomNavigationBar: FlatButton(
+          padding: EdgeInsets.all(15),
+          onPressed: () {
+            createJob();
+          },
+          child: Text(
+            "Create Job",
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.grey.shade200,
         body: new ListView(
           children: <Widget>[
             Column(
               children: <Widget>[
-
                 new Container(
-            color: Colors.grey.shade200,
+                  color: Colors.grey.shade200,
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 25.0),
                     child: new Column(
@@ -61,23 +63,16 @@ color: Colors.black,
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.bold),
                                     ),
-
-                                    FlatButton(child:
-
-
-                                    Text("Filter",style: TextStyle(
-                                        color: Colors.white
-
-                                    ),),
+                                    FlatButton(
+                                      child: Text(
+                                        "Filter",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                       color: Colors.black,
-                                      onPressed: (){
-
-                                      }
-                                      ,)
-
+                                      onPressed: () {},
+                                    )
                                   ],
                                 ),
-
                               ],
                             )),
                         Padding(
@@ -108,17 +103,13 @@ color: Colors.black,
                               children: <Widget>[
                                 new Flexible(
                                   child: new TextField(
-
                                     decoration: const InputDecoration(
-                                      border: OutlineInputBorder(
-
-                                      ),
+                                      border: OutlineInputBorder(),
                                       hintText: "Enter Job title",
                                     ),
-                                    onChanged:((value){
-                                      title=value;
+                                    onChanged: ((value) {
+                                      title = value;
                                     }),
-
                                   ),
                                 ),
                               ],
@@ -151,17 +142,13 @@ color: Colors.black,
                               children: <Widget>[
                                 new Flexible(
                                   child: new TextField(
-                                    onChanged:((value){
-                                      description=value;
+                                    onChanged: ((value) {
+                                      description = value;
                                     }),
-
                                     decoration: const InputDecoration(
-
-                                        border: OutlineInputBorder(
-
-                                        ),
+                                        border: OutlineInputBorder(),
                                         hintText: "Enter Description"),
-                                       maxLines: 4,
+                                    maxLines: 4,
                                   ),
                                 ),
                               ],
@@ -194,22 +181,16 @@ color: Colors.black,
                               children: <Widget>[
                                 new Flexible(
                                   child: new TextField(
-                                    onChanged:((value){
-                                      qualification=value;
+                                    onChanged: ((value) {
+                                      qualification = value;
                                     }),
                                     decoration: const InputDecoration(
-                                        border: OutlineInputBorder(
-
-                                        ),
+                                        border: OutlineInputBorder(),
                                         hintText: "Enter Qualifications"),
-
                                   ),
                                 ),
                               ],
                             )),
-
-
-
                         Padding(
                             padding: EdgeInsets.only(
                                 left: 25.0, right: 25.0, top: 25.0),
@@ -238,18 +219,12 @@ color: Colors.black,
                               children: <Widget>[
                                 new Flexible(
                                   child: new TextField(
-
-                                    onChanged:((value){
-                                      location=value;
+                                    onChanged: ((value) {
+                                      location = value;
                                     }),
                                     decoration: const InputDecoration(
-
-                                        border: OutlineInputBorder(
-
-                                        ),
-
+                                        border: OutlineInputBorder(),
                                         hintText: "Enter Location"),
-
                                   ),
                                 ),
                               ],
@@ -272,7 +247,6 @@ color: Colors.black,
                                   ),
                                   flex: 2,
                                 ),
-
                               ],
                             )),
                         Padding(
@@ -286,39 +260,28 @@ color: Colors.black,
                                   child: Padding(
                                     padding: EdgeInsets.only(right: 10.0),
                                     child: new TextField(
-                                      onChanged:((value){
-                                        type=value;
+                                      onChanged: ((value) {
+                                        type = value;
                                       }),
                                       decoration: const InputDecoration(
-                                          border: OutlineInputBorder(
-
-                                          ),
+                                          border: OutlineInputBorder(),
                                           hintText: "e.g contract"),
-
                                     ),
                                   ),
                                   flex: 2,
                                 ),
-
                               ],
                             )),
-
                       ],
                     ),
                   ),
                 ),
-
-
-
-
               ],
-
-
-
             ),
           ],
         ));
   }
+
   @override
   void dispose() {
     // Clean up the controller when the Widget is disposed
@@ -326,45 +289,22 @@ color: Colors.black,
     super.dispose();
   }
 
+  void createJob() async {
+    if (title != null)
+      await Firestore.instance.collection("jobs").document().setData({
+        'c_id': UserProfile().uId,
+        'job_title': title,
+        'description': description,
+        'location': location,
+        'qualification': qualification,
+        'type': type,
+      }).then((value) {
+        print('job data added');
+      }).catchError((onError) {
+        print('Failed to add data');
+      });
 
-
-  void createJob() async{
-
-
-
-
-if(title!=null)
-
-     await  Firestore.instance.collection("jobs").document().setData({
-
-          'c_id':CRUD.myuserid,
-          'job_title':title,
-          'description':description,
-          'location':location,
-          'qualification':qualification,
-          'type':type,
-
-
-
-        }).then((value) {
-
-          print('job data added');
-
-        }).catchError((onError){
-
-          print('Failed to add data');
-
-        });
-
-
-
-     Navigator.pop(context);
-      }
-
-
-
-
-
+    Navigator.pop(context);
   }
-
-
+}
+/// TODO UserProfile issues here...

@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:job_application/screens/auth/selectionScreen.dart';
 import 'package:job_application/wrapper.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -17,8 +16,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    print('Home INIT');
     _controller = AnimationController(
-      duration: const Duration(seconds: 9),
+      duration: const Duration(seconds: 4),
       vsync: this,
     );
 
@@ -32,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         MaterialPageRoute(builder: (context) => Wrapper()),
       ),
     );
+    print('HOME INIT Ends');
   }
 
   @override

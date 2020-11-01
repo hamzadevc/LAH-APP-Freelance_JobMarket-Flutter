@@ -1,15 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:job_application/old/Welcome.dart';
-import 'package:job_application/old/signUp.dart';
+import 'package:job_application/modals/employeeInfo.dart';
+import 'package:job_application/screens/auth_screens/signUp.dart';
 import 'package:job_application/services/auth_service.dart';
+import 'package:job_application/services/database_service.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-import 'CRUD.dart';
-import 'companyWelcome.dart';
+import '../../modals/user_profile.dart';
+import 'Components/WaveClipPath.dart';
+import 'Components/custom_password_field.dart';
+import 'Components/custom_text_fields.dart';
 
 class SignIn extends StatefulWidget {
+  final SessionType sessionType;
+  SignIn({this.sessionType});
   @override
   _SignInState createState() => _SignInState();
 }
@@ -18,45 +23,6 @@ class _SignInState extends State<SignIn> {
   bool showSpinner = false;
   String email;
   String password;
-  final _auth = FirebaseAuth.instance;
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    CRUD.fetchProfileData();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    loggedinuser();
-    super.initState();
-  }
-
-  loggedinuser() async {
-    await FirebaseAuth.instance.currentUser().then((firebaseUser) {
-      if (firebaseUser == null) {
-        //signed out
-      } else if (firebaseUser != null) {
-        //signed in
-        CRUD.myuserid = firebaseUser.uid;
-        print(firebaseUser.uid);
-        CRUD.AddData();
-        if (CRUD.type == "Employee") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Welcome()),
-          );
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CWelcome()),
-          );
-        }
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,91 +34,26 @@ class _SignInState extends State<SignIn> {
           children: <Widget>[
             Stack(
               children: <Widget>[
-                ClipPath(
-                  clipper: WaveClipper1(),
-                  child: Container(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 40,
-                        ),
-                        Image.asset(
-                          "assets/images/mylogo.png",
-                          height: 150,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text("Follow Me "),
-                      ],
-                    ),
-                    width: double.infinity,
-                    height: 300,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [Color(0xff000000), Color(0xff000000)])),
-                  ),
-                ),
+                WaveClipPath(),
               ],
             ),
             SizedBox(
               height: 30,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32),
-              child: Material(
-                elevation: 4.0,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                child: TextField(
-                  onChanged: (String value) {
-                    email = value.trim();
-                  },
-                  cursorColor: Colors.blue,
-                  decoration: InputDecoration(
-                      hintText: "Email",
-                      prefixIcon: Material(
-                        elevation: 0,
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                        child: Icon(
-                          Icons.email,
-                          color: Colors.black,
-                        ),
-                      ),
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
-                ),
-              ),
+            CustomTextField(
+              title: "Email",
+              onChanged: (String value) {
+                email = value.trim();
+              },
             ),
             SizedBox(
               height: 20,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32),
-              child: Material(
-                elevation: 4.0,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                child: TextField(
-                  obscureText: true,
-                  onChanged: (String value) {
-                    password = value.trim();
-                  },
-                  cursorColor: Colors.blue,
-                  decoration: InputDecoration(
-                      hintText: "Password",
-                      prefixIcon: Material(
-                        elevation: 0,
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                        child: Icon(
-                          Icons.lock,
-                          color: Colors.black,
-                        ),
-                      ),
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
-                ),
-              ),
+            PasswordField(
+              title: "Password",
+              onChanged: (String value) {
+                password = value.trim();
+              },
             ),
             SizedBox(
               height: 25,
@@ -192,48 +93,25 @@ class _SignInState extends State<SignIn> {
                       });
 
                       try {
-                        FirebaseUser newuser =
-                            (await _auth.signInWithEmailAndPassword(
-                                    email: email, password: password))
-                                .user;
-
-                        Auth().signIn(email, password);///TODO Start From Here....
-
-                        if (newuser != null &&
-                            newuser.isEmailVerified == true) {
-                          CRUD.email = email;
-                          print("sIrddd" + newuser.uid);
-                          if (CRUD.type == "Employee") {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Welcome()),
-                            );
-                          } else {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CWelcome()),
-                            );
-                          }
-                        } else {
-                          Fluttertoast.showToast(
-                              msg: "Please Verify Your Email.",
-                              gravity: ToastGravity.CENTER);
-                        }
+                        User user = await Auth()
+                            .signIn(email, password, widget.sessionType);
+                        // Save User Data in Shared Prefs
+                        UserProfile userProfile =
+                            await DatabaseService(uId: user.uId).getUser();
+                        await userProfile.saveUserInSharedPrefs();
                         setState(() {
                           showSpinner = false;
                         });
                       } catch (e) {
                         print(e);
-
                         Fluttertoast.showToast(
                             msg: "Incorrect email or password",
                             gravity: ToastGravity.CENTER);
-
-                        setState(() {
-                          showSpinner = false;
-                        });
+                        setState(
+                          () {
+                            showSpinner = false;
+                          },
+                        );
                       }
                     }
                   },
@@ -244,11 +122,13 @@ class _SignInState extends State<SignIn> {
               height: 20,
             ),
             Center(
-                child: InkWell(
-                    onTap: () {
-                      _asyncInputDialog(context);
-                    },
-                    child: Text('Forgot Password?'))),
+              child: InkWell(
+                onTap: () {
+                  _asyncInputDialog(context);
+                },
+                child: Text('Forgot Password?'),
+              ),
+            ),
             SizedBox(
               height: 20,
             ),
@@ -264,8 +144,14 @@ class _SignInState extends State<SignIn> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SignUp()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignUp(
+                          sessionType: widget.sessionType,
+                        ),
+                      ),
+                    );
                   },
                   child: Text(
                     "Sign Up ",

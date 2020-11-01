@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:job_application/screens/welcome_screens/company/companyCreateJob.dart';
+import 'package:job_application/screens/questions.dart';
 
-class LanguageSelect extends StatefulWidget {
+class CompanyCategory extends StatefulWidget {
   @override
-  _LanguageSelectState createState() => _LanguageSelectState();
+  _CompanyCategoryState createState() => _CompanyCategoryState();
 }
 
-class _LanguageSelectState extends State<LanguageSelect> {
+class _CompanyCategoryState extends State<CompanyCategory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +18,7 @@ class _LanguageSelectState extends State<LanguageSelect> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Select Language",
+              "What Do You Want",
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 25,
@@ -27,23 +29,32 @@ class _LanguageSelectState extends State<LanguageSelect> {
             ),
             FlatButton(
               child: Text(
-                "Polish",
-                style: TextStyle(color: Colors.white),
-              ),
-              color: Colors.black,
-              onPressed: () {},
-            ),
-            FlatButton(
-              child: Text(
-                "English",
+                "Freelancer",
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.black,
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => SelectCategory()),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Questions(),
+                  ),
+                );
+              },
+            ),
+            FlatButton(
+              child: Text(
+                "Labour",
+                style: TextStyle(color: Colors.white),
+              ),
+              color: Colors.black,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateJob(),
+                  ),
+                );
               },
             )
           ],

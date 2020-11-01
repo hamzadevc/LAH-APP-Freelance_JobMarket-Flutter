@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:job_application/modals/employeeInfo.dart';
+import 'package:job_application/services/auth_service.dart';
+import 'package:job_application/services/database_service.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +9,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:provider/provider.dart';
 
-import 'CRUD.dart';
+import '../modals/user_profile.dart';
 class EditProfile extends StatefulWidget {
   @override
   _EditProfileState createState() => _EditProfileState();
@@ -15,10 +19,45 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile>
     with SingleTickerProviderStateMixin {
+  bool _isLoading = false;
+  UserProfile _userProfile;
+  SessionType _userSession;
+  DatabaseService _databaseService;
   bool showSpinner = false;
   File _image;
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    var user = Provider.of<User>(context);
+    _getUserData(user.uId);
+    super.initState();
+  }
+
+
+  _toggleIsLoading() {
+    setState(() {
+      _isLoading = !_isLoading;
+    });
+  }
+
+  _getUserData(String uid) async {
+    _toggleIsLoading();
+    _userSession = await Auth().getUserSession(uId: uid);
+    _databaseService = DatabaseService(sessionType: _userSession, uId: uid);
+    await _databaseService.init();
+    _userProfile = await _databaseService.getUser();
+    _toggleIsLoading();
+  }
+
+  ///TODO fix all input fields...
+  ///TODO add phone number input from simi...
+  ///TODO add phone verification from simi...
+  ///TODO show warning if email is not verified...
+  ///TODO show warning if phone is not verified...
+  ///TODO fix all errors...
+
   @override
   Widget build(BuildContext context) {
     return
@@ -27,7 +66,7 @@ class _EditProfileState extends State<EditProfile>
 
         body: FutureBuilder<dynamic>(
 
-          future: CRUD.fetchProfileData(),
+          future: UserProfile.fetchProfileData(),
     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
 
     if (snapshot.connectionState == ConnectionState.done) {
@@ -61,7 +100,7 @@ class _EditProfileState extends State<EditProfile>
                                       shape: BoxShape.circle,
                                       image: new DecorationImage(
                                         image: new NetworkImage(
-                                            CRUD.imgUrl),
+                                            UserProfile.imgUrl),
                                         fit: BoxFit.cover,
                                       ),
                                     )),
@@ -177,9 +216,9 @@ class _EditProfileState extends State<EditProfile>
                                   new Flexible(
                                     child: new TextField(
                                       controller: TextEditingController()
-                                        ..text = CRUD.name,
+                                        ..text = UserProfile.name,
                                   onChanged: (value) {
-                          CRUD.name = value;
+                          UserProfile.name = value;
                           print(value);
                           },
                                       decoration: const InputDecoration(
@@ -221,9 +260,9 @@ class _EditProfileState extends State<EditProfile>
                                   new Flexible(
                                     child: new TextField(
                                       controller: TextEditingController()
-                                        ..text = CRUD.email,
+                                        ..text = UserProfile.email,
                                       onChanged: (value) {
-                                        CRUD.email = value;
+                                        UserProfile.email = value;
                                       },
                                       decoration: const InputDecoration(
                                           hintText: "Enter Email ID"),
@@ -261,9 +300,9 @@ class _EditProfileState extends State<EditProfile>
                                   new Flexible(
                                     child: new TextField(
                                       controller: TextEditingController()
-                                        ..text = CRUD.mobileNumber,
+                                        ..text = UserProfile.mobileNumber,
                                       onChanged: (value) {
-                                        CRUD.mobileNumber = value;
+                                        UserProfile.mobileNumber = value;
                                       },
                                       decoration: const InputDecoration(
                                           hintText: "Enter Mobile Number"),
@@ -303,10 +342,10 @@ class _EditProfileState extends State<EditProfile>
                                     child: new TextField(
 
                                       controller: TextEditingController()
-                                        ..text = CRUD.dob,
+                                        ..text = UserProfile.dob,
                                       keyboardType: TextInputType.number,
                                       onChanged: (value) {
-                                        CRUD.dob = value;
+                                        UserProfile.dob = value;
                                       },
                                       decoration: const InputDecoration(
                                           hintText: "E.g 18"),
@@ -344,9 +383,9 @@ class _EditProfileState extends State<EditProfile>
                                   new Flexible(
                                     child: new TextField(
                                       controller: TextEditingController()
-                                        ..text = CRUD.address,
+                                        ..text = UserProfile.address,
                                       onChanged: (value) {
-                                        CRUD.address = value;
+                                        UserProfile.address = value;
                                       },
                                       decoration: const InputDecoration(
                                           hintText: "Enter Address"),
@@ -386,9 +425,9 @@ class _EditProfileState extends State<EditProfile>
                                   new Flexible(
                                     child: new TextField(
                                       controller: TextEditingController()
-                                        ..text = CRUD.CardNo,
+                                        ..text = UserProfile.cardNo,
                                       onChanged: (value) {
-                                        CRUD.CardNo = value;
+                                        UserProfile.cardNo = value;
                                       },
                                       decoration: const InputDecoration(
                                           hintText: "Card No"),
@@ -446,9 +485,9 @@ class _EditProfileState extends State<EditProfile>
                                       padding: EdgeInsets.only(right: 10.0),
                                       child: new TextField(
                                         controller: TextEditingController()
-                                          ..text = CRUD.country,
+                                          ..text = UserProfile.country,
                                         onChanged: (value) {
-                                          CRUD.country = value;
+                                          UserProfile.country = value;
                                         },
                                         decoration: const InputDecoration(
                                             hintText: "Enter Country"),
@@ -460,9 +499,9 @@ class _EditProfileState extends State<EditProfile>
                                   Flexible(
                                     child: new TextField(
                                       controller: TextEditingController()
-                                        ..text = CRUD.city,
+                                        ..text = UserProfile.city,
                                       onChanged: (value) {
-                                        CRUD.city = value;
+                                        UserProfile.city = value;
                                       },
                                       decoration: const InputDecoration(
                                           hintText: "Enter City"),
@@ -517,9 +556,9 @@ class _EditProfileState extends State<EditProfile>
                                       padding: EdgeInsets.only(right: 10.0),
                                       child: new TextField(
                                         controller: TextEditingController()
-                                          ..text = CRUD.Cvv,
+                                          ..text = UserProfile.cVV,
                                         onChanged: (value) {
-                                          CRUD.Cvv = value;
+                                          UserProfile.cVV = value;
                                         },
                                         decoration: const InputDecoration(
                                             hintText: "Enter CVV"),
@@ -531,9 +570,9 @@ class _EditProfileState extends State<EditProfile>
                                   Flexible(
                                     child: new TextField(
                                       controller: TextEditingController()
-                                        ..text = CRUD.expiry,
+                                        ..text = UserProfile.expiry,
                                       onChanged: (value) {
-                                        CRUD.expiry = value;
+                                        UserProfile.expiry = value;
                                       },
                                       decoration: const InputDecoration(
                                           hintText: "Enter Expiry"),
@@ -599,8 +638,8 @@ class _EditProfileState extends State<EditProfile>
                     onPressed: () async{
 
 
-                      await CRUD.updateProfileData();
-                      await CRUD.fetchProfileData();
+                      await UserProfile.updateProfileData();
+                      await UserProfile.fetchProfileData();
                       Fluttertoast.showToast(msg: "Data Updated");
 
 
@@ -684,18 +723,18 @@ class _EditProfileState extends State<EditProfile>
         //  _uploadedFileURL = fileURL;
         // print(fileURL);
 
-        CRUD.imgUrl =  fileURL;
+        UserProfile.imgUrl =  fileURL;
 
 
       });
 
 //print(CRUD.imgUrl);
 
-      CRUD.imgUrl=fileURL;
+      UserProfile.imgUrl=fileURL;
       showSpinner = false;
 
-      print(CRUD.imgUrl);
-      CRUD.updateProfileData();
+      print(UserProfile.imgUrl);
+      UserProfile.updateProfileData();
 
     });
 

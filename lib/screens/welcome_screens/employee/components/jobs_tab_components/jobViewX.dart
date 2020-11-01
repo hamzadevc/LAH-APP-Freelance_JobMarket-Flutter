@@ -1,53 +1,58 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:job_application/modals/employeeInfo.dart';
+import 'package:job_application/modals/job_applicant.dart';
+import 'package:job_application/modals/user_profile.dart';
+import 'package:job_application/services/documents_service.dart';
+import 'package:job_application/services/job_service.dart';
+import 'package:provider/provider.dart';
 
-import 'CRUD.dart';
 class JobViewX extends StatefulWidget {
   @override
   _JobViewXState createState() => _JobViewXState();
 
-
-  String cimg;
-  String cname;
-  String ctye;
-  String cloc;
-  String ctitle;
-  String cdes;
-  String cqual;
-  String docID;
-  JobViewX(this.cimg, this.cname,this.ctye, this.cloc, this.ctitle, this.cdes, this.cqual,
-      this.docID);
-
+  final String cImg;
+  final String cname;
+  final int cTye;
+  final String cLoc;
+  final String cTitle;
+  final String cDes;
+  final String cQualification;
+  final String docID;
+  final String cId;
+  final String bidPrice;
+  JobViewX({
+    this.cImg,
+    this.cname,
+    this.cTye,
+    this.cLoc,
+    this.cTitle,
+    this.cDes,
+    this.cQualification,
+    this.docID,
+    this.cId,
+    this.bidPrice,
+  });
 }
 
 class _JobViewXState extends State<JobViewX> {
-
-  String btntxt="Apply Now";
-
-  @override
-  void initState() {
-    // TODO: implement initState
-
-
-    check();
-
-    super.initState();
-  }
+  String _cvUrl;
+  String _fileName;
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    final user = Provider.of<User>(context);
+    return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        title: Text(widget.cname
-         ,
+        title: Text(
+          widget.cname,
           style: TextStyle(
             color: Colors.black,
           ),
@@ -69,21 +74,19 @@ class _JobViewXState extends State<JobViewX> {
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(50),
               topRight: Radius.circular(50),
-            )
-        ),
+            )),
         child: Padding(
           padding: EdgeInsets.all(40),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Center(
                 child: Container(
                   height: 50,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(widget.cimg),
+                      image: NetworkImage(widget.cImg),
                       fit: BoxFit.fitWidth,
                     ),
                     borderRadius: BorderRadius.all(
@@ -92,28 +95,24 @@ class _JobViewXState extends State<JobViewX> {
                   ),
                 ),
               ),
-
               SizedBox(
                 height: 32,
               ),
-
               Center(
                 child: Text(
-                 widget.ctitle,
+                  widget.cTitle,
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-
               SizedBox(
                 height: 16,
               ),
-
               Center(
                 child: Text(
-                  widget.cloc,
+                  widget.cLoc,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -121,14 +120,11 @@ class _JobViewXState extends State<JobViewX> {
                   ),
                 ),
               ),
-
               SizedBox(
                 height: 32,
               ),
-
               Row(
                 children: [
-
                   Expanded(
                     child: Container(
                       height: 45,
@@ -140,7 +136,7 @@ class _JobViewXState extends State<JobViewX> {
                       ),
                       child: Center(
                         child: Text(
-                          widget.ctye,
+                          widget.cTye == 0 ? 'CONTRACT' : 'FREELANCER',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -149,12 +145,11 @@ class _JobViewXState extends State<JobViewX> {
                       ),
                     ),
                   ),
-
                   Expanded(
                     child: Container(
                       child: Center(
                         child: Text(
-                          r"$" + "75" + "/h",
+                          '\$${widget.bidPrice}/hr',
                           style: TextStyle(
                             fontSize: 36,
                           ),
@@ -162,26 +157,21 @@ class _JobViewXState extends State<JobViewX> {
                       ),
                     ),
                   ),
-
                 ],
               ),
-
               SizedBox(
                 height: 32,
               ),
-
               Text(
-                "Qualifications",
+                widget.cQualification,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               SizedBox(
                 height: 16,
               ),
-
               Expanded(
                 child: SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
@@ -191,7 +181,6 @@ class _JobViewXState extends State<JobViewX> {
                         margin: EdgeInsets.symmetric(vertical: 8),
                         child: Row(
                           children: [
-
                             Container(
                               width: 4,
                               height: 4,
@@ -200,14 +189,12 @@ class _JobViewXState extends State<JobViewX> {
                                 shape: BoxShape.circle,
                               ),
                             ),
-
                             SizedBox(
                               width: 16,
                             ),
-
                             Flexible(
                               child: Text(
-                                widget.cdes,
+                                widget.cDes,
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -215,15 +202,22 @@ class _JobViewXState extends State<JobViewX> {
                                 ),
                               ),
                             ),
-
                           ],
                         ),
                       ),
-
                       InkWell(
-                        onTap: (){
-
-                          uploadCV();
+                        onTap: () async {
+                          try {
+                            var params = await uploadCV(user.uId);
+                            setState(() {
+                              _fileName = params[0];
+                              _cvUrl = params[1];
+                            });
+                          } catch (e) {
+                            Fluttertoast.showToast(
+                                msg: "Failed to upload cv",
+                                backgroundColor: Colors.redAccent);
+                          }
                         },
                         child: Container(
                           height: 45,
@@ -236,13 +230,13 @@ class _JobViewXState extends State<JobViewX> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-
                               Icon(FontAwesomeIcons.fileUpload),
-                              SizedBox(width: 20,),
-
+                              SizedBox(
+                                width: 20,
+                              ),
                               Center(
                                 child: Text(
-                                  "Upload CV",
+                                  _fileName ?? "Upload CV",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -253,49 +247,71 @@ class _JobViewXState extends State<JobViewX> {
                           ),
                         ),
                       ),
-
                     ],
                   ),
                 ),
               ),
-
               SizedBox(
                 height: 16,
               ),
-
               Row(
                 children: <Widget>[
-                  Expanded(
-                    child: InkWell(
-                      onTap: ()
-                      async{
-                        await ApplyForJob();
-                        check();
-                      },
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.red[500],
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            btntxt,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                  StreamBuilder<bool>(
+                    stream: JobService(uId: user.uId, companyId: widget.cId)
+                        .isAlreadyApplied(),
+                    builder: (ctx, snapshot) {
+                      return Expanded(
+                        child: InkWell(
+                          onTap: () async {
+                            UserProfile userProfile =
+                                await UserProfile().getUserFromSharedPrefs();
+                            if (!snapshot.data) {
+                              if (_cvUrl != null) {
+                                await JobService(
+                                        jId: widget.docID, uId: userProfile.uId)
+                                    .applyForJob(
+                                  name: userProfile.name,
+                                  email: userProfile.email,
+                                  status: JobStatus.PENDING.index,
+                                  jobTitle: widget.cTitle,
+                                  appliedDate: Timestamp.now(),
+                                  type: widget.cTye,
+                                  cvLink: _cvUrl ?? '',
+                                  employeeId: userProfile.uId,
+                                  phoneNumber: userProfile.mobileNumber,
+                                );
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "Please Upload CV!",
+                                    backgroundColor: Colors.yellow);
+                              }
+                            }
+                          },
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.red[500],
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                snapshot.data ? "APPLIED" : "APPLY NOW",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ],
               ),
-
             ],
           ),
         ),
@@ -303,96 +319,19 @@ class _JobViewXState extends State<JobViewX> {
     );
   }
 
-
-
-  void ApplyForJob() async{
-
-
-    final QuerySnapshot resultQuery=await Firestore.instance.collection("jobs").document(widget.docID)
-        .collection("Applicants").where('employee_id',isEqualTo: CRUD.myuserid).getDocuments();
-
-    final List<DocumentSnapshot> documentSnapshot=resultQuery.documents;
-
-    print(documentSnapshot.length);
-
-    if(documentSnapshot.length==0)
-    {
-
-      Firestore.instance.collection("jobs").document(widget.docID)
-          .collection("Applicants").document()
-          .setData({
-
-        'employee_id':CRUD.myuserid,
-        'employee_name':CRUD.name,
-        'email':CRUD.email,
-        'phone_number':CRUD.mobileNumber,
-        'employee_CV':"",
-        'status': 'pending',
-
-      }).then((value) {
-
-        print('data added');
-
-      }).catchError((onError){
-
-        print('Failed to add data');
-
-      });
-
-    }
-    else{
-      setState(() {
-        btntxt="Applied";
-      });
-    }
-
-
-
-
-
-
-
-  }
-
-
-
-  void uploadCV()async{
-
+  Future<List<String>> uploadCV(String uid) async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf', 'doc'],
     );
-    if(result != null) {
+    if (result != null) {
       File file = File(result.files.single.path);
+      String fileName = result.names[0];
+      String url = await DocumentService(uId: uid)
+          .savePdf(file.readAsBytesSync(), fileName);
+      return [fileName, url];
     } else {
-      // User canceled the picker
-
-
+      return null;
     }
-
-
-
-  }
-
-
-
-  void check() async{
-
-
-    final QuerySnapshot resultQuery=await Firestore.instance.collection("jobs").document(widget.docID)
-        .collection("Applicants").where('employee_id',isEqualTo: CRUD.myuserid).getDocuments();
-
-    final List<DocumentSnapshot> documentSnapshot=resultQuery.documents;
-
-    if(documentSnapshot.length!=0)
-    {
-
-      setState(() {
-        btntxt="Applied";
-      });
-
-    }
-
-
   }
 }
