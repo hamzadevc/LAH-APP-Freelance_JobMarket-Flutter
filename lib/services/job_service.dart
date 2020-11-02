@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_application/modals/job.dart';
 import 'package:job_application/modals/job_applicant.dart';
+import 'package:job_application/services/database_service.dart';
 
 class JobService {
   final String uId;
@@ -34,6 +35,7 @@ class JobService {
         companyId: companyId,
         creationTime: creationTime,
         bidPrice: bidPrice,
+        status: JobStatus.PENDING.index,
       ).toJson());
     } catch (e) {
       throw e;
@@ -53,7 +55,7 @@ class JobService {
 // Get All Jobs Stream
   List<Job> _getJobFromStream(QuerySnapshot snapshot) {
     return snapshot.documents
-        .map((e) => Job(id: e.documentID).fromJson(e.data));
+        .map((e) => Job(id: e.documentID).fromJson(e.data)).toList();
   }
 
   // Get Company Specific Jobs
@@ -108,6 +110,16 @@ class JobService {
         .map(_getJobFromStream);
   }
 
+  _checkJobStatus(DocumentSnapshot snapshot){
+    return snapshot.data['status'] != 0;
+  }
+
+  Stream<bool> isStatusPending() {
+    return _jobRef.document(jId)
+        .snapshots()
+        .map(_checkJobStatus);
+  }
+
 // Delete job [Company Commands]
   Future deleteJob() async {
     try {
@@ -132,7 +144,7 @@ class JobService {
     try {
       // apply for job....
       await _applicationRef
-          .document(companyId)
+          .document(jId)
           .collection('applicants')
           .document(uId)
           .setData(JobApplicant(
@@ -148,6 +160,8 @@ class JobService {
             jobTitle: jobTitle,
           ).toJson());
 
+      // update user application list
+      await DatabaseService(uId: uId).updateUserApplications(jId: jId);
 
     } catch (e) {
       throw e;
@@ -157,7 +171,7 @@ class JobService {
   Future updateCv({String cvLink}) async {
     try {
       await _applicationRef
-          .document(companyId)
+          .document(jId)
           .collection('applicants')
           .document(uId)
           .updateData(JobApplicant(cvLink: cvLink).toJson2Cv());
@@ -169,7 +183,7 @@ class JobService {
   Future<JobApplicant> getCvLink() async {
     try {
       DocumentSnapshot snapshot = await _applicationRef
-          .document(companyId)
+          .document(jId)
           .collection('applicants')
           .document(uId)
           .get();
@@ -187,7 +201,7 @@ class JobService {
 
   Stream<bool> isAlreadyApplied() {
     return _applicationRef
-        .document(companyId)
+        .document(jId)
         .collection('applicants')
         .document(uId)
         .snapshots()
@@ -197,12 +211,12 @@ class JobService {
   // get all applicants for company
   List<JobApplicant> _getJobApplicantsStream(QuerySnapshot snapshot) {
     return snapshot.documents
-        .map((e) => JobApplicant(id: e.documentID).fromJson(e.data));
+        .map((e) => JobApplicant(id: e.documentID).fromJson(e.data)).toList();
   }
 
   Stream<List<JobApplicant>> getAllUserJobApplicationStream() {
     return _applicationRef
-        .document(companyId)
+        .document(jId)
         .collection('applicants')
         .where('employeeId', isEqualTo: uId)
         .where('status', isLessThan: 3)
@@ -212,7 +226,7 @@ class JobService {
 
   Stream<List<JobApplicant>> getAllUserCompletedJobApplicationStream() {
     return _applicationRef
-        .document(companyId)
+        .document(jId)
         .collection('applicants')
         .where('employeeId', isEqualTo: uId)
         .where('status', isEqualTo: 3)
@@ -222,7 +236,7 @@ class JobService {
 
   Stream<List<JobApplicant>> getAllJobApplicantsStream() {
     return _applicationRef
-        .document(companyId)
+        .document(jId)
         .collection('applicants')
         .orderBy('appliedDate', descending: true)
         .snapshots()
@@ -231,7 +245,7 @@ class JobService {
 
   Stream<List<JobApplicant>> getAllContractJobApplicantsStream() {
     return _applicationRef
-        .document(companyId)
+        .document(jId)
         .collection('applicants')
         .where('type', isEqualTo: 0)
         .orderBy('appliedDate', descending: true)
@@ -241,7 +255,7 @@ class JobService {
 
   Stream<List<JobApplicant>> getAllFreelanceJobApplicantsStream() {
     return _applicationRef
-        .document(companyId)
+        .document(jId)
         .collection('applicants')
         .where('type', isEqualTo: 1)
         .orderBy('appliedDate', descending: true)
@@ -257,7 +271,7 @@ class JobService {
 
   Stream<int> getCountFromJobApplicantsStream(int type) {
     return _applicationRef
-        .document(companyId)
+        .document(jId)
         .collection('applicants')
         .where('type', isEqualTo: type)
         .snapshots()
@@ -268,10 +282,21 @@ class JobService {
   Future changeApplicantStatus({int status}) async {
     try {
       await _applicationRef
-          .document(companyId)
+          .document(jId)
           .collection('applicants')
           .document(uId)
           .updateData(JobApplicant(status: status).toJson2Status());
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // change job status
+  Future changeJobStatus({int status}) async {
+    try {
+      await _jobRef
+          .document(jId)
+          .updateData(Job(status: status).toJson2Status());
     } catch (e) {
       throw e;
     }
@@ -281,7 +306,7 @@ class JobService {
   Future deleteApplicant() async {
     try {
       await _applicationRef
-          .document(companyId)
+          .document(jId)
           .collection('applicants')
           .document(uId)
           .delete();

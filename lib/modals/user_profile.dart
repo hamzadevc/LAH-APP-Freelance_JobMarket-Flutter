@@ -16,6 +16,7 @@ class UserProfile {
   final String uId;
   final String cvLink;
   final List<dynamic> appliedJobs;
+  final List<dynamic> myCompletedJobs; // contains my jobs which
 
   UserProfile({
     this.uId,
@@ -33,6 +34,7 @@ class UserProfile {
     this.type,
     this.cvLink,
     this.appliedJobs,
+    this.myCompletedJobs,
   });
 
   Map<String, dynamic> toJson() {
@@ -51,6 +53,7 @@ class UserProfile {
       'expiry': expiry,
       'cvLink': cvLink,
       'type': type,
+      'completedJobs': myCompletedJobs,
     };
   }
 
@@ -83,6 +86,7 @@ class UserProfile {
       cvLink: data['cvLink'],
       type: data['type'],
       appliedJobs: data['appliedJobs'],
+      myCompletedJobs: data['completedJobs'],
     );
   }
 
@@ -128,4 +132,27 @@ class UserProfile {
       type: prefs.getInt('type'),
     );
   }
+}
+
+///TODO Convert applicants back to list...
+class AllApplicants {
+  final String id;
+  final bool completed;
+  final String applicant;
+  AllApplicants({
+    this.applicant,
+    this.id,
+    this.completed,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'allApplicants': applicant,
+        'completed': completed,
+      };
+
+  AllApplicants fromJson(Map<String, dynamic> data) => AllApplicants(
+        id: id,
+        applicant: data['allApplicants'],
+        completed: data['completed'],
+      );
 }

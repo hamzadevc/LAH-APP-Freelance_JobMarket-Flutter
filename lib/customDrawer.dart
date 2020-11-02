@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/old/editProfile.dart';
-import 'package:job_application/old/wallet.dart';
+import 'package:job_application/screens/profile_screen/editProfile.dart';
+import 'package:job_application/screens/wallet_screen/wallet.dart';
 import 'package:job_application/services/auth_service.dart';
 import 'package:provider/provider.dart';
 

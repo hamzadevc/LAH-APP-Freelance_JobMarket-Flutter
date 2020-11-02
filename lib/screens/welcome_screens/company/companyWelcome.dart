@@ -137,8 +137,8 @@ class _CWelcomeState extends State<CWelcome> {
               : TabBarView(
                   children: <Widget>[
                     StreamBuilder<List<JobApplicant>>(
-                      stream: JobService(companyId: user.uId)
-                          .getAllJobApplicantsStream(),
+                      stream:
+                          DatabaseService(uId: user.uId).getApplicantsStream(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           List<JobApplicant> jobApplicants = snapshot.data;
@@ -178,8 +178,9 @@ class _CWelcomeState extends State<CWelcome> {
                                                         color: Colors.white),
                                                   ),
                                                   onPressed: () async {
-                                                    var status = JobStatus
+                                                    var status = ApplicantStatus
                                                         .PROCESSING.index;
+                                                    // Change applicant status
                                                     await JobService(
                                                       jId: jobApplicants[index]
                                                           .jobId,
@@ -189,6 +190,26 @@ class _CWelcomeState extends State<CWelcome> {
                                                     ).changeApplicantStatus(
                                                       status: status,
                                                     );
+
+                                                    // change job status
+                                                    await JobService(
+                                                      jId: jobApplicants[index]
+                                                          .jobId,
+                                                    ).changeJobStatus(
+                                                        status: JobStatus
+                                                            .ON_PROGRESS.index);
+                                                    // user id added with job
+                                                    await DatabaseService(
+                                                      uId: jobApplicants[index]
+                                                          .employeeId,
+                                                    ).updateEmployeeIdInCompanyProfile(
+                                                        jId:
+                                                            jobApplicants[index]
+                                                                .jobId,
+                                                        cId:
+                                                            jobApplicants[index]
+                                                                .companyId,
+                                                        completed: false);
                                                   },
                                                   color: Colors.grey,
                                                 ),
@@ -204,7 +225,7 @@ class _CWelcomeState extends State<CWelcome> {
                                                         color: Colors.white),
                                                   ),
                                                   onPressed: () async {
-                                                    var status = JobStatus
+                                                    var status = ApplicantStatus
                                                         .REJECTED.index;
                                                     await JobService(
                                                       jId: jobApplicants[index]
@@ -214,6 +235,23 @@ class _CWelcomeState extends State<CWelcome> {
                                                           .employeeId,
                                                     ).changeApplicantStatus(
                                                       status: status,
+                                                    );
+
+                                                    await JobService(
+                                                      jId: jobApplicants[index]
+                                                          .jobId,
+                                                      companyId: user.uId,
+                                                      uId: jobApplicants[index]
+                                                          .employeeId,
+                                                    ).deleteApplicant();
+
+                                                    await DatabaseService(
+                                                            uId: jobApplicants[
+                                                                    index]
+                                                                .employeeId)
+                                                        .updateUserApplications(
+                                                      jId: jobApplicants[index]
+                                                          .jobId,
                                                     );
                                                   },
                                                   color: Colors.red,
@@ -230,7 +268,7 @@ class _CWelcomeState extends State<CWelcome> {
                                                         color: Colors.white),
                                                   ),
                                                   onPressed: () async {
-                                                    var status = JobStatus
+                                                    var status = ApplicantStatus
                                                         .COMPLETED.index;
                                                     await JobService(
                                                       jId: jobApplicants[index]
@@ -240,6 +278,26 @@ class _CWelcomeState extends State<CWelcome> {
                                                           .employeeId,
                                                     ).changeApplicantStatus(
                                                       status: status,
+                                                    );
+
+                                                    // change job status
+                                                    await JobService(
+                                                      jId: jobApplicants[index]
+                                                          .jobId,
+                                                    ).changeJobStatus(
+                                                      status: JobStatus
+                                                          .COMPLETED.index,
+                                                    );
+
+                                                    await DatabaseService(
+                                                      uId: jobApplicants[index]
+                                                          .employeeId,
+                                                    ).updateJobStatusInCompanyProfile(
+                                                      jId: jobApplicants[index]
+                                                          .jobId,
+                                                      cId: jobApplicants[index]
+                                                          .companyId,
+                                                      completed: true,
                                                     );
                                                   },
                                                   color: Colors.black87,
@@ -289,6 +347,7 @@ class _CWelcomeState extends State<CWelcome> {
                                           type: companyJobs[index].type,
                                           imgUrl: _userProfile.imgUrl,
                                           name: _userProfile.name,
+                                          jId: companyJobs[index].id,
                                         );
                                       },
                                     );
@@ -342,6 +401,7 @@ class _CWelcomeState extends State<CWelcome> {
     String imgUrl,
     int type,
     String companyId,
+    String jId,
   }) {
     return Container(
       height: MediaQuery.of(context).size.height / 3.9,
@@ -417,7 +477,7 @@ class _CWelcomeState extends State<CWelcome> {
                   ),
                 ),
                 StreamBuilder<int>(
-                  stream: JobService(companyId: companyId)
+                  stream: JobService(jId: jId)
                       .getCountFromJobApplicantsStream(type),
                   builder: (ctx, snapshot) {
                     return Expanded(

@@ -25,6 +25,7 @@ class JobViewX extends StatefulWidget {
   final String docID;
   final String cId;
   final String bidPrice;
+  final bool canApply;
   JobViewX({
     this.cImg,
     this.cname,
@@ -36,6 +37,7 @@ class JobViewX extends StatefulWidget {
     this.docID,
     this.cId,
     this.bidPrice,
+    this.canApply,
   });
 }
 
@@ -207,16 +209,23 @@ class _JobViewXState extends State<JobViewX> {
                       ),
                       InkWell(
                         onTap: () async {
-                          try {
-                            var params = await uploadCV(user.uId);
-                            setState(() {
-                              _fileName = params[0];
-                              _cvUrl = params[1];
-                            });
-                          } catch (e) {
+                          if (widget.canApply) {
+                            try {
+                              var params = await uploadCV(user.uId);
+                              setState(() {
+                                _fileName = params[0];
+                                _cvUrl = params[1];
+                              });
+                            } catch (e) {
+                              Fluttertoast.showToast(
+                                  msg: "Failed to upload cv",
+                                  backgroundColor: Colors.redAccent);
+                            }
+                          } else {
                             Fluttertoast.showToast(
-                                msg: "Failed to upload cv",
-                                backgroundColor: Colors.redAccent);
+                              msg: "Cannot Apply for this job...",
+                              backgroundColor: Colors.redAccent,
+                            );
                           }
                         },
                         child: Container(
@@ -263,27 +272,30 @@ class _JobViewXState extends State<JobViewX> {
                       return Expanded(
                         child: InkWell(
                           onTap: () async {
-                            UserProfile userProfile =
-                                await UserProfile().getUserFromSharedPrefs();
-                            if (!snapshot.data) {
-                              if (_cvUrl != null) {
-                                await JobService(
-                                        jId: widget.docID, uId: userProfile.uId)
-                                    .applyForJob(
-                                  name: userProfile.name,
-                                  email: userProfile.email,
-                                  status: JobStatus.PENDING.index,
-                                  jobTitle: widget.cTitle,
-                                  appliedDate: Timestamp.now(),
-                                  type: widget.cTye,
-                                  cvLink: _cvUrl ?? '',
-                                  employeeId: userProfile.uId,
-                                  phoneNumber: userProfile.mobileNumber,
-                                );
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: "Please Upload CV!",
-                                    backgroundColor: Colors.yellow);
+                            if (widget.canApply) {
+                              UserProfile userProfile =
+                                  await UserProfile().getUserFromSharedPrefs();
+                              if (!snapshot.data) {
+                                if (_cvUrl != null) {
+                                  await JobService(
+                                          jId: widget.docID,
+                                          uId: userProfile.uId)
+                                      .applyForJob(
+                                    name: userProfile.name,
+                                    email: userProfile.email,
+                                    status: ApplicantStatus.PENDING.index,
+                                    jobTitle: widget.cTitle,
+                                    appliedDate: Timestamp.now(),
+                                    type: widget.cTye,
+                                    cvLink: _cvUrl ?? '',
+                                    employeeId: userProfile.uId,
+                                    phoneNumber: userProfile.mobileNumber,
+                                  );
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: "Please Upload CV!",
+                                      backgroundColor: Colors.yellow);
+                                }
                               }
                             }
                           },
@@ -297,7 +309,9 @@ class _JobViewXState extends State<JobViewX> {
                             ),
                             child: Center(
                               child: Text(
-                                snapshot.data ? "APPLIED" : "APPLY NOW",
+                                widget.canApply
+                                    ? (snapshot.data ? "APPLIED" : "APPLY NOW")
+                                    : "NOT AVAILABLE",
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,

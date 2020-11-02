@@ -135,7 +135,7 @@ class _JobCardState extends State<JobCard> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         StreamBuilder<int>(
-                          stream: JobService(companyId: _job.companyId)
+                          stream: JobService(jId: _job.id)
                               .getCountFromJobApplicantsStream(_job.type),
                           builder: (ctx, snapshot) {
                             return Flexible(

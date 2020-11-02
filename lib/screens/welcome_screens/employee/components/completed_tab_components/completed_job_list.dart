@@ -17,7 +17,7 @@ class _CompletedJobsListState extends State<CompletedJobsList> {
     return Container(
       child: StreamBuilder<List<JobApplicant>>(
         stream:
-            JobService(uId: user.uId).getAllUserCompletedJobApplicationStream(),
+            JobService(uId: user.uId).getAllUserCompletedJobApplicationStream(),///TODO Fix it here....
         builder: (ctx, snapshot) {
           if (snapshot.hasData) {
             List<JobApplicant> jobApplicants = snapshot.data;

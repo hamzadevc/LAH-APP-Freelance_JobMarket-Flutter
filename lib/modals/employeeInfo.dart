@@ -10,17 +10,20 @@ class EmployeesInfo {
   final String city;
   final String address;
   final String dob;
+  final List<dynamic> appliedJobs;
 
-  EmployeesInfo(
-      {this.name,
-      this.imgUrl,
-      this.email,
-      this.dob,
-      this.country,
-      this.city,
-      this.address,
-      this.phoneNumber,
-      this.uId});
+  EmployeesInfo({
+    this.name,
+    this.imgUrl,
+    this.email,
+    this.dob,
+    this.country,
+    this.city,
+    this.address,
+    this.phoneNumber,
+    this.appliedJobs,
+    this.uId,
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -32,6 +35,7 @@ class EmployeesInfo {
       'city': city,
       'img': imgUrl,
       'dob': dob,
+      'appliedJobs': appliedJobs,
     };
   }
 
@@ -45,6 +49,7 @@ class EmployeesInfo {
       email: data['email'],
       imgUrl: data['img'],
       name: data['name'],
+      appliedJobs: data['appliedJobs'],
     );
   }
 

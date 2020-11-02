@@ -10,6 +10,8 @@ class Job {
   final String companyId;
   final Timestamp creationTime;
   final String bidPrice;
+  final int status;
+  final int limit;
 
   Job({
     this.description,
@@ -21,6 +23,8 @@ class Job {
     this.companyId,
     this.creationTime,
     this.bidPrice,
+    this.status,
+    this.limit,
   });
 
   Map<String, dynamic> toJson() => {
@@ -33,6 +37,12 @@ class Job {
         'companyId': companyId,
         'creationTime': creationTime,
         'bidPrice': bidPrice,
+        'status': status,
+        'limit': limit,
+      };
+
+  Map<String, dynamic> toJson2Status() => {
+        'status': status,
       };
 
   Job fromJson(Map<String, dynamic> data) => Job(
@@ -45,7 +55,11 @@ class Job {
         companyId: data['companyId'],
         creationTime: data['creationTime'],
         bidPrice: data['bidPrice'],
+        status: data['status'],
+        limit: data['limit'],
       );
 }
+
+enum JobStatus { PENDING, ON_PROGRESS, COMPLETED }
 
 enum JobType { CONTRACT, FREELANCER }
