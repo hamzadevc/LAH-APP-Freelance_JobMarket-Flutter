@@ -52,35 +52,37 @@ class _EditProfileState extends State<EditProfile>
             UserProfile userProfile = snapshot.data;
             return ModalProgressHUD(
               inAsyncCall: showSpinner,
-              child: new Container(
+              child: Container(
                 color: Colors.grey.shade300,
-                child: new ListView(
+                child: ListView(
                   children: <Widget>[
                     Column(
                       children: <Widget>[
-                        new Container(
+                        Container(
                           height: 250.0,
                           color: Colors.grey.shade300,
-                          child: new Column(
+                          child: Column(
                             children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.only(top: 20.0),
-                                child: new Stack(
+                                child: Stack(
                                   fit: StackFit.loose,
                                   children: <Widget>[
-                                    new Row(
+                                    Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: <Widget>[
-                                        new Container(
+                                        Container(
                                             width: 140.0,
                                             height: 140.0,
-                                            decoration: new BoxDecoration(
+                                            decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              image: new DecorationImage(
-                                                image: new NetworkImage(
+                                              image: DecorationImage(
+                                                image: userProfile?.imgUrl == null ?
+                                                    AssetImage('assets/images/mylogo.png')
+                                                    : NetworkImage(
                                                     userProfile.imgUrl),
                                                 fit: BoxFit.cover,
                                               ),
@@ -158,7 +160,7 @@ class _EditProfileState extends State<EditProfile>
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             new Text(
-                                              'Parsonal Information',
+                                              'Personal Information',
                                               style: TextStyle(
                                                   fontSize: 18.0,
                                                   fontWeight: FontWeight.bold),
@@ -257,7 +259,7 @@ class _EditProfileState extends State<EditProfile>
                                             },
                                             decoration: const InputDecoration(
                                                 hintText: "Enter Email ID"),
-                                            enabled: false,
+                                            enabled: !_status,
                                           ),
                                         ),
                                       ],
@@ -576,26 +578,74 @@ class _EditProfileState extends State<EditProfile>
                                       ],
                                     )),
                                 !_status
-                                    ? _getActionButtons(
-                                        userProfile: userProfile,
-                                        uId: user.uId,
-                                        type: _type ?? userProfile.type,
-                                        cvLink: _cvLink ?? userProfile.cvLink,
-                                        email: _email ?? userProfile.email,
-                                        address:
-                                            _address ?? userProfile.address,
-                                        cardNo: _cardNo ?? userProfile.cardNo,
-                                        city: _city ?? userProfile.city,
-                                        mobileNumber: _mobileNumber ??
-                                            userProfile.mobileNumber,
-                                        expiry: _expiry ?? userProfile.expiry,
-                                        dob: _dob ?? userProfile.dob,
-                                        country:
-                                            _country ?? userProfile.country,
-                                        imgUrl: _imgUrl ?? userProfile.imgUrl,
-                                        name: _name ?? userProfile.name,
-                                        cVV: _cVV ?? userProfile.cVV,
-                                      )
+                                    ? Padding(
+                                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
+                                  child: new Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(right: 10.0),
+                                          child: Container(
+                                            child: new RaisedButton(
+                                              child: new Text("Save"),
+                                              textColor: Colors.white,
+                                              color: Colors.green,
+                                              onPressed: () async {
+                                                await DatabaseService(uId: userProfile.uId).updateUser(
+                                                  name: _name ?? userProfile.name,
+                                                  imgUrl: _imgUrl  ?? userProfile.imgUrl,
+                                                  country: _country  ?? userProfile.country,
+                                                  dob: _dob  ?? userProfile.dob,
+                                                  expiry: _expiry  ?? userProfile.expiry,
+                                                  mobileNumber: _mobileNumber  ?? userProfile.mobileNumber,
+                                                  city: _city  ?? userProfile.city,
+                                                  cardNo: _cardNo  ?? userProfile.cardNo,
+                                                  address: _address  ?? userProfile.address,
+                                                  email: _email ?? userProfile.email,
+                                                  type: _type ?? userProfile.type,
+                                                  cvv: _cVV ?? userProfile.cVV,
+                                                );
+                                                Fluttertoast.showToast(msg: "Data Updated");
+
+                                                setState(() {
+                                                  _status = true;
+                                                  FocusScope.of(context).requestFocus(new FocusNode());
+                                                });
+                                              },
+                                              shape: new RoundedRectangleBorder(
+                                                borderRadius: new BorderRadius.circular(20.0),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        flex: 2,
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 10.0),
+                                          child: Container(
+                                            child: new RaisedButton(
+                                              child: new Text("Cancel"),
+                                              textColor: Colors.white,
+                                              color: Colors.red,
+                                              onPressed: () {
+                                                setState(() {
+                                                  _status = true;
+                                                  FocusScope.of(context).requestFocus(new FocusNode());
+                                                });
+                                              },
+                                              shape: new RoundedRectangleBorder(
+                                                  borderRadius: new BorderRadius.circular(20.0)),
+                                            ),
+                                          ),
+                                        ),
+                                        flex: 2,
+                                      ),
+                                    ],
+                                  ),
+                                )
                                     : new Container(),
                               ],
                             ),
@@ -622,93 +672,6 @@ class _EditProfileState extends State<EditProfile>
     super.dispose();
   }
 
-  Widget _getActionButtons({
-    UserProfile userProfile,
-    String name,
-    String email,
-    String mobileNumber,
-    String imgUrl,
-    String country,
-    String city,
-    String address,
-    String dob,
-    String cardNo,
-    String cVV,
-    String expiry,
-    int type,
-    String uId,
-    String cvLink,
-  }) {
-    return Padding(
-      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
-      child: new Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: Container(
-                child: new RaisedButton(
-                  child: new Text("Save"),
-                  textColor: Colors.white,
-                  color: Colors.green,
-                  onPressed: () async {
-                    await DatabaseService(uId: userProfile.uId).saveUser(
-                      name: name,
-                      imgUrl: imgUrl,
-                      country: country,
-                      dob: dob,
-                      expiry: expiry,
-                      mobileNumber: mobileNumber,
-                      city: city,
-                      cardNo: cardNo,
-                      address: address,
-                      email: email,
-                      type: type,
-                      cvv: cVV,
-                    );
-                    Fluttertoast.showToast(msg: "Data Updated");
-
-                    setState(() {
-                      _status = true;
-                      FocusScope.of(context).requestFocus(new FocusNode());
-                    });
-                  },
-                  shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0),
-                  ),
-                ),
-              ),
-            ),
-            flex: 2,
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Container(
-                child: new RaisedButton(
-                  child: new Text("Cancel"),
-                  textColor: Colors.white,
-                  color: Colors.red,
-                  onPressed: () {
-                    setState(() {
-                      _status = true;
-                      FocusScope.of(context).requestFocus(new FocusNode());
-                    });
-                  },
-                  shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(20.0)),
-                ),
-              ),
-            ),
-            flex: 2,
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _getEditIcon() {
     return new GestureDetector(
       child: new CircleAvatar(
@@ -731,7 +694,7 @@ class _EditProfileState extends State<EditProfile>
   }
 
   void chooseFile(String uId) async {
-    ImagePicker imagePicker;
+    ImagePicker imagePicker = ImagePicker();
     PickedFile selected =
         await imagePicker.getImage(source: ImageSource.gallery);
 
@@ -750,7 +713,7 @@ class _EditProfileState extends State<EditProfile>
     storageReference.getDownloadURL().then(
       (fileURL) async {
         setState(() {
-          showSpinner = true;
+          showSpinner = false;
         });
 
         await DatabaseService(uId: uId).updateUserProfileImageLink(

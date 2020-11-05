@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_application/modals/employeeInfo.dart';
 import 'package:job_application/modals/job_applicant.dart';
 import 'package:job_application/modals/user_profile.dart';
+import 'package:job_application/services/database_service.dart';
 import 'package:job_application/services/documents_service.dart';
 import 'package:job_application/services/job_service.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +45,28 @@ class JobViewX extends StatefulWidget {
 class _JobViewXState extends State<JobViewX> {
   String _cvUrl;
   String _fileName;
+  bool _isLoading = false;
+  UserProfile _userProfile;
+
+  @override
+  void initState() {
+    var user = Provider.of<User>(context, listen: false);
+    _getSessionType(widget.cId);
+    super.initState();
+  }
+
+  _toggleIsLoading() {
+    setState(() {
+      _isLoading = !_isLoading;
+    });
+  }
+
+  _getSessionType(String uId) async {
+    _toggleIsLoading();
+      _userProfile = await DatabaseService(uId: uId).getUser();
+    _toggleIsLoading();
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
@@ -54,7 +77,7 @@ class _JobViewXState extends State<JobViewX> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          widget.cname,
+          (_userProfile?.name ?? widget.cname) ?? '' ,
           style: TextStyle(
             color: Colors.black,
           ),
@@ -88,7 +111,9 @@ class _JobViewXState extends State<JobViewX> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(widget.cImg),
+                      image: _userProfile?.imgUrl == null ?
+                          AssetImage('assets/images/mylogo.png')
+                          : NetworkImage(_userProfile.imgUrl),
                       fit: BoxFit.fitWidth,
                     ),
                     borderRadius: BorderRadius.all(
@@ -269,10 +294,11 @@ class _JobViewXState extends State<JobViewX> {
                     stream: JobService(uId: user.uId, companyId: widget.cId)
                         .isAlreadyApplied(),
                     builder: (ctx, snapshot) {
+                      bool canApply = snapshot.data;
                       return Expanded(
                         child: InkWell(
                           onTap: () async {
-                            if (widget.canApply) {
+                            if (widget.canApply && canApply != null) {
                               UserProfile userProfile =
                                   await UserProfile().getUserFromSharedPrefs();
                               if (!snapshot.data) {
@@ -310,7 +336,7 @@ class _JobViewXState extends State<JobViewX> {
                             child: Center(
                               child: Text(
                                 widget.canApply
-                                    ? (snapshot.data ? "APPLIED" : "APPLY NOW")
+                                    ? ((canApply ?? false) ? "APPLIED" : "APPLY NOW")
                                     : "NOT AVAILABLE",
                                 style: TextStyle(
                                   fontSize: 18,

@@ -32,7 +32,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => SignIn(
-                            sessionType: SessionType.COMPANY,
+                            sessionType: SessionType.EMPLOYEE,
                           ),
                         ),
                       );

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:job_application/modals/job.dart';
 import 'package:job_application/modals/job_applicant.dart';
 import 'package:job_application/services/database_service.dart';
@@ -16,14 +17,18 @@ class JobService {
 
 // Create Job [Company Commands]
   Future createJob({
-    String title,
-    String description,
-    String location,
-    String qualification,
-    JobType jobType,
-    String companyId,
-    Timestamp creationTime,
-    String bidPrice,
+    @required String title,
+    @required String description,
+    @required String location,
+    @required String qualification,
+    @required int jobType,
+    @required String companyId,
+    @required Timestamp creationTime,
+    @required String bidPrice,
+    @required String numHr,
+    @required String numDays,
+    @required Timestamp needDate,
+    @required String limit,
   }) async {
     try {
       await _jobRef.add(Job(
@@ -31,11 +36,15 @@ class JobService {
         description: description,
         location: location,
         qualifications: qualification,
-        type: jobType.index,
+        type: jobType,
         companyId: companyId,
         creationTime: creationTime,
         bidPrice: bidPrice,
         status: JobStatus.PENDING.index,
+        numHours: numHr,
+        numDays: numDays,
+        needDate: needDate,
+        limit: limit,
       ).toJson());
     } catch (e) {
       throw e;
@@ -55,14 +64,15 @@ class JobService {
 // Get All Jobs Stream
   List<Job> _getJobFromStream(QuerySnapshot snapshot) {
     return snapshot.documents
-        .map((e) => Job(id: e.documentID).fromJson(e.data)).toList();
+        .map((e) => Job(id: e.documentID).fromJson(e.data))
+        .toList();
   }
 
   // Get Company Specific Jobs
   Stream<List<Job>> getAllCompanyJobStream() {
     return _jobRef
         .where('companyId', isEqualTo: companyId)
-        .orderBy('creationTime', descending: true)
+        //.orderBy('creationTime', descending: true)
         .snapshots()
         .map(_getJobFromStream);
   }
@@ -110,14 +120,12 @@ class JobService {
         .map(_getJobFromStream);
   }
 
-  _checkJobStatus(DocumentSnapshot snapshot){
+  _checkJobStatus(DocumentSnapshot snapshot) {
     return snapshot.data['status'] != 0;
   }
 
   Stream<bool> isStatusPending() {
-    return _jobRef.document(jId)
-        .snapshots()
-        .map(_checkJobStatus);
+    return _jobRef.document(jId).snapshots().map(_checkJobStatus);
   }
 
 // Delete job [Company Commands]
@@ -162,7 +170,6 @@ class JobService {
 
       // update user application list
       await DatabaseService(uId: uId).updateUserApplications(jId: jId);
-
     } catch (e) {
       throw e;
     }
@@ -195,7 +202,7 @@ class JobService {
     }
   }
 
-  _checkIsApplied(DocumentSnapshot snapshot) {
+  bool _checkIsApplied(DocumentSnapshot snapshot) {
     return snapshot.data != null;
   }
 
@@ -209,59 +216,73 @@ class JobService {
   }
 
   // get all applicants for company
-  List<JobApplicant> _getJobApplicantsStream(QuerySnapshot snapshot) {
-    return snapshot.documents
-        .map((e) => JobApplicant(id: e.documentID).fromJson(e.data)).toList();
+  JobApplicant _getJobApplicantsStream(DocumentSnapshot snapshot) {
+    return JobApplicant(id: snapshot.documentID).fromJson(snapshot.data);
   }
 
-  Stream<List<JobApplicant>> getAllUserJobApplicationStream() {
+  Stream<JobApplicant> getAllUserJobApplicationStream() {
     return _applicationRef
         .document(jId)
         .collection('applicants')
-        .where('employeeId', isEqualTo: uId)
-        .where('status', isLessThan: 3)
+        .document(uId)
         .snapshots()
         .map(_getJobApplicantsStream);
   }
 
-  Stream<List<JobApplicant>> getAllUserCompletedJobApplicationStream() {
-    return _applicationRef
-        .document(jId)
-        .collection('applicants')
-        .where('employeeId', isEqualTo: uId)
-        .where('status', isEqualTo: 3)
-        .snapshots()
-        .map(_getJobApplicantsStream);
+  JobApplicant _getCompletedJobApplicantsStream(DocumentSnapshot snapshot) {
+    if (snapshot.data['status'] == 3)
+      return JobApplicant(id: snapshot.documentID).fromJson(snapshot.data);
+    else
+      return null;
   }
 
-  Stream<List<JobApplicant>> getAllJobApplicantsStream() {
+  Stream<JobApplicant> getAllUserCompletedJobApplicationStream() {
     return _applicationRef
         .document(jId)
         .collection('applicants')
-        .orderBy('appliedDate', descending: true)
+        .document(uId)
         .snapshots()
-        .map(_getJobApplicantsStream);
+        .map(_getCompletedJobApplicantsStream);
   }
 
-  Stream<List<JobApplicant>> getAllContractJobApplicantsStream() {
-    return _applicationRef
-        .document(jId)
-        .collection('applicants')
-        .where('type', isEqualTo: 0)
-        .orderBy('appliedDate', descending: true)
-        .snapshots()
-        .map(_getJobApplicantsStream);
-  }
-
-  Stream<List<JobApplicant>> getAllFreelanceJobApplicantsStream() {
-    return _applicationRef
-        .document(jId)
-        .collection('applicants')
-        .where('type', isEqualTo: 1)
-        .orderBy('appliedDate', descending: true)
-        .snapshots()
-        .map(_getJobApplicantsStream);
-  }
+  // Stream<List<JobApplicant>> getAllUserCompletedJobApplicationStream() {
+  //   return _applicationRef
+  //       .document(jId)
+  //       .collection('applicants')
+  //       .where('employeeId', isEqualTo: uId)
+  //       .where('status', isEqualTo: 3)
+  //       .snapshots()
+  //       .map(_getJobApplicantsStream);
+  // }
+  //
+  // Stream<List<JobApplicant>> getAllJobApplicantsStream() {
+  //   return _applicationRef
+  //       .document(jId)
+  //       .collection('applicants')
+  //       .orderBy('appliedDate', descending: true)
+  //       .snapshots()
+  //       .map(_getJobApplicantsStream);
+  // }
+  //
+  // Stream<List<JobApplicant>> getAllContractJobApplicantsStream() {
+  //   return _applicationRef
+  //       .document(jId)
+  //       .collection('applicants')
+  //       .where('type', isEqualTo: 0)
+  //       .orderBy('appliedDate', descending: true)
+  //       .snapshots()
+  //       .map(_getJobApplicantsStream);
+  // }
+  //
+  // Stream<List<JobApplicant>> getAllFreelanceJobApplicantsStream() {
+  //   return _applicationRef
+  //       .document(jId)
+  //       .collection('applicants')
+  //       .where('type', isEqualTo: 1)
+  //       .orderBy('appliedDate', descending: true)
+  //       .snapshots()
+  //       .map(_getJobApplicantsStream);
+  // }
 
   // get applicant count stream
 

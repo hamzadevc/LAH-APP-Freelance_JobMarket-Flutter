@@ -31,7 +31,7 @@ class _CWelcomeState extends State<CWelcome> {
 
   @override
   void initState() {
-    var user = Provider.of<User>(context);
+    var user = Provider.of<User>(context, listen: false);
     _getUserData(user.uId);
     super.initState();
   }
@@ -129,11 +129,13 @@ class _CWelcomeState extends State<CWelcome> {
             ),
           ),
           body: _isLoading
-              ? Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.black87,
+              ? Container(
+                child: Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.white,
+                    ),
                   ),
-                )
+              )
               : TabBarView(
                   children: <Widget>[
                     StreamBuilder<List<JobApplicant>>(
@@ -343,6 +345,7 @@ class _CWelcomeState extends State<CWelcome> {
                                       itemBuilder:
                                           (BuildContext ctx, int index) {
                                         return jobCard(
+                                          userProfile: _userProfile,
                                           title: companyJobs[index].title,
                                           type: companyJobs[index].type,
                                           imgUrl: _userProfile.imgUrl,
@@ -374,8 +377,6 @@ class _CWelcomeState extends State<CWelcome> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => CompanyCategory(),
-
-                                    ///TODO fix create job start from here
                                   ),
                                 );
                               },
@@ -396,6 +397,7 @@ class _CWelcomeState extends State<CWelcome> {
   }
 
   Widget jobCard({
+    UserProfile userProfile,
     String title,
     String name,
     String imgUrl,
@@ -415,7 +417,7 @@ class _CWelcomeState extends State<CWelcome> {
         child: Column(
           children: <Widget>[
             Text(
-              name,
+              name ?? 'Company',
               style: companyStyle,
               textAlign: TextAlign.left,
             ),
@@ -440,7 +442,9 @@ class _CWelcomeState extends State<CWelcome> {
                     flex: 1,
                     child: Container(
                       child: CircleAvatar(
-                        child: Image.network(imgUrl),
+                        child: userProfile.imgUrl == null ?  
+                            Image.asset('assets/images/mylogo.png')
+                            : Image.network(userProfile.imgUrl, fit: BoxFit.cover,),
                         radius: 25,
                         backgroundColor: Colors.transparent,
                       ),

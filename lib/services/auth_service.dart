@@ -13,7 +13,7 @@ class Auth {
 
   Future logOut({String uId}) async {
     await _clearSession(uId: uId);
-    return await _auth.signOut().catchError((e) {
+    await _auth.signOut().catchError((e) {
       throw e;
     });
   }
@@ -84,7 +84,7 @@ class Auth {
       // create user
       await DatabaseService(uId: user.uid).saveUser(
         name: 'new user',
-        imgUrl: '',
+        imgUrl: null,
         email: email,
         country: '',
         dob: '',
@@ -117,7 +117,7 @@ class Auth {
       FirebaseUser user = logInUser.user;
 
       // cache user data
-      UserProfile userProfile = await DatabaseService(uId: user.uid).getUser();
+      UserProfile userProfile = await DatabaseService(uId: user?.uid).getUser();
       userProfile.saveUserInSharedPrefs();
 
       //Save Sessions

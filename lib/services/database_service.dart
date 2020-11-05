@@ -11,7 +11,7 @@ class DatabaseService {
   CollectionReference _usersRef = Firestore.instance.collection("Users");
 
   // Save user Data in FireStore
-  Future saveUser({
+  Future updateUser({
     String name,
     String email,
     String mobileNumber,
@@ -47,6 +47,43 @@ class DatabaseService {
     }
   }
 
+  // Save user Data in FireStore
+  Future saveUser({
+    String name,
+    String email,
+    String mobileNumber,
+    String address,
+    String country,
+    String city,
+    String imgUrl,
+    String dob,
+    String cardNo,
+    String cvv,
+    String expiry,
+    int type,
+  }) async {
+    try {
+      if (_usersRef == null) return;
+      await _usersRef.document(uId).setData(UserProfile(
+            uId: uId,
+            name: name,
+            mobileNumber: mobileNumber,
+            imgUrl: imgUrl,
+            expiry: expiry,
+            email: email,
+            dob: dob,
+            cVV: cvv,
+            country: country,
+            city: city,
+            cardNo: cardNo,
+            address: address,
+            type: type,
+          ).toJson());
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future updateUserProfileImageLink({
     String imgUrl,
   }) async {
@@ -55,7 +92,7 @@ class DatabaseService {
       await _usersRef.document(uId).updateData(UserProfile(
             uId: uId,
             imgUrl: imgUrl,
-          ).toJson());
+          ).toJsonImg());
     } catch (e) {
       throw e;
     }
@@ -106,13 +143,35 @@ class DatabaseService {
           .collection('JobsWithApplicants')
           .document(jId)
           .updateData(AllApplicants(completed: completed).toJson());
+
+      if(completed)
+        await updateUserCompletedJobsList(jId: jId);
+
+      await _usersRef.document(uId).updateData({});
     } catch (e) {
       throw e;
     }
   }
 
-  _getApplicantsFromStream(QuerySnapshot snapshot) {
-    snapshot.documents
+  Future updateUserCompletedJobsList({String jId}) async {
+    try {
+      // get list
+      DocumentSnapshot snapshot = await _usersRef.document(uId).get();
+      List<dynamic> jobs = snapshot.data['completedJobs'];
+
+      // add item to list
+      if (jobs != null) {
+        jobs.add(jId);
+      } else
+        jobs = [jId];
+
+      // update list in document
+      await _usersRef.document(uId).updateData({'completedJobs': jobs});
+    } catch (e) {}
+  }
+
+  List<JobApplicant> _getApplicantsFromStream(QuerySnapshot snapshot) {
+    return snapshot.documents
         .map((e) => JobApplicant(id: e.documentID).fromJson(e.data))
         .toList();
   }
@@ -123,6 +182,26 @@ class DatabaseService {
         .collection('JobsWithApplicants')
         .snapshots()
         .map(_getApplicantsFromStream);
+  }
+
+  List<dynamic> _getApplicantJobs(DocumentSnapshot snapshot) {
+    return UserProfile(uId: snapshot.documentID)
+        .fromJson(snapshot.data)
+        .appliedJobs;
+  }
+
+  Stream<List<dynamic>> getApplicantJobs() {
+    return _usersRef.document(uId).snapshots().map(_getApplicantJobs);
+  }
+
+  List<dynamic> _getApplicantCompletedJobs(DocumentSnapshot snapshot) {
+    return UserProfile(uId: snapshot.documentID)
+        .fromJson(snapshot.data)
+        .myCompletedJobs;
+  }
+
+  Stream<List<dynamic>> getCompletedJobs() {
+    return _usersRef.document(uId).snapshots().map(_getApplicantCompletedJobs);
   }
 
   // Ger User Data from fireStore
@@ -138,7 +217,7 @@ class DatabaseService {
   }
 
   // get user profile stream
-  _getDocumentStream(DocumentSnapshot snapshot) {
+  UserProfile _getDocumentStream(DocumentSnapshot snapshot) {
     return UserProfile(uId: snapshot.documentID).fromJson(snapshot.data);
   }
 

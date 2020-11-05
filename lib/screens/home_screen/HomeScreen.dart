@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             height: 30,
           ),
           Text(
-            "LAH APP",
+            "LAH",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
           )
         ],

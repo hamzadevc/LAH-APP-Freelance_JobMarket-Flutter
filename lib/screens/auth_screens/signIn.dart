@@ -96,9 +96,15 @@ class _SignInState extends State<SignIn> {
                         User user = await Auth()
                             .signIn(email, password, widget.sessionType);
                         // Save User Data in Shared Prefs
-                        UserProfile userProfile =
-                            await DatabaseService(uId: user.uId).getUser();
-                        await userProfile.saveUserInSharedPrefs();
+                        if(user != null) {
+                          UserProfile userProfile =
+                          await DatabaseService(uId: user?.uId).getUser();
+                          await userProfile.saveUserInSharedPrefs();
+                        }else{
+                          Fluttertoast.showToast(
+                              msg: "Email is not registered.",
+                              gravity: ToastGravity.CENTER);
+                        }
                         setState(() {
                           showSpinner = false;
                         });

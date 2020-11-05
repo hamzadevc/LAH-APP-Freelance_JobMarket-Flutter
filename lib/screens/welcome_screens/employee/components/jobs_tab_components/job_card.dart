@@ -20,7 +20,7 @@ class _JobCardState extends State<JobCard> {
   Job _job;
   UserProfile _userProfile;
   DatabaseService _databaseService;
-  bool _isLoading;
+  bool _isLoading = false;
 
   TextStyle companyStyle = TextStyle(fontSize: 25, fontWeight: FontWeight.bold);
   TextStyle jobTitleStyle = TextStyle(
@@ -30,7 +30,7 @@ class _JobCardState extends State<JobCard> {
 
   @override
   void initState() {
-    var user = Provider.of<User>(context);
+    var user = Provider.of<User>(context, listen: false);
     _getJobDetail(user.uId);
     super.initState();
   }
@@ -60,9 +60,7 @@ class _JobCardState extends State<JobCard> {
   Widget build(BuildContext context) {
     return _isLoading
         ? Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.black87,
-            ),
+            child: Text(''),
           )
         : Container(
             //padding: EdgeInsets.only(top: 100,bottom: 100),
@@ -104,8 +102,8 @@ class _JobCardState extends State<JobCard> {
                             child: Container(
                               child: CircleAvatar(
                                 child: _userProfile?.imgUrl == null
-                                    ? AssetImage('assets/images/myLogo.png')
-                                    : NetworkImage(_userProfile?.imgUrl),
+                                    ? Image.asset('assets/images/mylogo.png')
+                                    : Image.network(_userProfile?.imgUrl),
                                 radius: 25,
                                 backgroundColor: Colors.transparent,
                               ),
@@ -178,6 +176,7 @@ class _JobCardState extends State<JobCard> {
                                     docID: _job?.id ?? '',
                                     cId: _job?.companyId ?? '',
                                     bidPrice: _job?.bidPrice ?? '',
+                                    canApply: _job.status < 1,
                                   ),
                                 ),
                               );

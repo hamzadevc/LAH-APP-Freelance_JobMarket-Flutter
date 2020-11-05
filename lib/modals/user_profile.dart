@@ -57,6 +57,13 @@ class UserProfile {
     };
   }
 
+  Map<String, dynamic> toJsonImg() {
+    return {
+      'id': uId,
+      'img': imgUrl,
+    };
+  }
+
   Map<String, dynamic> toJson2Cv() {
     return {
       'cvLink': cvLink,

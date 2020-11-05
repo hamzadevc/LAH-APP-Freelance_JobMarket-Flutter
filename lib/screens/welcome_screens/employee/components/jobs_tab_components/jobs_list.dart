@@ -66,8 +66,9 @@ class JobsList extends StatelessWidget {
                 return Container(
                   height: 500,
                   child: jobs.isEmpty
-                      ? AssetImage('assets/images/emptyList.png')
+                      ? Image.asset('assets/images/emptyList.png')
                       : ListView.builder(
+                          shrinkWrap: false,
                           physics: BouncingScrollPhysics(),
                           itemCount: jobs.length,
                           itemBuilder: (BuildContext ctx, int index) {
@@ -80,7 +81,13 @@ class JobsList extends StatelessWidget {
                 );
               } else {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: Text(
+                    'Finding jobs for you...',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
                 );
               }
             },

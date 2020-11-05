@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_application/screens/welcome_screens/company/companyCreateJob.dart';
+import 'package:job_application/screens/welcome_screens/company/components/date_picker.dart';
 
 class Questions extends StatefulWidget {
   @override
@@ -8,9 +10,16 @@ class Questions extends StatefulWidget {
 }
 
 class _QuestionsState extends State<Questions> {
+
+  String _empNeed;
+  String _numDays;
+  Timestamp _inDate;
+  String _numHours;
+  String _price;
+
   List questions = [
     'How many employees do You need?',
-    'Write Date that you need the employee in?',
+    'WHen Do you need the employee in?',
     'How many days?',
     'How many hours per days?',
     'Price per Hour?'
@@ -35,7 +44,10 @@ class _QuestionsState extends State<Questions> {
                 ),
                 Text(questions[0]),
                 TextField(
-                  onChanged: ((value) {}),
+                  keyboardType: TextInputType.number,
+                  onChanged: ((value) {
+                    _empNeed = value;
+                  }),
                   decoration: InputDecoration(
                       hintText: "Write your answer here ..",
                       border: OutlineInputBorder(),
@@ -45,19 +57,21 @@ class _QuestionsState extends State<Questions> {
                   height: 20,
                 ),
                 Text(questions[1]),
-                TextField(
-                  onChanged: ((value) {}),
-                  decoration: InputDecoration(
-                      hintText: "Write your answer here ..",
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(FontAwesomeIcons.penAlt)),
+                CustomDatePicker(
+                  onChanged: (val){
+                    _inDate = val;
+                  },
+                  question: questions[1],
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 Text(questions[2]),
                 TextField(
-                  onChanged: ((value) {}),
+                  keyboardType: TextInputType.number,
+                  onChanged: ((value) {
+                    _numDays = value;
+                  }),
                   decoration: InputDecoration(
                       hintText: "Write your answer here ..",
                       border: OutlineInputBorder(),
@@ -68,7 +82,9 @@ class _QuestionsState extends State<Questions> {
                 ),
                 Text(questions[3]),
                 TextField(
-                  onChanged: ((value) {}),
+                  onChanged: ((value) {
+                    _numHours = value;
+                  }),
                   decoration: InputDecoration(
                       hintText: "Write your answer here ..",
                       border: OutlineInputBorder(),
@@ -79,7 +95,9 @@ class _QuestionsState extends State<Questions> {
                 ),
                 Text(questions[4]),
                 TextField(
-                  onChanged: ((value) {}),
+                  onChanged: ((value) {
+                    _price = value;
+                  }),
                   decoration: InputDecoration(
                       hintText: "Write your answer here ..",
                       border: OutlineInputBorder(),
@@ -92,7 +110,13 @@ class _QuestionsState extends State<Questions> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CreateJob()),
+                      MaterialPageRoute(builder: (context) => CreateJob(
+                        empNeed: _empNeed,
+                        inDate: _inDate,
+                        numDays: _numDays,
+                        numHours: _numHours,
+                        price: _price,
+                      )),
                     );
                   },
                   child: Container(

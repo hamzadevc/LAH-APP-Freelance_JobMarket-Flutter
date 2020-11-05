@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:job_application/modals/job_applicant.dart';
 import 'package:job_application/screens/welcome_screens/employee/components/applied_tab_components/applicant_card.dart';
+import 'package:job_application/services/database_service.dart';
 import 'package:job_application/services/job_service.dart';
 
 class AppliedJobsList extends StatelessWidget {
@@ -32,11 +33,11 @@ class AppliedJobsList extends StatelessWidget {
               padding: EdgeInsets.only(right: 32, left: 32, bottom: 8),
               child: Container(
                 height: MediaQuery.of(context).size.height / 2,
-                child: StreamBuilder<List<JobApplicant>>(
-                  stream: JobService(uId: uId).getAllUserJobApplicationStream(),
+                child: StreamBuilder<List<dynamic>>(
+                  stream: DatabaseService(uId: uId).getApplicantJobs(),
                   builder: (ctx, snapShot) {
                     if (snapShot.hasData) {
-                      List<JobApplicant> applications = snapShot.data;
+                      List<dynamic> applications = snapShot.data;
                       return applications.isEmpty
                           ? Center(
                               child: Container(
@@ -51,15 +52,28 @@ class AppliedJobsList extends StatelessWidget {
                               ),
                             )
                           : ListView.builder(
-                              physics: BouncingScrollPhysics(),
                               itemCount: applications.length,
                               itemBuilder: (ctx, index) {
-                                return ApplicantCard(
-                                  type: applications[index].type,
-                                  title: applications[index].jobTitle,
-                                  status: applications[index].status,
-                                  cId: applications[index].companyId,
-                                  jId: applications[index].jobId,
+                                return StreamBuilder<JobApplicant>(
+                                  stream: JobService(
+                                          uId: uId, jId: applications[index])
+                                      .getAllUserJobApplicationStream(),
+                                  builder: (ctx, snapshot) {
+                                    JobApplicant applicant = snapshot.data;
+                                    return ListView.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      itemCount: applications.length,
+                                      itemBuilder: (ctx, index) {
+                                        return ApplicantCard(
+                                          type: applicant?.type ?? '',
+                                          title: applicant?.jobTitle ?? '',
+                                          status: applicant?.status ?? '',
+                                          cId: applicant?.companyId ?? '',
+                                          jId: applicant?.jobId ?? '',
+                                        );
+                                      },
+                                    );
+                                  },
                                 );
                               },
                             );

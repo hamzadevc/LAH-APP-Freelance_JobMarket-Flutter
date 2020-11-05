@@ -18,7 +18,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
   UserProfile _userProfile;
   @override
   void initState() {
-    var user = Provider.of<User>(context);
+    var user = Provider.of<User>(context, listen: false);
     _getSessionType(user.uId);
     super.initState();
   }
@@ -38,8 +38,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
   }
 
   _getTypeFunction(String uId) {
-    if(_isLoading)
-      return JobService(uId: uId).getAllJobStream();
+    if (_isLoading) return JobService(uId: uId).getAllJobStream();
     if (_userProfile?.type == 0)
       return JobService(uId: uId).getContractJobsStream();
     else
@@ -49,7 +48,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    return StreamBuilder<List<Job>>(
+    return _isLoading ? Text('') : StreamBuilder<List<Job>>(
       stream: _getTypeFunction(user.uId),
       builder: (context, snapshot) {
         List<Job> jobs = snapshot.data;
@@ -63,8 +62,12 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
               itemBuilder: (BuildContext ctx, int index) {
                 return jobs.isEmpty
                     ? Container(
-                        child: Image.asset(
-                          'assets/images/emptyList.png',
+                        child: Text(
+                          "No Job Found...",
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       )
                     : GestureDetector(
@@ -81,6 +84,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
                                 cTitle: jobs[index].title,
                                 cTye: jobs[index].type,
                                 docID: jobs[index].id,
+                                canApply: jobs[index].status < 1,
                               ),
                             ),
                           );
@@ -101,6 +105,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   StreamBuilder<UserProfile>(
                                     stream: DatabaseService(
@@ -115,7 +120,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
                                           image: DecorationImage(
                                             image: userProfile == null
                                                 ? AssetImage(
-                                                    'assets/images/myLogo.png')
+                                                    'assets/images/mylogo.png')
                                                 : NetworkImage(
                                                     userProfile?.imgUrl),
                                             fit: BoxFit.fitWidth,
@@ -126,6 +131,9 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
                                         ),
                                       );
                                     },
+                                  ),
+                                  SizedBox(
+                                    width: 6.0,
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
@@ -145,7 +153,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
                                             : 'FREELANCER',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 14,
+                                          fontSize: 10,
                                         ),
                                       ),
                                     ),
