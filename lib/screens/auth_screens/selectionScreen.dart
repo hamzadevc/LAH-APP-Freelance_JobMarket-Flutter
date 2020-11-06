@@ -37,7 +37,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                     iconSize: 40.0,
                     width: 250,
                     height: 70,
-                    onTap: () {
+                    onClick: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -58,7 +58,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                     iconSize: 40.0,
                     width: 250,
                     height: 70,
-                    onTap: () {
+                    onClick: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(

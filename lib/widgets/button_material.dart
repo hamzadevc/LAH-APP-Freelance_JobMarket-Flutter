@@ -11,7 +11,7 @@ class MaterialButtonShape extends StatelessWidget {
     this.textColor,
     this.iconColor,
     this.iconSize = 30,
-    this.onClick, Null Function() onTap,
+    this.onClick,
   }) : super(key: key);
 
   final double width;
