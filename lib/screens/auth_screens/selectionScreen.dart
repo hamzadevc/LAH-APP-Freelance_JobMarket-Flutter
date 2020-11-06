@@ -31,7 +31,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                     text: 'EMPLOYEE',
                     // icon: Icons.home,
                     icon: Icons.person_outline,
-                    color: Colors.black54,
+                    color: Colors.black,
                     textColor: Colors.white,
                     iconColor: Colors.black,
                     iconSize: 40.0,
@@ -52,7 +52,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                   MaterialButtonShape(
                     text: 'BUSINESS',
                     icon: Icons.home_repair_service_outlined,
-                    color: Colors.black54,
+                    color: Colors.black,
                     textColor: Colors.white,
                     iconColor: Colors.black,
                     iconSize: 40.0,
