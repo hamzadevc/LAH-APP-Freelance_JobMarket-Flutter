@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class WaveClipPath extends StatelessWidget {
@@ -11,10 +13,15 @@ class WaveClipPath extends StatelessWidget {
             SizedBox(
               height: 40,
             ),
-            Image.asset(
-              "assets/images/mylogo.png",
-              height: 150,
-            ),
+
+            Transform.rotate(
+              origin: Offset(-0, -0),
+              angle: pi / 2.5,
+              child: Image.asset(
+                "assets/images/mylogo.png",
+                height: 150,
+              ),
+              ),
           ],
         ),
         width: double.infinity,
@@ -31,6 +38,7 @@ class WaveClipPath extends StatelessWidget {
     );
   }
 }
+
 
 class _WaveClipper1 extends CustomClipper<Path> {
   @override
@@ -58,3 +66,4 @@ class _WaveClipper1 extends CustomClipper<Path> {
     return false;
   }
 }
+
