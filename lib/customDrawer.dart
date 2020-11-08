@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:job_application/modals/employeeInfo.dart';
 import 'package:job_application/screens/profile_screen/editProfile.dart';
@@ -120,10 +122,14 @@ class CustomDrawer {
                 SizedBox(
                   height: 30,
                 ),
-                Image.asset(
-                  'assets/images/mylogo.png',
-                  height: 88,
-                )
+                Transform.rotate(
+                  origin: Offset(-0, -0),
+                  angle: pi / 2.5,
+                  child: Image.asset(
+                    "assets/images/mylogo.png",
+                    height: 88,
+                  ),
+                ),
               ],
             ),
           ),
