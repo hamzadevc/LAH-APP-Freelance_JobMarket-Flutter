@@ -9,6 +9,8 @@ class JobService {
   final String jId;
   final String companyId;
 
+  String _applications = 'applications';
+
   JobService({this.uId, this.jId, this.companyId});
 
   final CollectionReference _jobRef = Firestore.instance.collection('jobs');
@@ -148,25 +150,29 @@ class JobService {
     int type,
     Timestamp appliedDate,
     String jobTitle,
+    String companyId,
   }) async {
     try {
       // apply for job....
       await _applicationRef
-          .document(jId)
-          .collection('applicants')
           .document(uId)
-          .setData(JobApplicant(
-            status: status,
-            phoneNumber: phoneNumber,
-            employeeName: name,
-            employeeId: employeeId,
-            cvLink: cvLink,
-            email: email,
-            type: type,
-            appliedDate: appliedDate,
-            jobId: jId,
-            jobTitle: jobTitle,
-          ).toJson());
+          .collection(_applications)
+          .document(jId)
+          .setData(
+            JobApplicant(
+              status: status,
+              phoneNumber: phoneNumber,
+              employeeName: name,
+              employeeId: employeeId,
+              cvLink: cvLink,
+              email: email,
+              type: type,
+              appliedDate: appliedDate,
+              jobId: jId,
+              jobTitle: jobTitle,
+              companyId: companyId,
+            ).toJson(),
+          );
 
       // update user application list
       await DatabaseService(uId: uId).updateUserApplications(jId: jId);
@@ -178,9 +184,9 @@ class JobService {
   Future updateCv({String cvLink}) async {
     try {
       await _applicationRef
-          .document(jId)
-          .collection('applicants')
           .document(uId)
+          .collection(_applications)
+          .document(jId)
           .updateData(JobApplicant(cvLink: cvLink).toJson2Cv());
     } catch (e) {
       throw e;
@@ -190,9 +196,9 @@ class JobService {
   Future<JobApplicant> getCvLink() async {
     try {
       DocumentSnapshot snapshot = await _applicationRef
-          .document(jId)
-          .collection('applicants')
           .document(uId)
+          .collection(_applications)
+          .document(jId)
           .get();
       if (snapshot != null)
         return JobApplicant(id: snapshot.documentID).fromJson2Cv(snapshot.data);
@@ -203,14 +209,14 @@ class JobService {
   }
 
   bool _checkIsApplied(DocumentSnapshot snapshot) {
-    return snapshot.data != null;
+    return snapshot.data == null;
   }
 
   Stream<bool> isAlreadyApplied() {
     return _applicationRef
-        .document(jId)
-        .collection('applicants')
         .document(uId)
+        .collection(_applications)
+        .document(jId)
         .snapshots()
         .map(_checkIsApplied);
   }
@@ -220,11 +226,11 @@ class JobService {
     return JobApplicant(id: snapshot.documentID).fromJson(snapshot.data);
   }
 
-  Stream<JobApplicant> getAllUserJobApplicationStream() {
+  Stream<JobApplicant> getUserJobApplicationStream() {
     return _applicationRef
-        .document(jId)
-        .collection('applicants')
         .document(uId)
+        .collection(_applications)
+        .document(jId)
         .snapshots()
         .map(_getJobApplicantsStream);
   }
@@ -238,9 +244,9 @@ class JobService {
 
   Stream<JobApplicant> getAllUserCompletedJobApplicationStream() {
     return _applicationRef
-        .document(jId)
-        .collection('applicants')
         .document(uId)
+        .collection(_applications)
+        .document(jId)
         .snapshots()
         .map(_getCompletedJobApplicantsStream);
   }
@@ -292,8 +298,8 @@ class JobService {
 
   Stream<int> getCountFromJobApplicantsStream(int type) {
     return _applicationRef
-        .document(jId)
-        .collection('applicants')
+        .document(uId)
+        .collection(_applications)
         .where('type', isEqualTo: type)
         .snapshots()
         .map(_countFromStream);
@@ -303,9 +309,9 @@ class JobService {
   Future changeApplicantStatus({int status}) async {
     try {
       await _applicationRef
-          .document(jId)
-          .collection('applicants')
           .document(uId)
+          .collection(_applications)
+          .document(jId)
           .updateData(JobApplicant(status: status).toJson2Status());
     } catch (e) {
       throw e;
@@ -327,9 +333,9 @@ class JobService {
   Future deleteApplicant() async {
     try {
       await _applicationRef
-          .document(jId)
-          .collection('applicants')
           .document(uId)
+          .collection(_applications)
+          .document(jId)
           .delete();
     } catch (e) {
       throw e;

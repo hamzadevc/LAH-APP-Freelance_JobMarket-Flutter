@@ -52,27 +52,25 @@ class AppliedJobsList extends StatelessWidget {
                               ),
                             )
                           : ListView.builder(
-                              itemCount: applications.length,
+                              itemCount: applications?.length ?? 0,
                               itemBuilder: (ctx, index) {
                                 return StreamBuilder<JobApplicant>(
                                   stream: JobService(
                                           uId: uId, jId: applications[index])
-                                      .getAllUserJobApplicationStream(),
+                                      .getUserJobApplicationStream(),
                                   builder: (ctx, snapshot) {
-                                    JobApplicant applicant = snapshot.data;
-                                    return ListView.builder(
-                                      physics: BouncingScrollPhysics(),
-                                      itemCount: applications.length,
-                                      itemBuilder: (ctx, index) {
-                                        return ApplicantCard(
-                                          type: applicant?.type ?? '',
-                                          title: applicant?.jobTitle ?? '',
-                                          status: applicant?.status ?? '',
-                                          cId: applicant?.companyId ?? '',
-                                          jId: applicant?.jobId ?? '',
-                                        );
-                                      },
-                                    );
+                                    if(snapshot.hasData) {
+                                      JobApplicant applicant = snapshot.data;
+                                      return ApplicantCard(
+                                        type: applicant?.type ?? '',
+                                        title: applicant?.jobTitle ?? '',
+                                        status: applicant?.status ?? '',
+                                        cId: applicant?.companyId ?? '',
+                                        jId: applicant?.jobId ?? '',
+                                      );
+                                    }else{
+                                      return Text('');
+                                    }
                                   },
                                 );
                               },

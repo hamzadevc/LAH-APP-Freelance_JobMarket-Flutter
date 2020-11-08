@@ -28,11 +28,11 @@ class ApplicantCard extends StatefulWidget {
 class _ApplicantCardState extends State<ApplicantCard> {
   Job _job;
   UserProfile _userProfile;
-  bool _isLoading;
+  bool _isLoading = false;
 
   @override
   void initState() {
-    var user = Provider.of<User>(context);
+    var user = Provider.of<User>(context, listen: false);
     _getJobDetail(user.uId);
     super.initState();
   }
@@ -59,7 +59,7 @@ class _ApplicantCardState extends State<ApplicantCard> {
   }
 
   Color _getStatusColor(int status) {
-    if (status == 0) return Colors.yellowAccent;
+    if (status == 0) return Colors.lightGreenAccent;
     if (status == 1) return Colors.deepOrange;
     if (status == 2) return Colors.redAccent;
     else
@@ -107,7 +107,7 @@ class _ApplicantCardState extends State<ApplicantCard> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: _userProfile?.imgUrl == null
-                        ? AssetImage('assets/images/myLogo.png')
+                        ? AssetImage('assets/images/mylogo.png')
                        : NetworkImage(_userProfile?.imgUrl),
                       fit: BoxFit.fitWidth,
                     ),
@@ -157,7 +157,7 @@ class _ApplicantCardState extends State<ApplicantCard> {
                   child: Container(
                     height: 45,
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: Colors.blueGrey,
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
                       ),

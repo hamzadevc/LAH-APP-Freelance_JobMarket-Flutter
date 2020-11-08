@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/modals/job_applicant.dart';
 import 'package:job_application/modals/user_profile.dart';
 
 class DatabaseService {
@@ -104,9 +103,14 @@ class DatabaseService {
       UserProfile userProfile = await getUser();
       List<dynamic> appList = userProfile.appliedJobs;
       if (appList != null && appList.isNotEmpty) {
-        if (appList.contains(jId))
+        if (appList.contains(jId)) {
           appList.remove(jId);
-        else
+          await _usersRef
+              .document(uId)
+              .collection('applications')
+              .document(jId)
+              .delete();
+        } else
           appList.add(jId);
       } else {
         appList = List<dynamic>();
@@ -127,8 +131,9 @@ class DatabaseService {
           .document(cId)
           .collection('JobsWithApplicants')
           .document(jId)
-          .updateData(
-              AllApplicants(applicant: uId, completed: completed).toJson());
+          .setData(
+            AllApplicants(applicant: uId, completed: completed).toJson(),
+          );
     } catch (e) {
       throw e;
     }
@@ -144,8 +149,7 @@ class DatabaseService {
           .document(jId)
           .updateData(AllApplicants(completed: completed).toJson());
 
-      if(completed)
-        await updateUserCompletedJobsList(jId: jId);
+      if (completed) await updateUserCompletedJobsList(jId: jId);
 
       await _usersRef.document(uId).updateData({});
     } catch (e) {
@@ -170,13 +174,13 @@ class DatabaseService {
     } catch (e) {}
   }
 
-  List<JobApplicant> _getApplicantsFromStream(QuerySnapshot snapshot) {
+  List<AllApplicants> _getApplicantsFromStream(QuerySnapshot snapshot) {
     return snapshot.documents
-        .map((e) => JobApplicant(id: e.documentID).fromJson(e.data))
+        .map((e) => AllApplicants(id: e.documentID).fromJson(e.data))
         .toList();
   }
 
-  Stream<List<JobApplicant>> getApplicantsStream() {
+  Stream<List<AllApplicants>> getApplicantsStream() {
     return _usersRef
         .document(uId)
         .collection('JobsWithApplicants')
@@ -184,23 +188,23 @@ class DatabaseService {
         .map(_getApplicantsFromStream);
   }
 
-  List<dynamic> _getApplicantJobs(DocumentSnapshot snapshot) {
+  List<UserProfile> _getApplicantJobs(DocumentSnapshot snapshot) {
     return UserProfile(uId: snapshot.documentID)
         .fromJson(snapshot.data)
         .appliedJobs;
   }
 
-  Stream<List<dynamic>> getApplicantJobs() {
+  Stream<List<UserProfile>> getApplicantJobs() {
     return _usersRef.document(uId).snapshots().map(_getApplicantJobs);
   }
 
-  List<dynamic> _getApplicantCompletedJobs(DocumentSnapshot snapshot) {
+  List<UserProfile> _getApplicantCompletedJobs(DocumentSnapshot snapshot) {
     return UserProfile(uId: snapshot.documentID)
         .fromJson(snapshot.data)
         .myCompletedJobs;
   }
 
-  Stream<List<dynamic>> getCompletedJobs() {
+  Stream<List<UserProfile>> getCompletedJobs() {
     return _usersRef.document(uId).snapshots().map(_getApplicantCompletedJobs);
   }
 
