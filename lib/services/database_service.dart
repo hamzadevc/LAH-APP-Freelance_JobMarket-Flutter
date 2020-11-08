@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_application/modals/employeeInfo.dart';
+import 'package:job_application/modals/job_applicant.dart';
 import 'package:job_application/modals/user_profile.dart';
 
 class DatabaseService {
@@ -147,7 +148,7 @@ class DatabaseService {
           .document(cId)
           .collection('JobsWithApplicants')
           .document(jId)
-          .updateData(AllApplicants(completed: completed).toJson());
+          .updateData(AllApplicants(completed: completed, applicant: uId).toJson());
 
       if (completed) await updateUserCompletedJobsList(jId: jId);
 
@@ -188,13 +189,13 @@ class DatabaseService {
         .map(_getApplicantsFromStream);
   }
 
-  List<UserProfile> _getApplicantJobs(DocumentSnapshot snapshot) {
+  List<dynamic> _getApplicantJobs(DocumentSnapshot snapshot) {
     return UserProfile(uId: snapshot.documentID)
         .fromJson(snapshot.data)
         .appliedJobs;
   }
 
-  Stream<List<UserProfile>> getApplicantJobs() {
+  Stream<List<dynamic>> getApplicantJobs() {
     return _usersRef.document(uId).snapshots().map(_getApplicantJobs);
   }
 

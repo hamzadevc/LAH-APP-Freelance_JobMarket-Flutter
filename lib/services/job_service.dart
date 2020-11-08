@@ -130,6 +130,25 @@ class JobService {
     return _jobRef.document(jId).snapshots().map(_checkJobStatus);
   }
 
+  // add applicants to the job
+  Future addApplicantsWithJobs({String applicantId}) async {
+    try{
+      // get all applicants
+      Job job = await getJob();
+      if(job != null){
+        if(job.allApplicants != null && job.allApplicants.isNotEmpty){
+          job.allApplicants.add(applicantId);
+        }
+        else
+          job = Job(allApplicants: [applicantId], id: jId);
+        await _jobRef.document(jId).updateData(job.toJsonAllApplicants());
+      }
+      // add or update applicants
+    }catch(e){
+      print(e);
+    }
+  }
+
 // Delete job [Company Commands]
   Future deleteJob() async {
     try {
@@ -292,15 +311,13 @@ class JobService {
 
   // get applicant count stream
 
-  int _countFromStream(QuerySnapshot snapshot) {
-    return snapshot.documents.length;
+  int _countFromStream(DocumentSnapshot snapshot) {
+    return Job().fromJson(snapshot.data).allApplicants?.length ?? 0;
   }
 
   Stream<int> getCountFromJobApplicantsStream(int type) {
-    return _applicationRef
-        .document(uId)
-        .collection(_applications)
-        .where('type', isEqualTo: type)
+    return _jobRef
+        .document(jId)
         .snapshots()
         .map(_countFromStream);
   }

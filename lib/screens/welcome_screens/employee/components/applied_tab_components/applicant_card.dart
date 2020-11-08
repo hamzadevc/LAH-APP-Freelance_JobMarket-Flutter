@@ -60,7 +60,7 @@ class _ApplicantCardState extends State<ApplicantCard> {
 
   Color _getStatusColor(int status) {
     if (status == 0) return Colors.lightGreenAccent;
-    if (status == 1) return Colors.deepOrange;
+    if (status == 1) return Colors.yellowAccent;
     if (status == 2) return Colors.redAccent;
     else
       return Colors.greenAccent;

@@ -72,4 +72,4 @@ class JobApplicant {
   );
 }
 
-enum ApplicantStatus { PENDING, PROCESSING, COMPLETED, REJECTED }
+enum ApplicantStatus { PENDING, PROCESSING, REJECTED, COMPLETED }

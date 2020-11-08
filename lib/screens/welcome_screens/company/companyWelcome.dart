@@ -130,12 +130,12 @@ class _CWelcomeState extends State<CWelcome> {
           ),
           body: _isLoading
               ? Container(
-                child: Center(
+                  child: Center(
                     child: CircularProgressIndicator(
                       backgroundColor: Colors.white,
                     ),
                   ),
-              )
+                )
               : TabBarView(
                   children: <Widget>[
                     StreamBuilder<List<AllApplicants>>(
@@ -163,171 +163,197 @@ class _CWelcomeState extends State<CWelcome> {
                                   itemCount: allApplicants.length,
                                   itemBuilder: (BuildContext ctx, int index) {
                                     return StreamBuilder<JobApplicant>(
-                                      stream: JobService(uId: allApplicants[index].applicant, jId: allApplicants[index].id)
-                                      .getUserJobApplicationStream(),
-                                      builder: (ctx, snapshot){
-                                        if(snapshot.hasData) {
-                                          JobApplicant jobApplicant = snapshot.data;
+                                      stream: JobService(
+                                              uId: allApplicants[index]
+                                                  .applicant,
+                                              jId: allApplicants[index].id)
+                                          .getUserJobApplicationStream(),
+                                      builder: (ctx, snapshot) {
+                                        if (snapshot.hasData) {
+                                          JobApplicant jobApplicant =
+                                              snapshot.data;
                                           return ListTile(
-                                            title: Text(
-                                                jobApplicant
-                                                    .employeeName),
+                                            title:
+                                                Text(jobApplicant.employeeName),
                                             subtitle: Column(
                                               crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                               children: <Widget>[
-                                                Text(jobApplicant
-                                                    .jobTitle),
+                                                Text(jobApplicant.jobTitle),
                                                 Row(
                                                   children: <Widget>[
-                                                    Expanded(
-                                                      child: FlatButton(
-                                                        child: Text(
-                                                          'Accept',
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .white),
-                                                        ),
-                                                        onPressed: () async {
-                                                          var status = ApplicantStatus
-                                                              .PROCESSING.index;
-                                                          // Change applicant status
-                                                          await JobService(
-                                                            jId: jobApplicant
-                                                                .jobId,
-                                                            companyId: user.uId,
-                                                            uId: jobApplicant
-                                                                .employeeId,
-                                                          )
-                                                              .changeApplicantStatus(
-                                                            status: status,
-                                                          );
-
-                                                          // change job status
-                                                          await JobService(
-                                                            jId: jobApplicant
-                                                                .jobId,
-                                                          ).changeJobStatus(
-                                                              status: JobStatus
-                                                                  .ON_PROGRESS
-                                                                  .index);
-                                                          // user id added with job
-                                                          // await DatabaseService(
-                                                          //   uId: jobApplicants[index]
-                                                          //       .employeeId,
-                                                          // ).updateEmployeeIdInCompanyProfile(
-                                                          //     jId:
-                                                          //         jobApplicants[index]
-                                                          //             .jobId,
-                                                          //     cId:
-                                                          //         jobApplicants[index]
-                                                          //             .companyId,
-                                                          //     completed: false);
-                                                        },
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Expanded(
-                                                      child: FlatButton(
-                                                        child: Text(
-                                                          'Decline',
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .white),
-                                                        ),
-                                                        onPressed: () async {
-                                                          var status = ApplicantStatus
-                                                              .REJECTED.index;
-                                                          await JobService(
-                                                            jId: jobApplicant
-                                                                .jobId,
-                                                            companyId: user.uId,
-                                                            uId: jobApplicant
-                                                                .employeeId,
-                                                          )
-                                                              .changeApplicantStatus(
-                                                            status: status,
-                                                          );
-
-                                                          await JobService(
-                                                            jId: jobApplicant
-                                                                .jobId,
-                                                            companyId: user.uId,
-                                                            uId: jobApplicant
-                                                                .employeeId,
-                                                          ).deleteApplicant();
-
-                                                          await DatabaseService(
+                                                    if (jobApplicant.status !=
+                                                        3)
+                                                      Expanded(
+                                                        child: FlatButton(
+                                                          child: Text(
+                                                            'Accept',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          onPressed: () async {
+                                                            var status =
+                                                                ApplicantStatus
+                                                                    .PROCESSING
+                                                                    .index;
+                                                            // Change applicant status
+                                                            await JobService(
+                                                              jId: jobApplicant
+                                                                  .jobId,
+                                                              companyId:
+                                                                  user.uId,
                                                               uId: jobApplicant
-                                                                  .employeeId)
-                                                              .updateUserApplications(
-                                                            jId: jobApplicant
-                                                                .jobId,
-                                                          );
-                                                        },
-                                                        color: Colors.red,
+                                                                  .employeeId,
+                                                            ).changeApplicantStatus(
+                                                              status: status,
+                                                            );
+
+                                                            // change job status
+                                                            await JobService(
+                                                              jId: jobApplicant
+                                                                  .jobId,
+                                                            ).changeJobStatus(
+                                                                status: JobStatus
+                                                                    .ON_PROGRESS
+                                                                    .index);
+                                                            await JobService(
+                                                              jId: jobApplicant
+                                                                  .jobId,
+                                                            ).addApplicantsWithJobs(
+                                                                applicantId:
+                                                                    jobApplicant
+                                                                        .id);
+                                                          },
+                                                          color:
+                                                              Colors.blueGrey,
+                                                        ),
                                                       ),
-                                                    ),
                                                     SizedBox(
                                                       width: 5,
                                                     ),
-                                                    Expanded(
-                                                      child: FlatButton(
-                                                        child: Text(
-                                                          'Mark As Complete',
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .white),
+                                                    if (jobApplicant.status < 1)
+                                                      Expanded(
+                                                        child: FlatButton(
+                                                          child: Text(
+                                                            'Decline',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          onPressed: () async {
+                                                            var status =
+                                                                ApplicantStatus
+                                                                    .REJECTED
+                                                                    .index;
+                                                            await JobService(
+                                                              jId: jobApplicant
+                                                                  .jobId,
+                                                              companyId:
+                                                                  user.uId,
+                                                              uId: jobApplicant
+                                                                  .employeeId,
+                                                            ).changeApplicantStatus(
+                                                              status: status,
+                                                            );
+
+                                                            await JobService(
+                                                              jId: jobApplicant
+                                                                  .jobId,
+                                                              companyId:
+                                                                  user.uId,
+                                                              uId: jobApplicant
+                                                                  .employeeId,
+                                                            ).deleteApplicant();
+
+                                                            await DatabaseService(
+                                                                    uId: jobApplicant
+                                                                        .employeeId)
+                                                                .updateUserApplications(
+                                                              jId: jobApplicant
+                                                                  .jobId,
+                                                            );
+                                                          },
+                                                          color: Colors.red,
                                                         ),
-                                                        onPressed: () async {
-                                                          var status = ApplicantStatus
-                                                              .COMPLETED.index;
-                                                          await JobService(
-                                                            jId: jobApplicant
-                                                                .jobId,
-                                                            companyId: user.uId,
-                                                            uId: jobApplicant
-                                                                .employeeId,
-                                                          )
-                                                              .changeApplicantStatus(
-                                                            status: status,
-                                                          );
-
-                                                          // change job status
-                                                          await JobService(
-                                                            jId: jobApplicant
-                                                                .jobId,
-                                                          ).changeJobStatus(
-                                                            status: JobStatus
-                                                                .COMPLETED
-                                                                .index,
-                                                          );
-
-                                                          await DatabaseService(
-                                                            uId: jobApplicant
-                                                                .employeeId,
-                                                          )
-                                                              .updateJobStatusInCompanyProfile(
-                                                            jId: jobApplicant
-                                                                .jobId,
-                                                            cId: jobApplicant
-                                                                .companyId,
-                                                            completed: true,
-                                                          );
-                                                        },
-                                                        color: Colors.black87,
                                                       ),
+                                                    SizedBox(
+                                                      width: 5,
                                                     ),
+                                                    if (jobApplicant.status !=
+                                                        3)
+                                                      Expanded(
+                                                        child: FlatButton(
+                                                          child: Text(
+                                                            'Mark As Complete',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          onPressed: () async {
+                                                            var status =
+                                                                ApplicantStatus
+                                                                    .COMPLETED
+                                                                    .index;
+                                                            await JobService(
+                                                              jId: jobApplicant
+                                                                  .jobId,
+                                                              companyId:
+                                                                  user.uId,
+                                                              uId: jobApplicant
+                                                                  .employeeId,
+                                                            ).changeApplicantStatus(
+                                                              status: status,
+                                                            );
+
+                                                            // change job status
+                                                            await JobService(
+                                                              jId: jobApplicant
+                                                                  .jobId,
+                                                            ).changeJobStatus(
+                                                              status: JobStatus
+                                                                  .COMPLETED
+                                                                  .index,
+                                                            );
+
+                                                            await DatabaseService(
+                                                              uId: jobApplicant
+                                                                  .employeeId,
+                                                            ).updateJobStatusInCompanyProfile(
+                                                              jId: jobApplicant
+                                                                  .jobId,
+                                                              cId: jobApplicant
+                                                                  .companyId,
+                                                              completed: true,
+                                                            );
+                                                          },
+                                                          color: Colors
+                                                              .greenAccent,
+                                                        ),
+                                                      ),
+                                                    if (jobApplicant.status ==
+                                                        3)
+                                                      Expanded(
+                                                        child: Container(
+                                                          child: Card(
+                                                            child: Text(
+                                                              'Completed',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                            color: Colors
+                                                                .greenAccent,
+                                                          ),
+                                                        ),
+                                                      ),
                                                   ],
                                                 )
                                               ],
                                             ),
                                             trailing: Icon(Icons.message),
                                           );
-                                        }else{
+                                        } else {
                                           return Text('');
                                         }
                                       },
@@ -465,9 +491,12 @@ class _CWelcomeState extends State<CWelcome> {
                     flex: 1,
                     child: Container(
                       child: CircleAvatar(
-                        child: userProfile.imgUrl == null ?  
-                            Image.asset('assets/images/mylogo.png')
-                            : Image.network(userProfile.imgUrl, fit: BoxFit.cover,),
+                        child: userProfile.imgUrl == null
+                            ? Image.asset('assets/images/mylogo.png')
+                            : Image.network(
+                                userProfile.imgUrl,
+                                fit: BoxFit.cover,
+                              ),
                         radius: 25,
                         backgroundColor: Colors.transparent,
                       ),
@@ -504,7 +533,7 @@ class _CWelcomeState extends State<CWelcome> {
                   ),
                 ),
                 StreamBuilder<int>(
-                  stream: JobService(jId: jId)
+                  stream: JobService(jId: jId, uId: userProfile.uId)
                       .getCountFromJobApplicantsStream(type),
                   builder: (ctx, snapshot) {
                     return Expanded(
