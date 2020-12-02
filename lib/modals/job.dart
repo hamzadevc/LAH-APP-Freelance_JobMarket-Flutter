@@ -12,7 +12,7 @@ class Job {
   final String bidPrice;
   final int status;
   final String limit;
-  final Timestamp needDate;
+  final DateTime needDate;
   final String numDays;
   final String numHours;
   final List<dynamic> allApplicants;
@@ -72,7 +72,7 @@ class Job {
         bidPrice: data['bidPrice'],
         status: data['status'],
         limit: data['limit'],
-        needDate: data['needDate'],
+        needDate: data['needDate']?.toDate(),
         numDays: data['numDays'],
         numHours: data['numHours'],
         allApplicants: data['allApplicants'],

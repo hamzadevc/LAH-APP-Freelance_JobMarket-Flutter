@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/modals/job_applicant.dart';
+import 'package:job_application/modals/review.dart';
 import 'package:job_application/screens/welcome_screens/employee/components/completed_tab_components/completed_job_card.dart';
-import 'package:job_application/services/database_service.dart';
-import 'package:job_application/services/job_service.dart';
+import 'package:job_application/services/review_service.dart';
 import 'package:provider/provider.dart';
 
 class CompletedJobsList extends StatefulWidget {
@@ -16,32 +15,41 @@ class _CompletedJobsListState extends State<CompletedJobsList> {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     return Container(
-      child: StreamBuilder<List<dynamic>>(
-        stream: DatabaseService(uId: user.uId).getCompletedJobs(),
+      child: StreamBuilder<List<UserReview>>(
+        stream: ReviewService(takerId: user.uId).getTakerReviewsStream(),
         builder: (ctx, snapshot) {
           if (snapshot.hasData) {
-            List<dynamic> jobApplicants = snapshot.data;
-            return ListView.builder(
-              itemCount: jobApplicants.length,
-              itemBuilder: (ctx, i) {
-                return StreamBuilder<JobApplicant>(
-                  stream: JobService(uId: user.uId, jId: jobApplicants[i])
-                      .getAllUserCompletedJobApplicationStream(),
-                  builder: (ctx, snapshot) {
-                    if (snapshot.hasData) {
-                      JobApplicant applicant = snapshot.data;
-                      return applicant == null ? Text('') : CompletedCard();
-                    } else {
-                      return Text('');
-                    }
-                  },
-                );
-              },
-            );
+            List<UserReview> reviews = snapshot.data;
+            if (reviews == null || reviews.isEmpty) {
+              return Center(
+                child: Container(
+                  margin: EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                        'assets/images/emptyList.png',
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: reviews.length,
+                itemBuilder: (ctx, index) {
+                  return CompletedCard(
+                    cId: reviews[index].senderId,
+                    uId: reviews[index].takerId,
+                    rating: reviews[index].rating,
+                    feedback: reviews[index].feedback,
+                  );
+                },
+              );
+            }
           } else {
             return Center(
               child: CircularProgressIndicator(
-                backgroundColor: Colors.black87,
+                backgroundColor: Colors.black54,
               ),
             );
           }

@@ -19,14 +19,15 @@ class JobCard extends StatefulWidget {
 class _JobCardState extends State<JobCard> {
   Job _job;
   UserProfile _userProfile;
+  UserProfile _companyProfile;
   DatabaseService _databaseService;
   bool _isLoading = false;
 
-  TextStyle companyStyle = TextStyle(fontSize: 25, fontWeight: FontWeight.bold);
+  TextStyle companyStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
   TextStyle jobTitleStyle = TextStyle(
       fontSize: 18, color: Colors.blueAccent, fontWeight: FontWeight.bold);
   TextStyle infoStyle =
-      TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white);
+      TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white);
 
   @override
   void initState() {
@@ -36,9 +37,11 @@ class _JobCardState extends State<JobCard> {
   }
 
   _toggleLoading() {
-    setState(() {
-      _isLoading = !_isLoading;
-    });
+    if(mounted) {
+      setState(() {
+        _isLoading = !_isLoading;
+      });
+    }
   }
 
   _getJobDetail(String uid) async {
@@ -46,12 +49,13 @@ class _JobCardState extends State<JobCard> {
     _job = await JobService(jId: widget.jId, companyId: widget.cId).getJob();
     _databaseService = DatabaseService(uId: uid);
     _userProfile = await _databaseService.getUser();
+    _companyProfile = await DatabaseService(uId: widget.cId).getUser();
     _toggleLoading();
   }
 
   String _getType(int type) {
     if (type == 0)
-      return 'COMPANY';
+      return 'LABOR CONTRACT';
     else
       return 'FREELANCER';
   }
@@ -77,7 +81,8 @@ class _JobCardState extends State<JobCard> {
                   children: <Widget>[
                     Text(
                       _userProfile?.name ?? '',
-                      style: companyStyle,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
                     SizedBox(
@@ -93,7 +98,11 @@ class _JobCardState extends State<JobCard> {
                             child: Container(
                               child: Text(
                                 _job?.title ?? '',
-                                style: jobTitleStyle,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.blueAccent,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -101,9 +110,9 @@ class _JobCardState extends State<JobCard> {
                             flex: 1,
                             child: Container(
                               child: CircleAvatar(
-                                child: _userProfile?.imgUrl == null
+                                child: _companyProfile?.imgUrl == null
                                     ? Image.asset('assets/images/mylogo.png')
-                                    : Image.network(_userProfile?.imgUrl),
+                                    : Image.network(_companyProfile?.imgUrl),
                                 radius: 25,
                                 backgroundColor: Colors.transparent,
                               ),
@@ -170,7 +179,7 @@ class _JobCardState extends State<JobCard> {
                                     cname: _userProfile?.name ?? '',
                                     cTye: _job?.type ?? 0,
                                     cLoc: _job?.location ?? '',
-                                    cTitle: _job?.location ?? '',
+                                    cTitle: _job?.title ?? '',
                                     cDes: _job?.description ?? '',
                                     cQualification: _job?.qualifications ?? '',
                                     docID: _job?.id ?? '',
@@ -184,7 +193,11 @@ class _JobCardState extends State<JobCard> {
                             color: Colors.black,
                             child: Text(
                               "view",
-                              style: infoStyle,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         )

@@ -29,7 +29,7 @@ class Auth {
   Future<SessionType> _getUserSessionFromFireBase({String uId}) async {
     if (uId != null) {
       DocumentSnapshot snapshot = await _sessionRef.document(uId).get();
-      final int index = snapshot.data['SessionType'];
+      final int index = snapshot?.data['SessionType'];
       if (index != null)
         return index == 0 ? SessionType.COMPANY : SessionType.EMPLOYEE;
     }
@@ -38,7 +38,7 @@ class Auth {
 
   Future setUserSessionInFireBase({String uId, SessionType sessionType}) async {
     await _sessionRef.document(uId).setData({
-      'SessionType': sessionType,
+      'SessionType': sessionType.index,
     });
   }
 
@@ -52,13 +52,12 @@ class Auth {
 
   Future setSessionInfoInSharedPrefs({SessionType sessionType}) async {
     final SharedPreferences prefs = await _prefs;
-    await prefs.setInt(
-        "SessionType", sessionType == SessionType.COMPANY ? 0 : 1);
+    await prefs.setInt("SessionType", sessionType.index);
   }
 
   Future _clearSession({String uId}) async {
     final SharedPreferences prefs = await _prefs;
-    await prefs.setInt("SessionType", -1);
+    await prefs.clear();
     await _sessionRef.document(uId).delete();
   }
 
@@ -72,11 +71,9 @@ class Auth {
     return (user != null && user.isEmailVerified);
   }
 
-  Future signUp(
-      String email,
-      String password,
-      SessionType sessionType) async {
+  Future signUp(String email, String password, SessionType sessionType) async {
     try {
+      await setSessionInfoInSharedPrefs(sessionType: sessionType);
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
@@ -99,10 +96,9 @@ class Auth {
 
       // cache user data
       UserProfile userProfile = await DatabaseService(uId: user.uid).getUser();
-      userProfile.saveUserInSharedPrefs();
+      await userProfile.saveUserInSharedPrefs();
 
       //Save Sessions
-      await setSessionInfoInSharedPrefs(sessionType: sessionType);
       await setUserSessionInFireBase(uId: user.uid, sessionType: sessionType);
       return _userFromFirebaseUser(user);
     } catch (e) {
@@ -110,22 +106,24 @@ class Auth {
     }
   }
 
-  Future signIn(String email, String password, SessionType sessionType) async {
-    return await _auth
-        .signInWithEmailAndPassword(email: email, password: password)
-        .then((logInUser) async {
+  Future<User> signIn(
+      String email, String password, SessionType sessionType) async {
+    try {
+      await setSessionInfoInSharedPrefs(sessionType: sessionType);
+      var logInUser = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+
       FirebaseUser user = logInUser.user;
 
       // cache user data
       UserProfile userProfile = await DatabaseService(uId: user?.uid).getUser();
-      userProfile.saveUserInSharedPrefs();
-
+      await userProfile.saveUserInSharedPrefs();
       //Save Sessions
-      await setSessionInfoInSharedPrefs(sessionType: sessionType);
       await setUserSessionInFireBase(uId: user.uid, sessionType: sessionType);
       return _userFromFirebaseUser(user);
-    }).catchError((e) {
-      throw e;
-    });
+    } on Exception catch (e) {
+      print(e);
+      return null;
+    }
   }
 }

@@ -27,6 +27,7 @@ class JobViewX extends StatefulWidget {
   final String cId;
   final String bidPrice;
   final bool canApply;
+
   JobViewX({
     this.cImg,
     this.cname,
@@ -120,14 +121,14 @@ class _JobViewXState extends State<JobViewX> {
                   children: [
                     Center(
                       child: Container(
-                        height: 50,
-                        width: double.infinity,
+                        height: MediaQuery.of(context).size.width * 0.2,
+                        width: MediaQuery.of(context).size.width * 0.2,
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: _userProfile?.imgUrl == null
                                 ? AssetImage('assets/images/mylogo.png')
                                 : NetworkImage(_userProfile.imgUrl),
-                            fit: BoxFit.fitWidth,
+                            fit: BoxFit.fill,
                           ),
                           borderRadius: BorderRadius.all(
                             Radius.circular(10),
@@ -152,7 +153,7 @@ class _JobViewXState extends State<JobViewX> {
                     ),
                     Center(
                       child: Text(
-                        widget.cLoc,
+                        _userProfile.name,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -176,7 +177,9 @@ class _JobViewXState extends State<JobViewX> {
                             ),
                             child: Center(
                               child: Text(
-                                widget.cTye == 0 ? 'CONTRACT' : 'FREELANCER',
+                                widget.cTye == 0
+                                    ? 'LABOR CONTRACT'
+                                    : 'FREELANCER',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -203,7 +206,7 @@ class _JobViewXState extends State<JobViewX> {
                       height: 32,
                     ),
                     Text(
-                      widget.cQualification,
+                      widget?.cQualification ?? '',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -234,7 +237,7 @@ class _JobViewXState extends State<JobViewX> {
                                   ),
                                   Flexible(
                                     child: Text(
-                                      widget.cDes,
+                                      widget?.cDes ?? '',
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
@@ -310,62 +313,76 @@ class _JobViewXState extends State<JobViewX> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         StreamBuilder<bool>(
-                          stream:
-                              JobService(uId: user.uId, companyId: widget.cId, jId: widget.docID)
-                                  .isAlreadyApplied(),
+                          stream: JobService(
+                                  uId: user.uId,
+                                  companyId: widget.cId,
+                                  jId: widget.docID)
+                              .isAlreadyApplied(),
                           builder: (ctx, snapshot) {
                             if (snapshot.hasData) {
                               bool canApply = snapshot.data;
                               return Expanded(
                                 child: InkWell(
-                                  onTap: _isUploading ? null : () async {
-                                    if (widget.canApply && canApply) {
-                                      try {
-                                        UserProfile userProfile =
-                                            await UserProfile()
-                                                .getUserFromSharedPrefs();
-                                        if (_cvUrl != null) {
-                                          _toggleIsLoading();
-                                          await JobService(
+                                  onTap: _isUploading
+                                      ? null
+                                      : () async {
+                                          if (user.uId == widget.cId) {
+                                            Fluttertoast.showToast(
+                                              msg:
+                                                  'Sorry! Job owner cannot apply',
+                                              backgroundColor: Colors.redAccent,
+                                            );
+                                            return;
+                                          }
+                                          if (widget.canApply && canApply) {
+                                            try {
+                                              UserProfile userProfile =
+                                                  await UserProfile()
+                                                      .getUserFromSharedPrefs();
+                                              if (_cvUrl != null) {
+                                                _toggleIsLoading();
+                                                await JobService(
                                                   jId: widget.docID,
-                                                  uId: userProfile.uId)
-                                              .applyForJob(
-                                            name: userProfile.name,
-                                            email: userProfile.email,
-                                            status:
-                                                ApplicantStatus.PENDING.index,
-                                            jobTitle: widget.cTitle,
-                                            appliedDate: Timestamp.now(),
-                                            type: widget.cTye,
-                                            cvLink: _cvUrl ?? '',
-                                            employeeId: userProfile.uId,
-                                            phoneNumber:
-                                                userProfile.mobileNumber,
-                                            companyId: widget.cId,
-                                          );
+                                                  uId: userProfile.uId,
+                                                ).applyForJob(
+                                                  name: userProfile.name,
+                                                  email: userProfile.email,
+                                                  status: ApplicantStatus
+                                                      .PENDING.index,
+                                                  jobTitle: widget.cTitle,
+                                                  appliedDate: Timestamp.now(),
+                                                  type: widget.cTye,
+                                                  cvLink: _cvUrl ?? '',
+                                                  employeeId: userProfile.uId,
+                                                  phoneNumber:
+                                                      userProfile.mobileNumber,
+                                                  companyId: widget.cId,
+                                                );
 
-                                          await DatabaseService(
-                                            uId: userProfile.uId,
-                                          ).updateEmployeeIdInCompanyProfile(
-                                              jId: widget.docID,
-                                              cId: widget.cId,
-                                              completed: false);
-                                          _toggleIsLoading();
-                                        } else {
-                                          Fluttertoast.showToast(
-                                              msg: "Please Upload CV!",
-                                              backgroundColor: Colors.yellow);
-                                        }
-                                      } catch (e) {
-                                        print(e);
-                                        if (_isLoading) _toggleIsLoading();
-                                      }
-                                    } else {
-                                      Fluttertoast.showToast(
-                                          msg: "Already Applied",
-                                          backgroundColor: Colors.yellow);
-                                    }
-                                  },
+                                                await DatabaseService(
+                                                  uId: userProfile.uId,
+                                                ).updateEmployeeIdInCompanyProfile(
+                                                    jId: widget.docID,
+                                                    cId: widget.cId,
+                                                    completed: false);
+                                                _toggleIsLoading();
+                                              } else {
+                                                Fluttertoast.showToast(
+                                                    msg: "Please Upload CV!",
+                                                    backgroundColor:
+                                                        Colors.yellow);
+                                              }
+                                            } catch (e) {
+                                              print(e);
+                                              if (_isLoading)
+                                                _toggleIsLoading();
+                                            }
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg: "Already Applied",
+                                                backgroundColor: Colors.yellow);
+                                          }
+                                        },
                                   child: Container(
                                     height: 50,
                                     decoration: BoxDecoration(

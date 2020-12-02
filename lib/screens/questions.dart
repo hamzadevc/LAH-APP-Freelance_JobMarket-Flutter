@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_application/screens/welcome_screens/company/companyCreateJob.dart';
@@ -10,16 +9,15 @@ class Questions extends StatefulWidget {
 }
 
 class _QuestionsState extends State<Questions> {
-
   String _empNeed;
   String _numDays;
-  Timestamp _inDate;
+  DateTime _inDate;
   String _numHours;
   String _price;
 
   List questions = [
     'How many employees do You need?',
-    'WHen Do you need the employee in?',
+    'When Do you need the employee in?',
     'How many days?',
     'How many hours per days?',
     'Price per Hour?'
@@ -58,8 +56,9 @@ class _QuestionsState extends State<Questions> {
                 ),
                 Text(questions[1]),
                 CustomDatePicker(
-                  onChanged: (val){
+                  onChanged: (DateTime val) {
                     _inDate = val;
+                    print('EMP NEED: $_inDate');
                   },
                   question: questions[1],
                 ),
@@ -110,13 +109,15 @@ class _QuestionsState extends State<Questions> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CreateJob(
-                        empNeed: _empNeed,
-                        inDate: _inDate,
-                        numDays: _numDays,
-                        numHours: _numHours,
-                        price: _price,
-                      )),
+                      MaterialPageRoute(
+                        builder: (context) => CreateJob(
+                          empNeed: _empNeed,
+                          inDate: _inDate,
+                          numDays: _numDays,
+                          numHours: _numHours,
+                          price: _price,
+                        ),
+                      ),
                     );
                   },
                   child: Container(

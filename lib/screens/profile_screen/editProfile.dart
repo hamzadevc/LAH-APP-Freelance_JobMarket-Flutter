@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:job_application/modals/employeeInfo.dart';
+import 'package:job_application/screens/welcome_screens/employee/components/completed_tab_components/star_display.dart';
 import 'package:job_application/services/database_service.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -20,7 +20,7 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile>
     with SingleTickerProviderStateMixin {
   bool showSpinner = false;
-  bool _status = true;
+  bool _static = true;
   String _name;
   String _email;
   String _mobileNumber;
@@ -34,7 +34,7 @@ class _EditProfileState extends State<EditProfile>
   String _expiry;
   int _type;
   String _cvLink;
-  FocusNode myFocusNode = FocusNode();
+  // FocusNode myFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -80,10 +80,12 @@ class _EditProfileState extends State<EditProfile>
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               image: DecorationImage(
-                                                image: userProfile?.imgUrl == null ?
-                                                    AssetImage('assets/images/mylogo.png')
+                                                image: userProfile?.imgUrl ==
+                                                        null
+                                                    ? AssetImage(
+                                                        'assets/images/mylogo.png')
                                                     : NetworkImage(
-                                                    userProfile.imgUrl),
+                                                        userProfile.imgUrl),
                                                 fit: BoxFit.cover,
                                               ),
                                             )),
@@ -92,18 +94,18 @@ class _EditProfileState extends State<EditProfile>
                                     Padding(
                                       padding: EdgeInsets.only(
                                           top: 90.0, right: 100.0),
-                                      child: new Row(
+                                      child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: <Widget>[
-                                          new CircleAvatar(
+                                          CircleAvatar(
                                             backgroundColor: Colors.red,
                                             radius: 25.0,
                                             child: InkWell(
                                               onTap: () {
                                                 chooseFile(user.uId);
                                               },
-                                              child: new Icon(
+                                              child: Icon(
                                                 Icons.camera_alt,
                                                 color: Colors.white,
                                               ),
@@ -118,48 +120,50 @@ class _EditProfileState extends State<EditProfile>
                               SizedBox(
                                 height: 15,
                               ),
-                              RatingBar(
-                                itemSize: 30,
-                                initialRating: 5,
-                                minRating: 1,
-                                direction: Axis.horizontal,
-                                allowHalfRating: true,
-                                itemCount: 5,
-                                itemPadding:
-                                    EdgeInsets.symmetric(horizontal: 4.0),
-                                itemBuilder: (context, _) => Icon(
-                                  Icons.star,
-                                  color: Colors.orange,
-                                ),
-                                onRatingUpdate: (rating) {
-                                  print(rating);
-                                },
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    'Rating ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  StarDisplay(
+                                    value: double.parse(userProfile?.avgRating ?? '0.0'),
+                                    color: Colors.yellow,
+                                  ),
+                                ],
                               )
                             ],
                           ),
                         ),
-                        new Container(
+                        Container(
                           color: Colors.grey.shade300,
                           child: Padding(
                             padding: EdgeInsets.only(bottom: 25.0),
-                            child: new Column(
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 25.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Column(
+                                        Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
-                                            new Text(
+                                            Text(
                                               'Personal Information',
                                               style: TextStyle(
                                                   fontSize: 18.0,
@@ -167,14 +171,14 @@ class _EditProfileState extends State<EditProfile>
                                             ),
                                           ],
                                         ),
-                                        new Column(
+                                        Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
-                                            _status
+                                            _static
                                                 ? _getEditIcon()
-                                                : new Container(),
+                                                : Container(),
                                           ],
                                         )
                                       ],
@@ -182,15 +186,15 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 25.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Column(
+                                        Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
-                                            new Text(
+                                            Text(
                                               'Name',
                                               style: TextStyle(
                                                   fontSize: 16.0,
@@ -203,11 +207,11 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 2.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Flexible(
-                                          child: new TextField(
+                                        Flexible(
+                                          child: TextField(
                                             controller: TextEditingController()
                                               ..text = userProfile.name,
                                             onChanged: (value) {
@@ -217,8 +221,8 @@ class _EditProfileState extends State<EditProfile>
                                             decoration: const InputDecoration(
                                               hintText: "Enter Your Name",
                                             ),
-                                            enabled: !_status,
-                                            autofocus: !_status,
+                                            enabled: !_static,
+                                            autofocus: !_static,
                                           ),
                                         ),
                                       ],
@@ -226,15 +230,15 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 25.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Column(
+                                        Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
-                                            new Text(
+                                            Text(
                                               'Email ID',
                                               style: TextStyle(
                                                   fontSize: 16.0,
@@ -247,11 +251,11 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 2.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Flexible(
-                                          child: new TextField(
+                                        Flexible(
+                                          child: TextField(
                                             controller: TextEditingController()
                                               ..text = userProfile.email,
                                             onChanged: (value) {
@@ -259,7 +263,7 @@ class _EditProfileState extends State<EditProfile>
                                             },
                                             decoration: const InputDecoration(
                                                 hintText: "Enter Email ID"),
-                                            enabled: !_status,
+                                            enabled: !_static,
                                           ),
                                         ),
                                       ],
@@ -267,15 +271,15 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 25.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Column(
+                                        Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
-                                            new Text(
+                                            Text(
                                               'Mobile',
                                               style: TextStyle(
                                                   fontSize: 16.0,
@@ -288,11 +292,11 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 2.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Flexible(
-                                          child: new TextField(
+                                        Flexible(
+                                          child: TextField(
                                             controller: TextEditingController()
                                               ..text = userProfile.mobileNumber,
                                             onChanged: (value) {
@@ -301,7 +305,7 @@ class _EditProfileState extends State<EditProfile>
                                             decoration: const InputDecoration(
                                                 hintText:
                                                     "Enter Mobile Number"),
-                                            enabled: !_status,
+                                            enabled: !_static,
                                           ),
                                         ),
                                       ],
@@ -309,15 +313,15 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 25.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Column(
+                                        Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
-                                            new Text(
+                                            Text(
                                               'AGE',
                                               style: TextStyle(
                                                   fontSize: 16.0,
@@ -330,11 +334,11 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 2.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Flexible(
-                                          child: new TextField(
+                                        Flexible(
+                                          child: TextField(
                                             controller: TextEditingController()
                                               ..text = userProfile.dob,
                                             keyboardType: TextInputType.number,
@@ -343,7 +347,7 @@ class _EditProfileState extends State<EditProfile>
                                             },
                                             decoration: const InputDecoration(
                                                 hintText: "E.g 18"),
-                                            enabled: !_status,
+                                            enabled: !_static,
                                           ),
                                         ),
                                       ],
@@ -351,15 +355,15 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 25.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Column(
+                                        Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
-                                            new Text(
+                                            Text(
                                               'Address',
                                               style: TextStyle(
                                                   fontSize: 16.0,
@@ -372,11 +376,11 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 2.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Flexible(
-                                          child: new TextField(
+                                        Flexible(
+                                          child: TextField(
                                             controller: TextEditingController()
                                               ..text = userProfile.address,
                                             onChanged: (value) {
@@ -384,7 +388,7 @@ class _EditProfileState extends State<EditProfile>
                                             },
                                             decoration: const InputDecoration(
                                                 hintText: "Enter Address"),
-                                            enabled: !_status,
+                                            enabled: !_static,
                                           ),
                                         ),
                                       ],
@@ -392,15 +396,15 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 25.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Column(
+                                        Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
-                                            new Text(
+                                            Text(
                                               'Bank Card Number',
                                               style: TextStyle(
                                                   fontSize: 16.0,
@@ -413,11 +417,11 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 2.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: <Widget>[
-                                        new Flexible(
-                                          child: new TextField(
+                                        Flexible(
+                                          child: TextField(
                                             controller: TextEditingController()
                                               ..text = userProfile.cardNo,
                                             onChanged: (value) {
@@ -425,7 +429,7 @@ class _EditProfileState extends State<EditProfile>
                                             },
                                             decoration: const InputDecoration(
                                                 hintText: "Card No"),
-                                            enabled: !_status,
+                                            enabled: !_static,
                                           ),
                                         ),
                                       ],
@@ -433,14 +437,14 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 25.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: <Widget>[
                                         Expanded(
                                           child: Container(
-                                            child: new Text(
+                                            child: Text(
                                               'Country',
                                               style: TextStyle(
                                                   fontSize: 16.0,
@@ -451,7 +455,7 @@ class _EditProfileState extends State<EditProfile>
                                         ),
                                         Expanded(
                                           child: Container(
-                                            child: new Text(
+                                            child: Text(
                                               'City',
                                               style: TextStyle(
                                                   fontSize: 16.0,
@@ -465,7 +469,7 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 2.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -474,7 +478,7 @@ class _EditProfileState extends State<EditProfile>
                                           child: Padding(
                                             padding:
                                                 EdgeInsets.only(right: 10.0),
-                                            child: new TextField(
+                                            child: TextField(
                                               controller:
                                                   TextEditingController()
                                                     ..text =
@@ -484,13 +488,13 @@ class _EditProfileState extends State<EditProfile>
                                               },
                                               decoration: const InputDecoration(
                                                   hintText: "Enter Country"),
-                                              enabled: !_status,
+                                              enabled: !_static,
                                             ),
                                           ),
                                           flex: 2,
                                         ),
                                         Flexible(
-                                          child: new TextField(
+                                          child: TextField(
                                             controller: TextEditingController()
                                               ..text = userProfile.city,
                                             onChanged: (value) {
@@ -498,7 +502,7 @@ class _EditProfileState extends State<EditProfile>
                                             },
                                             decoration: const InputDecoration(
                                                 hintText: "Enter City"),
-                                            enabled: !_status,
+                                            enabled: !_static,
                                           ),
                                           flex: 2,
                                         ),
@@ -507,14 +511,14 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 25.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: <Widget>[
                                         Expanded(
                                           child: Container(
-                                            child: new Text(
+                                            child: Text(
                                               'CVV',
                                               style: TextStyle(
                                                   fontSize: 16.0,
@@ -525,7 +529,7 @@ class _EditProfileState extends State<EditProfile>
                                         ),
                                         Expanded(
                                           child: Container(
-                                            child: new Text(
+                                            child: Text(
                                               'Expiry',
                                               style: TextStyle(
                                                   fontSize: 16.0,
@@ -539,7 +543,7 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 2.0),
-                                    child: new Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -548,7 +552,7 @@ class _EditProfileState extends State<EditProfile>
                                           child: Padding(
                                             padding:
                                                 EdgeInsets.only(right: 10.0),
-                                            child: new TextField(
+                                            child: TextField(
                                               controller:
                                                   TextEditingController()
                                                     ..text = userProfile.cVV,
@@ -557,13 +561,13 @@ class _EditProfileState extends State<EditProfile>
                                               },
                                               decoration: const InputDecoration(
                                                   hintText: "Enter CVV"),
-                                              enabled: !_status,
+                                              enabled: !_static,
                                             ),
                                           ),
                                           flex: 2,
                                         ),
                                         Flexible(
-                                          child: new TextField(
+                                          child: TextField(
                                             controller: TextEditingController()
                                               ..text = userProfile.expiry,
                                             onChanged: (value) {
@@ -571,82 +575,116 @@ class _EditProfileState extends State<EditProfile>
                                             },
                                             decoration: const InputDecoration(
                                                 hintText: "Enter Expiry"),
-                                            enabled: !_status,
+                                            enabled: !_static,
                                           ),
                                           flex: 2,
                                         ),
                                       ],
                                     )),
-                                !_status
+                                !_static
                                     ? Padding(
-                                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(right: 10.0),
-                                          child: Container(
-                                            child: new RaisedButton(
-                                              child: new Text("Save"),
-                                              textColor: Colors.white,
-                                              color: Colors.green,
-                                              onPressed: () async {
-                                                await DatabaseService(uId: userProfile.uId).updateUser(
-                                                  name: _name ?? userProfile.name,
-                                                  imgUrl: _imgUrl  ?? userProfile.imgUrl,
-                                                  country: _country  ?? userProfile.country,
-                                                  dob: _dob  ?? userProfile.dob,
-                                                  expiry: _expiry  ?? userProfile.expiry,
-                                                  mobileNumber: _mobileNumber  ?? userProfile.mobileNumber,
-                                                  city: _city  ?? userProfile.city,
-                                                  cardNo: _cardNo  ?? userProfile.cardNo,
-                                                  address: _address  ?? userProfile.address,
-                                                  email: _email ?? userProfile.email,
-                                                  type: _type ?? userProfile.type,
-                                                  cvv: _cVV ?? userProfile.cVV,
-                                                );
-                                                Fluttertoast.showToast(msg: "Data Updated");
+                                        padding: EdgeInsets.only(
+                                            left: 25.0, right: 25.0, top: 45.0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    right: 10.0),
+                                                child: Container(
+                                                  child: RaisedButton(
+                                                    child: Text("Save"),
+                                                    textColor: Colors.white,
+                                                    color: Colors.green,
+                                                    onPressed: () async {
+                                                      await DatabaseService(
+                                                              uId: userProfile
+                                                                  .uId)
+                                                          .updateUser(
+                                                        name: _name ??
+                                                            userProfile.name,
+                                                        imgUrl: _imgUrl ??
+                                                            userProfile.imgUrl,
+                                                        country: _country ??
+                                                            userProfile.country,
+                                                        dob: _dob ??
+                                                            userProfile.dob,
+                                                        expiry: _expiry ??
+                                                            userProfile.expiry,
+                                                        mobileNumber:
+                                                            _mobileNumber ??
+                                                                userProfile
+                                                                    .mobileNumber,
+                                                        city: _city ??
+                                                            userProfile.city,
+                                                        cardNo: _cardNo ??
+                                                            userProfile.cardNo,
+                                                        address: _address ??
+                                                            userProfile.address,
+                                                        email: _email ??
+                                                            userProfile.email,
+                                                        type: _type ??
+                                                            userProfile
+                                                                .sessionType,
+                                                        cvv: _cVV ??
+                                                            userProfile.cVV,
+                                                      );
+                                                      Fluttertoast.showToast(
+                                                          msg: "Data Updated");
 
-                                                setState(() {
-                                                  _status = true;
-                                                  FocusScope.of(context).requestFocus(new FocusNode());
-                                                });
-                                              },
-                                              shape: new RoundedRectangleBorder(
-                                                borderRadius: new BorderRadius.circular(20.0),
+                                                      setState(() {
+                                                        _static = true;
+                                                        FocusScope.of(context)
+                                                            .requestFocus(
+                                                                FocusNode());
+                                                      });
+                                                    },
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.0),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
+                                              flex: 2,
                                             ),
-                                          ),
-                                        ),
-                                        flex: 2,
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: 10.0),
-                                          child: Container(
-                                            child: new RaisedButton(
-                                              child: new Text("Cancel"),
-                                              textColor: Colors.white,
-                                              color: Colors.red,
-                                              onPressed: () {
-                                                setState(() {
-                                                  _status = true;
-                                                  FocusScope.of(context).requestFocus(new FocusNode());
-                                                });
-                                              },
-                                              shape: new RoundedRectangleBorder(
-                                                  borderRadius: new BorderRadius.circular(20.0)),
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 10.0),
+                                                child: Container(
+                                                  child: RaisedButton(
+                                                    child: Text("Cancel"),
+                                                    textColor: Colors.white,
+                                                    color: Colors.red,
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        _static = true;
+                                                        FocusScope.of(context)
+                                                            .requestFocus(
+                                                                FocusNode());
+                                                      });
+                                                    },
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20.0)),
+                                                  ),
+                                                ),
+                                              ),
+                                              flex: 2,
                                             ),
-                                          ),
+                                          ],
                                         ),
-                                        flex: 2,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                                    : new Container(),
+                                      )
+                                    : Container(),
                               ],
                             ),
                           ),
@@ -668,16 +706,16 @@ class _EditProfileState extends State<EditProfile>
   @override
   void dispose() {
     // Clean up the controller when the Widget is disposed
-    myFocusNode.dispose();
+    //myFocusNode.dispose();
     super.dispose();
   }
 
   Widget _getEditIcon() {
-    return new GestureDetector(
-      child: new CircleAvatar(
+    return GestureDetector(
+      child: CircleAvatar(
         backgroundColor: Colors.red,
         radius: 14.0,
-        child: new Icon(
+        child: Icon(
           Icons.edit,
           color: Colors.white,
           size: 16.0,
@@ -686,7 +724,7 @@ class _EditProfileState extends State<EditProfile>
       onTap: () {
         setState(
           () {
-            _status = false;
+            _static = false;
           },
         );
       },

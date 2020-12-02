@@ -5,8 +5,11 @@ import 'package:job_application/services/job_service.dart';
 import 'job_card.dart';
 
 class JobsList extends StatelessWidget {
+  final bool toggleJob;
+  JobsList({this.toggleJob = false});
   @override
   Widget build(BuildContext context) {
+    var mq = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -64,7 +67,9 @@ class JobsList extends StatelessWidget {
               List<Job> jobs = snapshot.data;
               if (snapshot.hasData) {
                 return Container(
-                  height: 500,
+                  height: mq.height * 0.5,
+                  margin: EdgeInsets.only(
+                      left: mq.width * 0.08, right: mq.width * 0.08),
                   child: jobs.isEmpty
                       ? Image.asset('assets/images/emptyList.png')
                       : ListView.builder(
@@ -72,10 +77,12 @@ class JobsList extends StatelessWidget {
                           physics: BouncingScrollPhysics(),
                           itemCount: jobs.length,
                           itemBuilder: (BuildContext ctx, int index) {
-                            return JobCard(
-                              jId: jobs[index].id,
-                              cId: jobs[index].companyId,
-                            );
+                            return jobs[index].status == 2
+                                ? Text('')
+                                : JobCard(
+                                    jId: jobs[index].id,
+                                    cId: jobs[index].companyId,
+                                  );
                           },
                         ),
                 );

@@ -100,6 +100,7 @@ class _SignInState extends State<SignIn> {
                           UserProfile userProfile =
                           await DatabaseService(uId: user?.uId).getUser();
                           await userProfile.saveUserInSharedPrefs();
+                          Navigator.of(context).pop();
                         }else{
                           Fluttertoast.showToast(
                               msg: "Email is not registered.",

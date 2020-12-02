@@ -29,7 +29,7 @@ class _CompanyCategoryState extends State<CompanyCategory> {
             ),
             FlatButton(
               child: Text(
-                "Freelancer",
+                "FREELANCER",
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.black,
@@ -44,7 +44,7 @@ class _CompanyCategoryState extends State<CompanyCategory> {
             ),
             FlatButton(
               child: Text(
-                "Labour",
+                "LABOR CONTRACT",
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.black,
@@ -52,7 +52,7 @@ class _CompanyCategoryState extends State<CompanyCategory> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CreateJob(),
+                    builder: (context) => Questions(),
                   ),
                 );
               },

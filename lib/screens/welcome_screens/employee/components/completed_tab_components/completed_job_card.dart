@@ -1,8 +1,56 @@
 import 'package:expandable/expandable.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:job_application/modals/review.dart';
+import 'package:job_application/modals/user_profile.dart';
+import 'package:job_application/screens/welcome_screens/employee/components/completed_tab_components/star_display.dart';
+import 'package:job_application/services/database_service.dart';
+import 'package:job_application/services/review_service.dart';
 
-class CompletedCard extends StatelessWidget {
+class CompletedCard extends StatefulWidget {
+  final String cId;
+  final String uId;
+  final String rating;
+  final String feedback;
+
+  CompletedCard({
+    this.uId,
+    this.cId,
+    this.rating,
+    this.feedback,
+  });
+
+  @override
+  _CompletedCardState createState() => _CompletedCardState();
+}
+
+class _CompletedCardState extends State<CompletedCard> {
+  UserProfile _jobProfile;
+  UserReview _review;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    _getJobDetail(widget.uId, widget.cId);
+    super.initState();
+  }
+
+  _toggleLoading() {
+    if(mounted) {
+      setState(() {
+        _isLoading = !_isLoading;
+      });
+    }
+  }
+
+  _getJobDetail(String uid, String cId) async {
+    _toggleLoading();
+    _jobProfile = await DatabaseService(uId: cId).getUser();
+    _review = await ReviewService(takerId: widget.cId, senderId: widget.uId)
+        .getReview();
+    _toggleLoading();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ExpandableNotifier(
@@ -12,21 +60,25 @@ class CompletedCard extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: <Widget>[
-              SizedBox(
-                height: 150,
+              Container(
+                height: MediaQuery.of(context).size.height * 0.22 +
+                    (widget.feedback.length * 0.1),
                 child: Container(
                   padding: EdgeInsets.all(20),
-                  child: Column(
+                  child: ListView(
+                    shrinkWrap: true,
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           CircleAvatar(
                             backgroundColor: Colors.transparent,
-                            radius: 30,
-                            child: Image.network(
-                              "http://www.pngall.com/wp-content/uploads/5/Google-Logo-PNG-Free-Image.png",
-                            ),
+                            radius: 20,
+                            child: _isLoading
+                                ? Image.asset('assets/images/mylogo.png')
+                                : Image.network(
+                                    _jobProfile.imgUrl,
+                                  ),
                           ),
                           Text(
                             "Company Review",
@@ -38,22 +90,47 @@ class CompletedCard extends StatelessWidget {
                           )
                         ],
                       ),
-                      RatingBar(
-                        itemSize: 30,
-                        initialRating: 3.5,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                        itemBuilder: (context, _) => Icon(
-                          Icons.star,
-                          color: Colors.amber,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            'Rating: ',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5.0,
+                          ),
+                          StarDisplay(
+                            value: double.parse(widget.rating),
+                          ),
+                        ],
+                      ),
+                      SingleChildScrollView(
+                        child: Container(
+                          child: ListTile(
+                            title: Text(
+                              'Feedback',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            subtitle: ExpandableText(
+                              widget.feedback,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                              expandText: 'show more',
+                              collapseText: 'show less',
+                              maxLines: 1,
+                              linkColor: Colors.blue,
+                            ),
+                          ),
                         ),
-                        onRatingUpdate: (rating) {
-                          print(rating);
-                        },
-                      )
+                      ),
                     ],
                   ),
                   decoration: new BoxDecoration(
@@ -67,58 +144,82 @@ class CompletedCard extends StatelessWidget {
                   ),
                 ),
               ),
-              ScrollOnExpand(
-                scrollOnExpand: true,
-                scrollOnCollapse: false,
-                child: ExpandablePanel(
-                  theme: const ExpandableThemeData(
-                    headerAlignment: ExpandablePanelHeaderAlignment.center,
-                    tapBodyToCollapse: true,
-                  ),
-                  header: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      "Your Review",
-                      style:
-                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              if (_review != null)
+                ScrollOnExpand(
+                  scrollOnExpand: true,
+                  scrollOnCollapse: false,
+                  child: ExpandablePanel(
+                    theme: const ExpandableThemeData(
+                      headerAlignment: ExpandablePanelHeaderAlignment.center,
+                      tapBodyToCollapse: true,
                     ),
-                  ),
-                  expanded: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 10),
-                        child: RatingBar(
-                          unratedColor: Colors.black38.withOpacity(0.1),
-                          initialRating: 2.25,
-                          minRating: 1,
-                          direction: Axis.horizontal,
-                          allowHalfRating: true,
-                          itemCount: 5,
-                          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                          itemBuilder: (context, _) => Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                          ),
-                          onRatingUpdate: (rating) {
-                            print(rating);
-                          },
+                    header: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        "Your Review",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    expanded: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              'Rating: ',
+                              style: TextStyle(
+                                color: Colors.black87,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5.0,
+                            ),
+                            StarDisplay(
+                              value: double.parse(_review.rating),
+                              color: Colors.black54,
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        SingleChildScrollView(
+                          child: Container(
+                            child: ListTile(
+                              title: Text(
+                                'Feedback',
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              subtitle: ExpandableText(
+                                _review.feedback,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                ),
+                                expandText: 'show more',
+                                collapseText: 'show less',
+                                maxLines: 1,
+                                linkColor: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    builder: (_, collapsed, expanded) {
+                      return Padding(
+                        padding:
+                            EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        child: Expandable(
+                          collapsed: collapsed,
+                          expanded: expanded,
+                          theme: const ExpandableThemeData(crossFadePoint: 0),
+                        ),
+                      );
+                    },
                   ),
-                  builder: (_, collapsed, expanded) {
-                    return Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                      child: Expandable(
-                        collapsed: collapsed,
-                        expanded: expanded,
-                        theme: const ExpandableThemeData(crossFadePoint: 0),
-                      ),
-                    );
-                  },
                 ),
-              ),
             ],
           ),
         ),

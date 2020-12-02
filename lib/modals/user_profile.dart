@@ -12,9 +12,13 @@ class UserProfile {
   final String cardNo;
   final String cVV;
   final String expiry;
-  final int type;
+  final int sessionType;
   final String uId;
   final String cvLink;
+  final String avgRating;
+  final String companyAvgRating;
+  final List<dynamic> allRatings;
+  final List<dynamic> allCompanyRatings;
   final List<dynamic> appliedJobs;
   final List<dynamic> myCompletedJobs; // contains my jobs which
 
@@ -31,10 +35,14 @@ class UserProfile {
     this.imgUrl,
     this.mobileNumber,
     this.name,
-    this.type,
+    this.sessionType,
     this.cvLink,
     this.appliedJobs,
     this.myCompletedJobs,
+    this.allRatings,
+    this.avgRating,
+    this.allCompanyRatings,
+    this.companyAvgRating,
   });
 
   Map<String, dynamic> toJson() {
@@ -52,7 +60,7 @@ class UserProfile {
       'cvv': cVV,
       'expiry': expiry,
       'cvLink': cvLink,
-      'type': type,
+      'type': sessionType,
       'completedJobs': myCompletedJobs,
     };
   }
@@ -76,6 +84,20 @@ class UserProfile {
     };
   }
 
+  Map<String, dynamic> toJsonRating() {
+    return {
+      'avg_rating': avgRating,
+      'all_rating': allRatings,
+    };
+  }
+
+  Map<String, dynamic> toJsonCompanyRating() {
+    return {
+      'avg_company_rating': companyAvgRating,
+      'all_company_rating': allCompanyRatings,
+    };
+  }
+
   UserProfile fromJson(Map<String, dynamic> data) {
     return UserProfile(
       uId: data['id'],
@@ -91,9 +113,13 @@ class UserProfile {
       mobileNumber: data['mobile_number'],
       name: data['name'],
       cvLink: data['cvLink'],
-      type: data['type'],
-      appliedJobs: data['appliedJobs'],
-      myCompletedJobs: data['completedJobs'],
+      sessionType: data['type'],
+      appliedJobs: data['appliedJobs'] ?? [],
+      myCompletedJobs: data['completedJobs'] ?? [],
+      allRatings: data['all_rating'] ?? [],
+      avgRating: data['avg_rating'],
+      allCompanyRatings: data['all_company_rating'] ?? [],
+      companyAvgRating: data['avg_company_rating'],
     );
   }
 
@@ -112,7 +138,7 @@ class UserProfile {
     await prefs.setString('cvv', cVV);
     await prefs.setString('expiry', expiry);
     await prefs.setString('cvLink', cvLink);
-    await prefs.setInt('type', type);
+    await prefs.setInt('type', sessionType);
   }
 
   Future saveCVLinkInSharedPrefs() async {
@@ -136,7 +162,7 @@ class UserProfile {
       cVV: prefs.getString('cvv'),
       expiry: prefs.getString('expiry'),
       cvLink: prefs.getString('cvLink'),
-      type: prefs.getInt('type'),
+      sessionType: prefs.getInt('type'),
     );
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:job_application/modals/employeeInfo.dart';
+import 'package:job_application/modals/user_profile.dart';
 import 'package:job_application/screens/auth_screens/signIn.dart';
 import 'package:job_application/services/auth_service.dart';
+import 'package:job_application/services/database_service.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'Components/WaveClipPath.dart';
@@ -101,11 +103,21 @@ class _SignUpState extends State<SignUp> {
                       });
 
                       try {
-                        Auth().signUp(email, password, widget.sessionType);
+                        User user = await Auth().signUp(email, password, widget.sessionType);
                         Fluttertoast.showToast(
                           msg: "Verification Email Sent.",
                           toastLength: Toast.LENGTH_LONG,
                         );
+                        if(user != null) {
+                          UserProfile userProfile =
+                          await DatabaseService(uId: user?.uId).getUser();
+                          await userProfile.saveUserInSharedPrefs();
+                          Navigator.of(context).pop();
+                        }else{
+                          Fluttertoast.showToast(
+                              msg: "Email is not registered.",
+                              gravity: ToastGravity.CENTER);
+                        }
                         Fluttertoast.showToast(
                           msg: "Successfully Signed Up",
                           toastLength: Toast.LENGTH_LONG,

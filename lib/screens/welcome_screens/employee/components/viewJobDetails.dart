@@ -1,5 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/current_remaining_time.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:job_application/modals/employeeInfo.dart';
+import 'package:job_application/services/database_service.dart';
+import 'package:job_application/services/job_service.dart';
+import 'package:job_application/services/review_service.dart';
+import 'package:job_application/wrapper.dart';
+import 'package:provider/provider.dart';
+import 'package:quick_feedback/quick_feedback.dart';
 
 class ViewJob extends StatefulWidget {
   final String jId;
@@ -12,6 +22,10 @@ class ViewJob extends StatefulWidget {
   final String description;
   final String qualification;
   final int type;
+  final bool empReviewed;
+  final bool compReviewed;
+  final Timestamp acceptTime;
+  final int numDays;
   ViewJob({
     this.jId,
     this.cId,
@@ -23,6 +37,10 @@ class ViewJob extends StatefulWidget {
     this.description,
     this.location,
     this.cName,
+    this.compReviewed,
+    this.empReviewed,
+    this.acceptTime,
+    this.numDays,
   });
   @override
   _ViewJobState createState() => _ViewJobState();
@@ -36,22 +54,78 @@ class _ViewJobState extends State<ViewJob> {
   TextStyle heading =
       TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black);
 
+  Future _showFeedback(context,
+      {String senderId, String takerId, String jid}) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return QuickFeedback(
+          title: 'Leave a feedback', // Title of dialog
+          showTextBox: true, // default false
+          textBoxHint:
+              'Share your feedback', // Feedback text field hint text default: Tell us more
+          submitText: 'SUBMIT', // submit button text default: SUBMIT
+          onSubmitCallback: (feedback) async {
+            String rating = '${feedback['rating']}';
+            String review = feedback['feedback'];
+
+            await ReviewService(
+              senderId: senderId,
+              takerId: takerId,
+            ).createReview(
+              feedback: review,
+              rating: rating,
+            );
+
+            await DatabaseService(uId: takerId).updateCompanyRating(
+              rating: rating,
+              feedback: review,
+            );
+
+            await JobService(jId: jid, uId: takerId)
+                .changeApplicantReviewStatus(status: 4, isEmpReview: true);
+
+            // remove from job document
+            if (widget.empReviewed && widget.compReviewed) {
+              await JobService(
+                jId: widget.jId,
+              ).removeApplicantsWithJobs(applicantId: senderId);
+            }
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (ctx) => Wrapper(),
+              ),
+            );
+          },
+          askLaterText: 'LATER',
+          onAskLaterCallback: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  }
+
   String _getStatus(int status) {
     if (status == 0) return 'PENDING';
     if (status == 1) return 'PROCESSING';
     if (status == 2) return 'REJECTED';
-    if (status == 3)
-      return 'COMPLETED';
+    if (status == 3) return 'COMPLETED';
+    if (status == 4)
+      return 'COMPANY REVIEWED';
     else
       return 'ERROR';
   }
 
   Color _getStatusColor(int status) {
-    if (status == 0) return Colors.yellowAccent;
+    if (status == 0) return Colors.orangeAccent;
     if (status == 1) return Colors.deepOrange;
     if (status == 2) return Colors.redAccent;
-    if (status == 3)
-      return Colors.greenAccent;
+    if (status == 3) return Colors.green;
+    if (status == 4)
+      return Colors.green;
     else
       return Colors.redAccent;
   }
@@ -64,8 +138,37 @@ class _ViewJobState extends State<ViewJob> {
       return 'ERROR';
   }
 
+  String readTimestamp(int timestamp) {
+    print(timestamp);
+    var now = new DateTime.now();
+    var date = new DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+    var diff = date.difference(now);
+    var time =
+        '${diff.inDays} days | ${diff.inMinutes} minutes | ${diff.inSeconds} seconds';
+
+    return time;
+  }
+
+  int _getEndTime() {
+    var acceptTime = widget.acceptTime.toDate();
+    var newTime = DateTime(
+      acceptTime.year,
+      acceptTime.month,
+      acceptTime.day + widget.numDays,
+      acceptTime.hour,
+      acceptTime.minute,
+      acceptTime.second,
+    );
+
+    var dur = newTime.microsecondsSinceEpoch;
+    print('DUR: $dur');
+    print('NUM DAYS: ${widget.numDays}');
+    return dur;
+  }
+
   @override
   Widget build(BuildContext context) {
+    var user = Provider.of<User>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: Padding(
@@ -75,7 +178,7 @@ class _ViewJobState extends State<ViewJob> {
             borderRadius: BorderRadius.circular(10.0),
           ),
           onPressed: () {},
-          color: Colors.grey,
+          color: Colors.grey[200],
           child: Text(
             _getStatus(widget.status),
             style: TextStyle(
@@ -171,6 +274,23 @@ class _ViewJobState extends State<ViewJob> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      if (widget.status > 0 && widget.status != 2)
+                        Wrap(
+                          children: <Widget>[
+                            Text('Remaining Time: ', style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),),
+                            SizedBox(width: 5.0,),
+                            CountdownTimer(
+                              endTime: (_getEndTime() / 1000).floor(),
+                              daysSymbol: Text("days"),
+                              hoursSymbol: Text("hrs "),
+                              minSymbol: Text("min "),
+                              secSymbol: Text("sec"),
+                            ),
+                          ],
+                        ),
                       Text(
                         widget.cName,
                         style: heading,
@@ -204,6 +324,23 @@ class _ViewJobState extends State<ViewJob> {
                         height: 8,
                       ),
                       Text(widget.qualification),
+                      if (widget.status >= 3)
+                        Container(
+                          child: Center(
+                            child: FlatButton(
+                              onPressed: () async {
+                                await _showFeedback(
+                                  context,
+                                  takerId: widget.cId,
+                                  senderId: user.uId,
+                                  jid: widget.jId,
+                                );
+                              },
+                              color: Colors.grey[200],
+                              child: Text('Give Feedback'),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ],

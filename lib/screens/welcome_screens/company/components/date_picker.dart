@@ -25,13 +25,13 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
             containerHeight: 210.0,
           ),
           showTitleActions: true,
-          minTime: DateTime(2000, 1, 1),
+          minTime: DateTime.now(),
           maxTime: DateTime(2022, 12, 31),
           onConfirm: (date) {
             print('confirm $date');
             _date = '${date.year} - ${date.month} - ${date.day}';
             setState(() {});
-            widget.onChanged(_date);
+            widget.onChanged(date);
           },
           currentTime: DateTime.now(),
           locale: LocaleType.en,

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:job_application/modals/employeeInfo.dart';
+import 'package:job_application/screens/chat/chat_screen.dart';
 import 'package:job_application/screens/profile_screen/editProfile.dart';
 import 'package:job_application/screens/wallet_screen/wallet.dart';
 import 'package:job_application/services/auth_service.dart';
@@ -79,12 +80,21 @@ class CustomDrawer {
                       Icons.person,
                       "Profile",
                     )),
-                _buildDivider(),
-
-                _buildRow(
-                  Icons.message,
-                  "Messages",
-                ),
+                // _buildDivider(),
+                //
+                // GestureDetector(
+                //   onTap: () {
+                //     Navigator.of(context).push(
+                //       MaterialPageRoute(
+                //         builder: (ctx) => ChatScreen()
+                //       )
+                //     );
+                //   },
+                //   child: _buildRow(
+                //     Icons.message,
+                //     "Messages",
+                //   ),
+                // ),
 
                 _buildDivider(),
 
@@ -107,10 +117,7 @@ class CustomDrawer {
 
                 InkWell(
                   onTap: () {
-                    User user = Provider.of<User>(
-                      context,
-                      listen: false,
-                    );
+                    User user = Provider.of<User>(context, listen: false);
                     Auth().logOut(uId: user.uId);
                   },
                   child: _buildRow(

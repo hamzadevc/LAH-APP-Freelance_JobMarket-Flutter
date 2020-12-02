@@ -24,9 +24,11 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
   }
 
   _toggleIsLoading() {
-    setState(() {
-      _isLoading = !_isLoading;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = !_isLoading;
+      });
+    }
   }
 
   _getSessionType(String uId) async {
@@ -39,7 +41,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
 
   _getTypeFunction(String uId) {
     if (_isLoading) return JobService(uId: uId).getAllJobStream();
-    if (_userProfile?.type == 0)
+    if (_userProfile?.sessionType == 0)
       return JobService(uId: uId).getContractJobsStream();
     else
       return JobService(uId: uId).getFreelanceJobsStream();
@@ -48,160 +50,174 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    return _isLoading ? Text('') : StreamBuilder<List<Job>>(
-      stream: _getTypeFunction(user.uId),
-      builder: (context, snapshot) {
-        List<Job> jobs = snapshot.data;
-        if (snapshot.hasData) {
-          return Container(
-            height: 190,
-            child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemCount: jobs.length,
-              itemBuilder: (BuildContext ctx, int index) {
-                return jobs.isEmpty
-                    ? Container(
-                        child: Text(
-                          "No Job Found...",
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
-                    : GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => JobViewX(
-                                cId: jobs[index].companyId,
-                                bidPrice: jobs[index].bidPrice,
-                                cDes: jobs[index].description,
-                                cQualification: jobs[index].qualifications,
-                                cLoc: jobs[index].location,
-                                cTitle: jobs[index].title,
-                                cTye: jobs[index].type,
-                                docID: jobs[index].id,
-                                canApply: jobs[index].status < 1,
+    return _isLoading
+        ? Text('')
+        : StreamBuilder<List<Job>>(
+            stream: JobService(uId: user.uId).getAllJobStream(),
+            builder: (context, snapshot) {
+              List<Job> jobs = snapshot.data;
+              if (snapshot.hasData) {
+                return Container(
+                  height: 150,
+                  margin: EdgeInsets.only(left: 10.0),
+                  child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: jobs.length,
+                    itemBuilder: (BuildContext ctx, int index) {
+                      return jobs.isEmpty
+                          ? Container(
+                              child: Text(
+                                "No Job Found...",
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          padding: EdgeInsets.all(16),
-                          margin: EdgeInsets.only(right: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  StreamBuilder<UserProfile>(
-                                    stream: DatabaseService(
-                                            uId: jobs[index].companyId)
-                                        .getUserStream(),
-                                    builder: (ctx, snapshot) {
-                                      UserProfile userProfile = snapshot.data;
-                                      return Container(
-                                        height: 70,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: userProfile == null
-                                                ? AssetImage(
-                                                    'assets/images/mylogo.png')
-                                                : NetworkImage(
-                                                    userProfile?.imgUrl),
-                                            fit: BoxFit.fitWidth,
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10),
-                                          ),
+                            )
+                          : (jobs[index].status == 2
+                              ? Text('')
+                              : GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => JobViewX(
+                                          cId: jobs[index].companyId,
+                                          bidPrice: jobs[index].bidPrice,
+                                          cDes: jobs[index].description,
+                                          cQualification:
+                                              jobs[index].qualifications,
+                                          cLoc: jobs[index].location,
+                                          cTitle: jobs[index].title,
+                                          cTye: jobs[index].type,
+                                          docID: jobs[index].id,
+                                          canApply: jobs[index].status < 1,
                                         ),
-                                      );
-                                    },
-                                  ),
-                                  SizedBox(
-                                    width: 6.0,
-                                  ),
-                                  Container(
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    width: 200,
                                     decoration: BoxDecoration(
-                                      color: Colors.grey[200],
+                                      color: Colors.black,
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(10),
                                       ),
                                     ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 4,
-                                      ),
-                                      child: Text(
-                                        jobs[index].type == 0
-                                            ? 'CONTRACT'
-                                            : 'FREELANCER',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 10,
+                                    padding: EdgeInsets.all(14),
+                                    margin: EdgeInsets.only(right: 14),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            StreamBuilder<UserProfile>(
+                                              stream: DatabaseService(
+                                                      uId:
+                                                          jobs[index].companyId)
+                                                  .getUserStream(),
+                                              builder: (ctx, snapshot) {
+                                                UserProfile userProfile =
+                                                    snapshot.data;
+                                                return Container(
+                                                  height: 60,
+                                                  width: 60,
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: userProfile == null
+                                                          ? AssetImage(
+                                                              'assets/images/mylogo.png')
+                                                          : NetworkImage(
+                                                              userProfile
+                                                                  ?.imgUrl),
+                                                      fit: BoxFit.fitWidth,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            SizedBox(
+                                              width: 6.0,
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[200],
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 12,
+                                                  vertical: 4,
+                                                ),
+                                                child: Text(
+                                                  jobs[index].type == 0
+                                                      ? 'LABOR CONTRACT'
+                                                      : 'FREELANCER',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              jobs[index].title,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            Text(
+                                              '\$${jobs[index].bidPrice}/hr',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      jobs[index].title,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    Text(
-                                      '\$${jobs[index].bidPrice}/hr',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 24,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-              },
-            ),
+                                ));
+                    },
+                  ),
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.black87,
+                  ),
+                );
+              }
+            },
           );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.black87,
-            ),
-          );
-        }
-      },
-    );
   }
 }

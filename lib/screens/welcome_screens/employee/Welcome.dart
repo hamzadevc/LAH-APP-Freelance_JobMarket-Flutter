@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_application/modals/employeeInfo.dart';
+import 'package:job_application/screens/welcome_screens/employee/components/completed_tab_components/completed_job_list.dart';
 import 'package:job_application/screens/welcome_screens/employee/components/jobs_tab_components/jobs_list.dart';
 import 'package:provider/provider.dart';
 
@@ -33,55 +34,60 @@ class _WelcomeState extends State<Welcome> {
             child: AppBar(
               backgroundColor: Colors.black,
               actions: <Widget>[
-                isSearch
-                    ? Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          isSearch = false;
-                        });
-                      },
-                      icon: new FaIcon(
-                        FontAwesomeIcons.timesCircle,
-                      ),
-                    ),
-                  ),
-                )
-                    : Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          isSearch = true;
-                        });
-                      },
-                      icon: new FaIcon(
-                        FontAwesomeIcons.search,
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Questions()),
-                      );
-                    },
-                    icon: new Icon(
-                      Icons.filter_list,
-                      color: Colors.white,
-                    ),
-                  ),
-                )
+                // isSearch
+                //     ? Padding(
+                //   padding: const EdgeInsets.only(right: 8.0),
+                //   child: Align(
+                //     alignment: Alignment.centerLeft,
+                //     child: IconButton(
+                //       onPressed: () {
+                //         setState(() {
+                //           isSearch = false;
+                //         });
+                //       },
+                //       icon: new FaIcon(
+                //         FontAwesomeIcons.timesCircle,
+                //       ),
+                //     ),
+                //   ),
+                // )
+                //     : Padding(
+                //   padding: const EdgeInsets.only(right: 8.0),
+                //   child: Align(
+                //     alignment: Alignment.centerLeft,
+                //     child: IconButton(
+                //       onPressed: () {
+                //         setState(() {
+                //           isSearch = true;
+                //         });
+                //       },
+                //       icon: new FaIcon(
+                //         FontAwesomeIcons.search,
+                //         size: 18,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: IconButton(
+                //     onPressed: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(builder: (context) => Questions()),
+                //       );
+                //     },
+                //     icon: GestureDetector(
+                //       onTap: () {
+                //
+                //       },
+                //       child: new Icon(
+                //         Icons.filter_list,
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   ),
+                // )
               ],
               leading: Padding(
                 padding: const EdgeInsets.only(top: 18.0),
@@ -168,14 +174,7 @@ class _WelcomeState extends State<Welcome> {
                 uId: user.uId,
               ),
               JobsList(),
-              ListView(
-                physics: const BouncingScrollPhysics(),
-                children: <Widget>[
-                  CompletedCard(),
-                  CompletedCard(),
-                  CompletedCard(),
-                ],
-              ),
+              CompletedJobsList(),
             ],
           ),
         ),

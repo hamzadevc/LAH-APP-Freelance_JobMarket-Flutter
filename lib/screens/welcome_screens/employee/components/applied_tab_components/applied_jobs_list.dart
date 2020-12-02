@@ -12,6 +12,7 @@ class AppliedJobsList extends StatelessWidget {
     return Container(
       child: Center(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(
@@ -52,24 +53,29 @@ class AppliedJobsList extends StatelessWidget {
                               ),
                             )
                           : ListView.builder(
-                              itemCount: applications?.length ?? 0,
+                              itemCount: applications?.length,
                               itemBuilder: (ctx, index) {
                                 return StreamBuilder<JobApplicant>(
                                   stream: JobService(
                                           uId: uId, jId: applications[index])
                                       .getUserJobApplicationStream(),
                                   builder: (ctx, snapshot) {
-                                    if(snapshot.hasData) {
+                                    if (snapshot.hasData) {
                                       JobApplicant applicant = snapshot.data;
-                                      return ApplicantCard(
-                                        type: applicant?.type ?? '',
-                                        title: applicant?.jobTitle ?? '',
-                                        status: applicant?.status ?? '',
-                                        cId: applicant?.companyId ?? '',
-                                        jId: applicant?.jobId ?? '',
-                                      );
-                                    }else{
+                                        return ApplicantCard(
+                                          type: applicant?.type ?? '',
+                                          title: applicant?.jobTitle ?? '',
+                                          status: applicant?.status ?? '',
+                                          cId: applicant?.companyId ?? '',
+                                          jId: applicant?.jobId ?? '',
+                                        );
+                                    } else {
                                       return Text('');
+                                      // return Center(
+                                      //   child: CircularProgressIndicator(
+                                      //     backgroundColor: Colors.black87,
+                                      //   ),
+                                      // );
                                     }
                                   },
                                 );

@@ -29,7 +29,7 @@ class JobService {
     @required String bidPrice,
     @required String numHr,
     @required String numDays,
-    @required Timestamp needDate,
+    @required DateTime needDate,
     @required String limit,
   }) async {
     try {
@@ -132,19 +132,35 @@ class JobService {
 
   // add applicants to the job
   Future addApplicantsWithJobs({String applicantId}) async {
-    try{
+    try {
       // get all applicants
       Job job = await getJob();
-      if(job != null){
-        if(job.allApplicants != null && job.allApplicants.isNotEmpty){
+      if (job != null) {
+        if (job.allApplicants != null && job.allApplicants.isNotEmpty) {
           job.allApplicants.add(applicantId);
-        }
-        else
+        } else
           job = Job(allApplicants: [applicantId], id: jId);
         await _jobRef.document(jId).updateData(job.toJsonAllApplicants());
       }
       // add or update applicants
-    }catch(e){
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future removeApplicantsWithJobs({String applicantId}) async {
+    try {
+      // get all applicants
+      Job job = await getJob();
+      if (job != null) {
+        if (job.allApplicants != null &&
+            job.allApplicants.contains(applicantId)) {
+          job.allApplicants.remove(applicantId);
+        }
+        await _jobRef.document(jId).updateData(job.toJsonAllApplicants());
+      }
+      // add or update applicants
+    } catch (e) {
       print(e);
     }
   }
@@ -190,6 +206,8 @@ class JobService {
               jobId: jId,
               jobTitle: jobTitle,
               companyId: companyId,
+              isEmployeeReviewed: false,
+              isCompanyReviewed: false,
             ).toJson(),
           );
 
@@ -212,7 +230,35 @@ class JobService {
     }
   }
 
-  Future<JobApplicant> getCvLink() async {
+  Future updateAcceptTime() async {
+    try {
+      await _applicationRef
+          .document(uId)
+          .collection(_applications)
+          .document(jId)
+          .updateData(
+            JobApplicant(acceptTime: Timestamp.now()).toJsonAcceptTime(),
+          );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future updateCompletedTime() async {
+    try {
+      await _applicationRef
+          .document(uId)
+          .collection(_applications)
+          .document(jId)
+          .updateData(
+            JobApplicant(completedTime: Timestamp.now()).toJsonCompletedTime(),
+          );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<JobApplicant> getJobApplicant() async {
     try {
       DocumentSnapshot snapshot = await _applicationRef
           .document(uId)
@@ -220,7 +266,7 @@ class JobService {
           .document(jId)
           .get();
       if (snapshot != null)
-        return JobApplicant(id: snapshot.documentID).fromJson2Cv(snapshot.data);
+        return JobApplicant(id: snapshot.documentID).fromJson(snapshot.data);
       return null;
     } catch (e) {
       throw e;
@@ -246,6 +292,10 @@ class JobService {
   }
 
   Stream<JobApplicant> getUserJobApplicationStream() {
+    print('-------------');
+    print('UID: $uId');
+    print('JID $jId');
+    print('-------------');
     return _applicationRef
         .document(uId)
         .collection(_applications)
@@ -316,20 +366,34 @@ class JobService {
   }
 
   Stream<int> getCountFromJobApplicantsStream(int type) {
-    return _jobRef
-        .document(jId)
-        .snapshots()
-        .map(_countFromStream);
+    return _jobRef.document(jId).snapshots().map(_countFromStream);
   }
 
 // change applied job status [Company Commands]
-  Future changeApplicantStatus({int status}) async {
+  Future changeApplicantStatus({int status, bool isCompReview = false}) async {
     try {
       await _applicationRef
           .document(uId)
           .collection(_applications)
           .document(jId)
-          .updateData(JobApplicant(status: status).toJson2Status());
+          .updateData(
+              JobApplicant(status: status, isCompanyReviewed: isCompReview)
+                  .toJson2Status());
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future changeApplicantReviewStatus(
+      {int status, bool isEmpReview = false}) async {
+    try {
+      await _applicationRef
+          .document(uId)
+          .collection(_applications)
+          .document(jId)
+          .updateData(
+              JobApplicant(isEmployeeReviewed: isEmpReview, status: status)
+                  .toJsonIsReviewed());
     } catch (e) {
       throw e;
     }

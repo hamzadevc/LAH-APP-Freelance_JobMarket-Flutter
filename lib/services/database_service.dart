@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/modals/job_applicant.dart';
 import 'package:job_application/modals/user_profile.dart';
 
 class DatabaseService {
@@ -40,7 +39,7 @@ class DatabaseService {
             city: city,
             cardNo: cardNo,
             address: address,
-            type: type,
+            sessionType: type,
           ).toJson());
     } catch (e) {
       throw e;
@@ -77,7 +76,7 @@ class DatabaseService {
             city: city,
             cardNo: cardNo,
             address: address,
-            type: type,
+            sessionType: type,
           ).toJson());
     } catch (e) {
       throw e;
@@ -124,6 +123,22 @@ class DatabaseService {
     }
   }
 
+  Future removeUserApplications({String jId}) async {
+    try {
+      UserProfile userProfile = await getUser();
+      List<dynamic> appList = userProfile.appliedJobs;
+      if (appList != null && appList.isNotEmpty) {
+        if (appList.contains(jId)) {
+          appList.remove(jId);
+        }
+      }
+      await _usersRef.document(uId).updateData(
+          UserProfile(uId: uId, appliedJobs: appList).toJson2AppliedJobs());
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future updateEmployeeIdInCompanyProfile(
       {String cId, String jId, bool completed}) async {
     try {
@@ -140,6 +155,62 @@ class DatabaseService {
     }
   }
 
+  Future updateRating({String rating, String feedback}) async {
+    try {
+      UserProfile profile = await getUser();
+      List<dynamic> allRatings = [];
+      String avgRating;
+      double temp = 0.0;
+      if (profile.allRatings == null)
+        allRatings.add(rating);
+      else {
+        allRatings = profile.allRatings;
+        allRatings.add(rating);
+      }
+
+      for (int i = 0; i < allRatings.length; i++) {
+        double rating = double.parse(allRatings[i]);
+        temp += rating;
+      }
+      avgRating = '${temp / allRatings.length}';
+
+      _usersRef.document(uId).updateData(UserProfile(
+            avgRating: avgRating,
+            allRatings: allRatings,
+          ).toJsonRating());
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future updateCompanyRating({String rating, String feedback}) async {
+    try {
+      UserProfile profile = await getUser();
+      List<dynamic> allRatings = [];
+      String avgRating;
+      double temp = 0.0;
+      if (profile.allCompanyRatings == null)
+        allRatings.add(rating);
+      else {
+        allRatings = profile.allCompanyRatings;
+        allRatings.add(rating);
+      }
+
+      for (int i = 0; i < allRatings.length; i++) {
+        double rating = double.parse(allRatings[i]);
+        temp += rating;
+      }
+      avgRating = '${temp / allRatings.length}';
+
+      _usersRef.document(uId).updateData(UserProfile(
+        companyAvgRating: avgRating,
+        allCompanyRatings: allRatings,
+      ).toJsonCompanyRating());
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future updateJobStatusInCompanyProfile(
       {String cId, String jId, bool completed}) async {
     try {
@@ -148,7 +219,8 @@ class DatabaseService {
           .document(cId)
           .collection('JobsWithApplicants')
           .document(jId)
-          .updateData(AllApplicants(completed: completed, applicant: uId).toJson());
+          .updateData(
+              AllApplicants(completed: completed, applicant: uId).toJson());
 
       if (completed) await updateUserCompletedJobsList(jId: jId);
 
