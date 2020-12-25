@@ -141,14 +141,13 @@ class _CWelcomeState extends State<CWelcome> {
                 )
               : TabBarView(
                   children: <Widget>[
-                    StreamBuilder<List<AllApplicants>>(
-                      stream:
-                          DatabaseService(uId: user.uId).getApplicantsStream(),
+                    StreamBuilder<UserProfile>(
+                      stream: DatabaseService(uId: user.uId).getUserStream(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          List<AllApplicants> allApplicants = snapshot.data;
-                          return (allApplicants.isEmpty ||
-                                  allApplicants == null)
+                          UserProfile allApplicants = snapshot.data;
+                          return (allApplicants.allApplicants == null ||
+                                  allApplicants.allApplicants.isEmpty)
                               ? Center(
                                   child: Container(
                                     margin: EdgeInsets.all(10.0),
@@ -164,13 +163,12 @@ class _CWelcomeState extends State<CWelcome> {
                               : ListView.builder(
                                   padding: EdgeInsets.all(10),
                                   physics: BouncingScrollPhysics(),
-                                  itemCount: allApplicants.length,
+                                  itemCount: allApplicants.allApplicants.length,
                                   itemBuilder: (BuildContext ctx, int index) {
                                     return StreamBuilder<JobApplicant>(
                                       stream: JobService(
-                                              uId: allApplicants[index]
-                                                  .applicant,
-                                              jId: allApplicants[index].id)
+                                              uId: allApplicants.uId,
+                                              jId: allApplicants.allApplicants[index])
                                           .getUserJobApplicationStream(),
                                       builder: (ctx, snapshot) {
                                         if (snapshot.hasData) {
@@ -207,7 +205,9 @@ class _CWelcomeState extends State<CWelcome> {
                                                             empReviewed:
                                                                 jobApplicant
                                                                     .isEmployeeReviewed,
-                                                                acceptTime: jobApplicant.acceptTime,
+                                                            acceptTime:
+                                                                jobApplicant
+                                                                    .acceptTime,
                                                           ),
                                                         ),
                                                       );
@@ -282,6 +282,7 @@ class _CWelcomeState extends State<CWelcome> {
                                                                         jobApplicant
                                                                             .id,
                                                                   ).updateAcceptTime();
+
                                                                 },
                                                                 color: Colors
                                                                     .blueGrey,

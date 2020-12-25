@@ -139,16 +139,44 @@ class DatabaseService {
     }
   }
 
+  Future<AllApplicants> getAllApplicants({
+    String cId,
+    String jId,
+  }) async {
+    try {
+      DocumentSnapshot snapshot = await _usersRef
+          .document(cId)
+          .collection('JobsWithApplicants')
+          .document(jId)
+          .get();
+      if (snapshot == null || snapshot.data == null) return null;
+
+      return AllApplicants(id: snapshot.documentID).fromJson(snapshot.data);
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future updateEmployeeIdInCompanyProfile(
       {String cId, String jId, bool completed}) async {
     try {
+      var apps = await getAllApplicants(cId: cId, jId: jId);
+
+      var all = apps.applicant;
+
+      if (all == null || all.isEmpty) {
+        all = [uId];
+      } else {
+        all.add(uId);
+      }
       // update list
       await _usersRef
           .document(cId)
           .collection('JobsWithApplicants')
           .document(jId)
           .setData(
-            AllApplicants(applicant: uId, completed: completed).toJson(),
+            AllApplicants(applicant: all, completed: completed).toJson(),
           );
     } catch (e) {
       throw e;
@@ -203,9 +231,9 @@ class DatabaseService {
       avgRating = '${temp / allRatings.length}';
 
       _usersRef.document(uId).updateData(UserProfile(
-        companyAvgRating: avgRating,
-        allCompanyRatings: allRatings,
-      ).toJsonCompanyRating());
+            companyAvgRating: avgRating,
+            allCompanyRatings: allRatings,
+          ).toJsonCompanyRating());
     } catch (e) {
       print(e);
     }
@@ -219,8 +247,7 @@ class DatabaseService {
           .document(cId)
           .collection('JobsWithApplicants')
           .document(jId)
-          .updateData(
-              AllApplicants(completed: completed, applicant: uId).toJson());
+          .updateData(AllApplicants(completed: completed).toJsonStatus());
 
       if (completed) await updateUserCompletedJobsList(jId: jId);
 

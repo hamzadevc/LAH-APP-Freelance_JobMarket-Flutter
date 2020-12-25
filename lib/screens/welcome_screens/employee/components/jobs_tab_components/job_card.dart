@@ -186,6 +186,8 @@ class _JobCardState extends State<JobCard> {
                                     cId: _job?.companyId ?? '',
                                     bidPrice: _job?.bidPrice ?? '',
                                     canApply: _job.status < 1,
+                                    neededEmployees: int.parse(_job?.limit ?? '0'),
+                                    totalEmployees: _job.allApplicants?.length ?? 0,
                                   ),
                                 ),
                               );

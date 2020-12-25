@@ -292,10 +292,6 @@ class JobService {
   }
 
   Stream<JobApplicant> getUserJobApplicationStream() {
-    print('-------------');
-    print('UID: $uId');
-    print('JID $jId');
-    print('-------------');
     return _applicationRef
         .document(uId)
         .collection(_applications)

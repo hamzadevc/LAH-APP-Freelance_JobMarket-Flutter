@@ -27,6 +27,8 @@ class JobViewX extends StatefulWidget {
   final String cId;
   final String bidPrice;
   final bool canApply;
+  final int totalEmployees;
+  final int neededEmployees;
 
   JobViewX({
     this.cImg,
@@ -40,6 +42,8 @@ class JobViewX extends StatefulWidget {
     this.cId,
     this.bidPrice,
     this.canApply,
+    this.neededEmployees,
+    this.totalEmployees,
   });
 }
 
@@ -340,32 +344,41 @@ class _JobViewXState extends State<JobViewX> {
                                                   await UserProfile()
                                                       .getUserFromSharedPrefs();
                                               if (_cvUrl != null) {
-                                                _toggleIsLoading();
-                                                await JobService(
-                                                  jId: widget.docID,
-                                                  uId: userProfile.uId,
-                                                ).applyForJob(
-                                                  name: userProfile.name,
-                                                  email: userProfile.email,
-                                                  status: ApplicantStatus
-                                                      .PENDING.index,
-                                                  jobTitle: widget.cTitle,
-                                                  appliedDate: Timestamp.now(),
-                                                  type: widget.cTye,
-                                                  cvLink: _cvUrl ?? '',
-                                                  employeeId: userProfile.uId,
-                                                  phoneNumber:
-                                                      userProfile.mobileNumber,
-                                                  companyId: widget.cId,
-                                                );
-
-                                                await DatabaseService(
-                                                  uId: userProfile.uId,
-                                                ).updateEmployeeIdInCompanyProfile(
+                                                if (widget.totalEmployees <
+                                                    widget.neededEmployees) {
+                                                  _toggleIsLoading();
+                                                  await JobService(
                                                     jId: widget.docID,
-                                                    cId: widget.cId,
-                                                    completed: false);
-                                                _toggleIsLoading();
+                                                    uId: userProfile.uId,
+                                                  ).applyForJob(
+                                                    name: userProfile.name,
+                                                    email: userProfile.email,
+                                                    status: ApplicantStatus
+                                                        .PENDING.index,
+                                                    jobTitle: widget.cTitle,
+                                                    appliedDate:
+                                                        Timestamp.now(),
+                                                    type: widget.cTye,
+                                                    cvLink: _cvUrl ?? '',
+                                                    employeeId: userProfile.uId,
+                                                    phoneNumber: userProfile
+                                                        .mobileNumber,
+                                                    companyId: widget.cId,
+                                                  );
+
+                                                  await DatabaseService(
+                                                    uId: userProfile.uId,
+                                                  ).updateEmployeeIdInCompanyProfile(
+                                                      jId: widget.docID,
+                                                      cId: widget.cId,
+                                                      completed: false);
+                                                  _toggleIsLoading();
+                                                } else {
+                                                  Fluttertoast.showToast(
+                                                      msg: "No Vacancy Left!!!",
+                                                      backgroundColor:
+                                                          Colors.yellow);
+                                                }
                                               } else {
                                                 Fluttertoast.showToast(
                                                     msg: "Please Upload CV!",
@@ -393,11 +406,7 @@ class _JobViewXState extends State<JobViewX> {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        widget.canApply
-                                            ? (canApply
-                                                ? "APPLY NOW"
-                                                : "APPLIED")
-                                            : "NOT AVAILABLE",
+                                        getFunctionName(canApply),
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -424,6 +433,16 @@ class _JobViewXState extends State<JobViewX> {
               ),
             ),
     );
+  }
+
+  String getFunctionName(bool canApply) {
+    if (!widget.canApply) return "NOT AVAILABLE";
+    if (widget.totalEmployees >= widget.neededEmployees)
+      return "No Vacancy Left..";
+    else if (canApply)
+      return "APPLY NOW";
+    else
+      return 'APPLIED';
   }
 
   Future<List<String>> uploadCV(String uid) async {

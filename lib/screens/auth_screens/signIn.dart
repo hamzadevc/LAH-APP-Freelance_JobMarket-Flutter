@@ -102,9 +102,9 @@ class _SignInState extends State<SignIn> {
                           await userProfile.saveUserInSharedPrefs();
                           Navigator.of(context).pop();
                         }else{
-                          Fluttertoast.showToast(
-                              msg: "Email is not registered.",
-                              gravity: ToastGravity.CENTER);
+                          // Fluttertoast.showToast(
+                          //     msg: "Email is not registered.",
+                          //     gravity: ToastGravity.CENTER);
                         }
                         setState(() {
                           showSpinner = false;

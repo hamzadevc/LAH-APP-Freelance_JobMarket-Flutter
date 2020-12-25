@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:879633480212:ios:eef502be4a8ebc4fb90501</string>
+	<string>1:879633480212:ios:3d41d4e37194cc71b90501</string>
 	<key>DATABASE_URL</key>
 	<string>https://jobportal-e73b7.firebaseio.com</string>
 </dict>

@@ -20,6 +20,8 @@ class UserProfile {
   final List<dynamic> allRatings;
   final List<dynamic> allCompanyRatings;
   final List<dynamic> appliedJobs;
+  final List<dynamic> allApplicants;
+  final List<dynamic> allChats;
   final List<dynamic> myCompletedJobs; // contains my jobs which
 
   UserProfile({
@@ -43,6 +45,8 @@ class UserProfile {
     this.avgRating,
     this.allCompanyRatings,
     this.companyAvgRating,
+    this.allApplicants,
+    this.allChats,///TODO Start from here....
   });
 
   Map<String, dynamic> toJson() {
@@ -98,6 +102,10 @@ class UserProfile {
     };
   }
 
+  Map<String, dynamic> toJsonAllApplicants() => {
+    'all_applicants': allApplicants,
+  };
+
   UserProfile fromJson(Map<String, dynamic> data) {
     return UserProfile(
       uId: data['id'],
@@ -120,6 +128,7 @@ class UserProfile {
       avgRating: data['avg_rating'],
       allCompanyRatings: data['all_company_rating'] ?? [],
       companyAvgRating: data['avg_company_rating'],
+      allApplicants: data['all_applicants'] ?? [],
     );
   }
 
@@ -167,11 +176,10 @@ class UserProfile {
   }
 }
 
-///TODO Convert applicants back to list...
 class AllApplicants {
   final String id;
   final bool completed;
-  final String applicant;
+  final List<dynamic> applicant;
   AllApplicants({
     this.applicant,
     this.id,
@@ -182,6 +190,9 @@ class AllApplicants {
         'allApplicants': applicant,
         'completed': completed,
       };
+  Map<String, dynamic> toJsonStatus() => {
+    'completed': completed,
+  };
 
   AllApplicants fromJson(Map<String, dynamic> data) => AllApplicants(
         id: id,
