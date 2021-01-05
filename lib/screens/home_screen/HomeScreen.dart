@@ -1,6 +1,9 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:job_application/wrapper.dart';
+import 'package:video_player/video_player.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -12,27 +15,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
-  AnimationController _controller;
+  VideoPlayerController _controller;
 
   @override
   void initState() {
-    print('Home INIT');
-    _controller = AnimationController(
-      duration: const Duration(seconds: 4),
-      vsync: this,
-    );
-
     super.initState();
-
-    _controller.forward();
-    new Future.delayed(
-      const Duration(seconds: 9),
-          () => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Wrapper()),
-      ),
+    Timer(Duration(seconds: 5),
+            ()=>Navigator.pushReplacement(context,
+            MaterialPageRoute(builder:
+                (context) =>
+                    Wrapper()
+            )
+        )
     );
-    print('HOME INIT Ends');
+
+    _controller = VideoPlayerController.asset('assets/LAH4K_02.mp4')
+      ..initialize().then((_) {
+        // Once the video has been loaded we play the video and set looping to true.
+        _controller.play();
+        _controller.setLooping(true);
+        _controller.setVolume(0.0);
+        _controller.play();
+        // Ensure the first frame is shown after the video is initialized.
+        //setState(() {});
+      });
   }
 
   @override
@@ -44,37 +50,20 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 50,
-          ),
-          Image.asset(
-            "assets/images/undrawpic.png",
-            height: 250,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Center(
-            child: RotationTransition(
-              turns: Tween(begin: 1.2, end: 2.2).animate(_controller),
-              child: Image.asset(
-                "assets/images/mylogo.png",
-                height: 120,
-              ),
+      body: Container(
+        child: SizedBox.expand(
+          child: FittedBox(
+            // If your background video doesn't look right, try changing the BoxFit property.
+            // BoxFit.fill created the look I was going for.
+            fit: BoxFit.fill,
+            child: SizedBox(
+              width: _controller.value.size?.width ?? 0,
+              height: _controller.value.size?.height ?? 0,
+              child: VideoPlayer(_controller),
             ),
           ),
-          SizedBox(
-            height: 30,
-          ),
-          Text(
-            "LAH",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-          )
-        ],
-      ),
+        ),
+      )
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

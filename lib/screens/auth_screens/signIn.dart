@@ -27,6 +27,9 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black87,
+      ),
       backgroundColor: Color(0xffffffff),
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
@@ -96,12 +99,12 @@ class _SignInState extends State<SignIn> {
                         User user = await Auth()
                             .signIn(email, password, widget.sessionType);
                         // Save User Data in Shared Prefs
-                        if(user != null) {
+                        if (user != null) {
                           UserProfile userProfile =
-                          await DatabaseService(uId: user?.uId).getUser();
+                              await DatabaseService(uId: user?.uId).getUser();
                           await userProfile.saveUserInSharedPrefs();
                           Navigator.of(context).pop();
-                        }else{
+                        } else {
                           // Fluttertoast.showToast(
                           //     msg: "Email is not registered.",
                           //     gravity: ToastGravity.CENTER);

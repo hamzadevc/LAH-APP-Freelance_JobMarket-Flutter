@@ -1,4 +1,4 @@
-package com.flashsol.job_application
+package com.flashsol.lahapp
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

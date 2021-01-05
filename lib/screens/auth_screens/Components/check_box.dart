@@ -1,39 +1,30 @@
 import 'package:flutter/material.dart';
 
-class CheckboxFormField extends FormField<bool> {
-  CheckboxFormField({
-    Widget title,
-    FormFieldSetter<bool> onSaved,
-    FormFieldValidator<bool> validator,
-    bool initialValue = false,
-    bool autoValidate = false,
-    Function onTap,
-  }) : super(
-          onSaved: onSaved,
-          validator: validator,
-          initialValue: initialValue,
-          autovalidate: autoValidate,
-          builder: (FormFieldState<bool> state) {
-            return CheckboxListTile(
-              dense: state.hasError,
-              title: title,
-              value: state.value,
-              onChanged: state.didChange,
-              subtitle: state.hasError
-                  ? Builder(
-                      builder: (BuildContext context) => GestureDetector(
-                        onTap: onTap,
-                        child: Text(
-                          state.errorText,
-                          style: TextStyle(
-                            color: Theme.of(context).errorColor,
-                          ),
-                        ),
-                      ),
-                    )
-                  : null,
-              controlAffinity: ListTileControlAffinity.leading,
-            );
-          },
-        );
+class CheckboxField extends StatelessWidget {
+  final Text title;
+  final Function onTap;
+  final Function onChanged;
+  final bool value;
+
+  CheckboxField({
+    this.title,
+    this.onTap,
+    this.onChanged,
+    this.value,
+  });
+
+  Widget build(BuildContext context) {
+    return Container(
+      child: ListTile(
+        title: GestureDetector(
+          onTap: onTap,
+          child: title,
+        ),
+        trailing: Checkbox(
+          onChanged: onChanged,
+          value: value,
+        ),
+      ),
+    );
+  }
 }

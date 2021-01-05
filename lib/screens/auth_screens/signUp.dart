@@ -31,6 +31,9 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+      ),
       backgroundColor: Color(0xffffffff),
       body: Form(
         key: key,
@@ -70,22 +73,22 @@ class _SignUpState extends State<SignUp> {
                   cPassword = value.trim();
                 },
               ),
-              CheckboxFormField(
-                onSaved: (val) {
-                  termsOfUse = val;
+              CheckboxField(
+                onChanged: (val) {
+                  setState(() {
+                    termsOfUse = val;
+                  });
                 },
+                value: termsOfUse,
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (ctx) => PDFView(
-                        path: 'assets/documents/terms-of-use.pdf',
+                        path: 'assets/documents/app-terms.pdf',
                       ),
                     ),
                   );
-                },
-                validator: (val) {
-                  return val ? null : 'Agree with terms and conditions.';
                 },
                 title: Text(
                   'terms of use.',
@@ -95,10 +98,13 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              CheckboxFormField(
-                onSaved: (val) {
-                  privacyPolicy = val;
+              CheckboxField(
+                onChanged: (val) {
+                  setState(() {
+                    privacyPolicy = val;
+                  });
                 },
+                value: privacyPolicy,
                 onTap: () {
                   Navigator.push(
                     context,
@@ -108,9 +114,6 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                   );
-                },
-                validator: (val) {
-                  return val ? null : 'Agree with privacy policy.';
                 },
                 title: Text(
                   'privacy policy.',
@@ -134,7 +137,7 @@ class _SignUpState extends State<SignUp> {
                           fontWeight: FontWeight.w700,
                           fontSize: 18),
                     ),
-                    onPressed: () async {
+                    onPressed: (privacyPolicy && termsOfUse) ? () async {
                       if (key.currentState.validate()) {
                         key.currentState.save();
                         if (email == null || password == null) {
@@ -199,7 +202,7 @@ class _SignUpState extends State<SignUp> {
                           }
                         }
                       }
-                    },
+                    } : null,
                   ),
                 ),
               ),

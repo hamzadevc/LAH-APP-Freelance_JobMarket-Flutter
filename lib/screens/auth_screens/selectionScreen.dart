@@ -3,7 +3,6 @@ import 'package:job_application/modals/employeeInfo.dart';
 import 'package:job_application/screens/auth_screens/signIn.dart';
 
 import 'Components/WaveClipPath.dart';
-import 'Components/custom_card.dart';
 
 import 'package:job_application/widgets/button_material.dart';
 
@@ -16,6 +15,9 @@ class _SelectCategoryState extends State<SelectCategory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black87,
+      ),
       backgroundColor: Colors.white,
       body: Stack(
         children: [

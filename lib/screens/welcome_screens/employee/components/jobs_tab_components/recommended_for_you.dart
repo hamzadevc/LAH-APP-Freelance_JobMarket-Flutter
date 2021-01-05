@@ -94,7 +94,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
                                           docID: jobs[index].id,
                                           canApply: jobs[index].status < 1,
                                           neededEmployees: int.parse(jobs[index].limit ?? '0'),
-                                          totalEmployees: jobs[index]?.allApplicants ?? 0,
+                                          totalEmployees: jobs[index]?.allApplicants?.length ?? 0,
                                         ),
                                       ),
                                     );

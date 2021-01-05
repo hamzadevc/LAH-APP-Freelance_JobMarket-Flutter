@@ -32,6 +32,7 @@ dependencies:
   quick_feedback: ^0.1.1
   expandable_text: 1.0.1
   intl: ^0.16.1
+  video_player: ^1.0.1
 
 dev_dependencies:
   flutter_test:
