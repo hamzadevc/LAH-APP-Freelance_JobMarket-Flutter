@@ -2,19 +2,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:job_application/screens/initial_screens/splash_screen.dart';
 import 'package:job_application/wrapper.dart';
 import 'package:video_player/video_player.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class LogoScreen extends StatefulWidget {
+  LogoScreen({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _LogoScreenState createState() => _LogoScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+class _LogoScreenState extends State<LogoScreen> with TickerProviderStateMixin {
   VideoPlayerController _controller;
 
   @override
@@ -24,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             ()=>Navigator.pushReplacement(context,
             MaterialPageRoute(builder:
                 (context) =>
-                    Wrapper()
+                    SplashScreen()
             )
         )
     );

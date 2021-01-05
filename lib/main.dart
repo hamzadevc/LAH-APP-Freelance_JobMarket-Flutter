@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:job_application/screens/home_screen/HomeScreen.dart';
+import 'package:job_application/screens/initial_screens/logo_screen.dart';
 import 'package:job_application/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
           textTheme: GoogleFonts.montserratTextTheme(),
         ),
-        home: MyHomePage(),
+        home: LogoScreen(),
       ),
     );
   }
