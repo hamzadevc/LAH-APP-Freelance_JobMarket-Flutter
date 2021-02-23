@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/modals/job_applicant.dart';
-import 'package:job_application/screens/welcome_screens/employee/components/applied_tab_components/applicant_card.dart';
-import 'package:job_application/services/database_service.dart';
-import 'package:job_application/services/job_service.dart';
+import '../../../../../modals/job_applicant.dart';
+import '../../../../welcome_screens/employee/components/applied_tab_components/applicant_card.dart';
+import '../../../../../services/database_service.dart';
+import '../../../../../services/job_service.dart';
 
 class AppliedJobsList extends StatelessWidget {
   final String uId;

@@ -4,12 +4,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/modals/job_applicant.dart';
-import 'package:job_application/modals/user_profile.dart';
-import 'package:job_application/services/database_service.dart';
-import 'package:job_application/services/documents_service.dart';
-import 'package:job_application/services/job_service.dart';
+import '../../../../../modals/employeeInfo.dart';
+import '../../../../../modals/job_applicant.dart';
+import '../../../../../modals/user_profile.dart';
+import '../../../../../services/database_service.dart';
+import '../../../../../services/documents_service.dart';
+import '../../../../../services/job_service.dart';
 import 'package:provider/provider.dart';
 
 class JobViewX extends StatefulWidget {

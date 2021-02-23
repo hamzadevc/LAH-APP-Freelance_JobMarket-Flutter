@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/modals/job.dart';
-import 'package:job_application/modals/user_profile.dart';
-import 'package:job_application/screens/welcome_screens/employee/components/jobs_tab_components/jobViewX.dart';
-import 'package:job_application/services/database_service.dart';
-import 'package:job_application/services/job_service.dart';
+import '../../../../../modals/employeeInfo.dart';
+import '../../../../../modals/job.dart';
+import '../../../../../modals/user_profile.dart';
+import '../../../../welcome_screens/employee/components/jobs_tab_components/jobViewX.dart';
+import '../../../../../services/database_service.dart';
+import '../../../../../services/job_service.dart';
 import 'package:provider/provider.dart';
 
 class JobCard extends StatefulWidget {

@@ -1,9 +1,7 @@
-
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:job_application/screens/initial_screens/splash_screen.dart';
-import 'package:job_application/wrapper.dart';
+import '../../screens/initial_screens/splash_screen.dart';
+import '../../wrapper.dart';
 import 'package:video_player/video_player.dart';
 
 class LogoScreen extends StatefulWidget {

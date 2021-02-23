@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/modals/review.dart';
-import 'package:job_application/screens/welcome_screens/employee/components/completed_tab_components/completed_job_card.dart';
-import 'package:job_application/services/review_service.dart';
+import '../../../../../modals/employeeInfo.dart';
+import '../../../../../modals/review.dart';
+import '../../../../welcome_screens/employee/components/completed_tab_components/completed_job_card.dart';
+import '../../../../../services/review_service.dart';
 import 'package:provider/provider.dart';
 
 class CompletedJobsList extends StatefulWidget {

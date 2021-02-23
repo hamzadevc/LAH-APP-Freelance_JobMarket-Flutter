@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/screens/welcome_screens/company/companyWelcome.dart';
-import 'package:job_application/screens/welcome_screens/employee/Welcome.dart';
-import 'package:job_application/services/auth_service.dart';
+import '../../modals/employeeInfo.dart';
+import '../welcome_screens/company/companyWelcome.dart';
+import '../welcome_screens/employee/Welcome.dart';
+import '../../services/auth_service.dart';
 
 class WelcomeWrapper extends StatefulWidget {
   final String uid;
@@ -42,7 +42,7 @@ class _WelcomeWrapperState extends State<WelcomeWrapper> {
         ),
       );
     } else {
-      return _sessionType == SessionType.COMPANY ? CWelcome() : Welcome();
+      return _sessionType == SessionType.COMPANY ? CWelcome(_sessionType) : Welcome(_sessionType);
     }
   }
 }

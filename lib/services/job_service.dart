@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:job_application/modals/job.dart';
-import 'package:job_application/modals/job_applicant.dart';
-import 'package:job_application/services/database_service.dart';
+import '../modals/job.dart';
+import '../modals/job_applicant.dart';
+import '../services/database_service.dart';
 
 class JobService {
   final String uId;

@@ -4,9 +4,15 @@ class CustomTextField extends StatelessWidget {
   final String title;
   final Function onChanged;
   final TextEditingController controller;
+  final IconData icon;
+  final Function validator;
 
   CustomTextField(
-      {@required this.title, @required this.onChanged, this.controller});
+      {@required this.title,
+      @required this.icon,
+      @required this.onChanged,
+      this.validator,
+      this.controller});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -14,9 +20,10 @@ class CustomTextField extends StatelessWidget {
       child: Material(
         elevation: 4.0,
         borderRadius: BorderRadius.all(Radius.circular(30)),
-        child: TextField(
+        child: TextFormField(
           controller: controller,
           onChanged: onChanged,
+          validator: validator,
           cursorColor: Colors.blue,
           decoration: InputDecoration(
               hintText: title,
@@ -24,7 +31,7 @@ class CustomTextField extends StatelessWidget {
                 elevation: 0,
                 borderRadius: BorderRadius.all(Radius.circular(30)),
                 child: Icon(
-                  Icons.email,
+                  icon,
                   color: Colors.black,
                 ),
               ),

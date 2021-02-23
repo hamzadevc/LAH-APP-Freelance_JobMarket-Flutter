@@ -4,9 +4,13 @@ class PasswordField extends StatelessWidget {
   final String title;
   final Function onChanged;
   final TextEditingController controller;
+  final Function validator;
 
   PasswordField(
-      {this.controller, @required this.title, @required this.onChanged});
+      {this.controller, 
+      @required this.validator,
+      @required this.title, 
+      @required this.onChanged});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -14,10 +18,11 @@ class PasswordField extends StatelessWidget {
       child: Material(
         elevation: 4.0,
         borderRadius: BorderRadius.all(Radius.circular(30)),
-        child: TextField(
+        child: TextFormField(
           controller: controller,
           obscureText: true,
           onChanged: onChanged,
+          validator: validator,
           cursorColor: Colors.blue,
           decoration: InputDecoration(
               hintText: title,

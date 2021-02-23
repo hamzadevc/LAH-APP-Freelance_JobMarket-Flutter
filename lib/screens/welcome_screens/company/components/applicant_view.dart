@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:job_application/modals/job.dart';
-import 'package:job_application/modals/user_profile.dart';
-import 'package:job_application/screens/welcome_screens/company/components/pdf_view.dart';
-import 'package:job_application/services/database_service.dart';
-import 'package:job_application/services/job_service.dart';
-import 'package:job_application/services/review_service.dart';
-import 'package:job_application/wrapper.dart';
+import '../../../../modals/job.dart';
+import '../../../../modals/user_profile.dart';
+import '../../../welcome_screens/company/components/pdf_view.dart';
+import '../../../../services/database_service.dart';
+import '../../../../services/job_service.dart';
+import '../../../../services/review_service.dart';
+import '../../../../wrapper.dart';
 import 'package:quick_feedback/quick_feedback.dart';
 
 class ApplicantView extends StatefulWidget {
@@ -305,13 +305,14 @@ class _ApplicantViewState extends State<ApplicantView> {
                                       fontSize: 18.0,
                                     ),),
                                     SizedBox(width: 5.0,),
-                                    CountdownTimer(
-                                      endTime: (_getEndTime() / 1000).floor(),
-                                      daysSymbol: Text("days"),
-                                      hoursSymbol: Text("hrs "),
-                                      minSymbol: Text("min "),
-                                      secSymbol: Text("sec"),
-                                    ),
+                                    // CountdownTimer(
+
+                                    //   // endTime: (_getEndTime() / 1000).floor(),
+                                    //   // daysSymbol: Text("days"),
+                                    //   // hoursSymbol: Text("hrs "),
+                                    //   // minSymbol: Text("min "),
+                                    //   // secSymbol: Text("sec"),
+                                    // ),
                                   ],
                                 ),
                               Text(

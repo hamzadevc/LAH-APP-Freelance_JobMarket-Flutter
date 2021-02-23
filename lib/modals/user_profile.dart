@@ -1,22 +1,27 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfile {
+  // final String country;
+  // final String city;
+  // final String cVV;
+  // final String expiry;
   final String name;
   final String email;
   final String mobileNumber;
   final String imgUrl;
-  final String country;
-  final String city;
   final String address;
   final String dob;
-  final String cardNo;
-  final String cVV;
-  final String expiry;
+  final String accountNo;
   final int sessionType;
   final String uId;
   final String cvLink;
   final String avgRating;
   final String companyAvgRating;
+  final String bank;
+  final String nip;
+  final String krs;
+  final String phone2;
+  final String resPerson;
   final List<dynamic> allRatings;
   final List<dynamic> allCompanyRatings;
   final List<dynamic> appliedJobs;
@@ -25,15 +30,20 @@ class UserProfile {
   final List<dynamic> myCompletedJobs; // contains my jobs which
 
   UserProfile({
+    this.nip,
+    this.krs,
+    this.phone2,
+    this.resPerson,
     this.uId,
     this.address,
-    this.cardNo,
-    this.city,
-    this.country,
-    this.cVV,
+    this.accountNo,
+    // this.city,
+    // this.country,
+    // this.cVV,
     this.dob,
     this.email,
-    this.expiry,
+    // this.expiry,
+    this.bank,
     this.imgUrl,
     this.mobileNumber,
     this.name,
@@ -46,7 +56,9 @@ class UserProfile {
     this.allCompanyRatings,
     this.companyAvgRating,
     this.allApplicants,
-    this.allChats,///TODO Start from here....
+    this.allChats,
+
+    ///TODO Start from here....
   });
 
   Map<String, dynamic> toJson() {
@@ -56,16 +68,21 @@ class UserProfile {
       'email': email,
       'mobile_number': mobileNumber,
       'address': address,
-      'country': country,
-      'city': city,
+      // 'country': country,
+      // 'city': city,
       'img': imgUrl,
       'dob': dob,
-      'card_no': cardNo,
-      'cvv': cVV,
-      'expiry': expiry,
+      'account_no': accountNo,
+      'bank_name': bank,
+      // 'cvv': cVV,
+      // 'expiry': expiry,
       'cvLink': cvLink,
       'type': sessionType,
       'completedJobs': myCompletedJobs,
+      'secound_phone': phone2,
+      'nip': nip,
+      'krs': krs,
+      'responsible_person': resPerson,
     };
   }
 
@@ -103,25 +120,30 @@ class UserProfile {
   }
 
   Map<String, dynamic> toJsonAllApplicants() => {
-    'all_applicants': allApplicants,
-  };
+        'all_applicants': allApplicants,
+      };
 
   UserProfile fromJson(Map<String, dynamic> data) {
     return UserProfile(
       uId: data['id'],
       address: data['address'],
-      cardNo: data['card_no'],
-      city: data['city'],
-      country: data['country'],
-      cVV: data['cvv'],
+      accountNo: data['account_no'],
+      bank: data['bank'],
+      // city: data['city'],
+      // country: data['country'],
+      // cVV: data['cvv'],
       dob: data['dob'],
       email: data['email'],
-      expiry: data['expiry'],
+      // expiry: data['expiry'],
       imgUrl: data['img'],
       mobileNumber: data['mobile_number'],
       name: data['name'],
       cvLink: data['cvLink'],
       sessionType: data['type'],
+      phone2: data['second_phone'],
+      nip: data['nip'],
+      krs: data['krs'],
+      resPerson: data['responsible_person'],
       appliedJobs: data['appliedJobs'] ?? [],
       myCompletedJobs: data['completedJobs'] ?? [],
       allRatings: data['all_rating'] ?? [],
@@ -139,20 +161,22 @@ class UserProfile {
     await prefs.setString('email', email);
     await prefs.setString('mobile_number', mobileNumber);
     await prefs.setString('address', address);
-    await prefs.setString('country', country);
-    await prefs.setString('city', city);
+    await prefs.setString('phone', phone2);
+    await prefs.setString('nip', nip);
     await prefs.setString('img', imgUrl);
     await prefs.setString('dob', dob);
-    await prefs.setString('card_no', cardNo);
-    await prefs.setString('cvv', cVV);
-    await prefs.setString('expiry', expiry);
+    await prefs.setString('account_no', accountNo);
+    await prefs.setString('bank', bank);
+    await prefs.setString('krs', krs);
+    await prefs.setString('responsible_person', resPerson);
     await prefs.setString('cvLink', cvLink);
     await prefs.setInt('type', sessionType);
   }
 
   Future saveCVLinkInSharedPrefs() async {
+    // ignore: unused_local_variable
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('cvLink', expiry);
+    // await prefs.setString('cvLink', expiry);
   }
 
   Future<UserProfile> getUserFromSharedPrefs() async {
@@ -163,13 +187,13 @@ class UserProfile {
       email: prefs.getString('email'),
       mobileNumber: prefs.getString('mobile_number'),
       address: prefs.getString('address'),
-      country: prefs.getString('country'),
-      city: prefs.getString('city'),
+      phone2: prefs.getString('phone'),
+      nip: prefs.getString('nip'),
       imgUrl: prefs.getString('img'),
       dob: prefs.getString('dob'),
-      cardNo: prefs.getString('card_no'),
-      cVV: prefs.getString('cvv'),
-      expiry: prefs.getString('expiry'),
+      accountNo: prefs.getString('account_no'),
+      krs: prefs.getString('krs'),
+      resPerson: prefs.getString('responsible_person'),
       cvLink: prefs.getString('cvLink'),
       sessionType: prefs.getInt('type'),
     );
@@ -191,8 +215,8 @@ class AllApplicants {
         'completed': completed,
       };
   Map<String, dynamic> toJsonStatus() => {
-    'completed': completed,
-  };
+        'completed': completed,
+      };
 
   AllApplicants fromJson(Map<String, dynamic> data) => AllApplicants(
         id: id,

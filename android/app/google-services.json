@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:879633480212:android:d325eceda49b9f25b90501",
+        "mobilesdk_app_id": "1:879633480212:android:dad83d370b07342db90501",
         "android_client_info": {
-          "package_name": "com.flashsol.lahapp"
+          "package_name": "com.lahapp.lahapp"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "879633480212-eof6ncshck7hsob2pk78q077ek0me8o0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lahapp.lahapp",
+            "certificate_hash": "00aeb564eaab91d950622458c74e404a0cdf4e62"
+          }
+        },
         {
           "client_id": "879633480212-vqefqgqvuiebafejqcdf59preaf5hlhm.apps.googleusercontent.com",
           "client_type": 3
@@ -32,10 +40,10 @@
               "client_type": 3
             },
             {
-              "client_id": "879633480212-e5hbqkbtn5h76j44jkd9tojvadvn8g94.apps.googleusercontent.com",
+              "client_id": "879633480212-402u7t8oiuru72k6gaau2p7d8onmh2qt.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.flashsol.jobApplication"
+                "bundle_id": "com.lahapp.lahapp"
               }
             }
           ]

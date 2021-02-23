@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/modals/user_profile.dart';
-import 'package:job_application/services/database_service.dart';
+import '../../modals/employeeInfo.dart';
+import '../../modals/user_profile.dart';
+import '../../services/database_service.dart';
 import 'package:provider/provider.dart';
 
 class Wallet extends StatefulWidget {
@@ -89,11 +89,11 @@ class _WalletState extends State<Wallet> {
                         if (snapshot.hasData) {
                           UserProfile userProfile = snapshot.data;
 
-                          var cardNo = userProfile.cardNo.isEmpty ||
-                              userProfile.cardNo == null
-                              ? '0000'
-                              : userProfile.cardNo
-                              ?.substring(userProfile.cardNo.length - 4);
+                          // var cardNo = userProfile.cardNo.isEmpty ||
+                          //     userProfile.cardNo == null
+                          //     ? '0000'
+                          //     : userProfile.cardNo
+                          //     ?.substring(userProfile.cardNo.length - 4);
                           return Container(
                             margin: EdgeInsets.symmetric(horizontal: 5),
                             decoration: BoxDecoration(
@@ -139,7 +139,7 @@ class _WalletState extends State<Wallet> {
                                   height: 32,
                                 ),
                                 Text(
-                                  "**** **** **** $cardNo",
+                                  "**** **** **** cardNo",
                                   style: TextStyle(
                                     fontSize: 20,
                                     color: Colors.white,
@@ -192,7 +192,7 @@ class _WalletState extends State<Wallet> {
                                           ),
                                         ),
                                         Text(
-                                          userProfile.expiry,
+                                          "userProfile.expiry",
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.grey[100],
@@ -216,7 +216,7 @@ class _WalletState extends State<Wallet> {
                                           ),
                                         ),
                                         Text(
-                                          userProfile.cVV,
+                                          "userProfile.cVV",
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.grey[100],
