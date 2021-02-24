@@ -26,16 +26,15 @@ class _EditProfileState extends State<EditProfile>
   String _email;
   String _mobileNumber;
   String _imgUrl;
-  // String _country;
-  // String _city;
   String _address;
   String _dob;
   String _accountNo;
   String _bank;
-  // String _cVV;
-  // String _expiry;
   int _type;
-  String _cvLink;
+  String _secondNumber;
+  String _nip;
+  String _krs;
+  String _rperson;
   // FocusNode myFocusNode = FocusNode();
 
   @override
@@ -225,7 +224,7 @@ class _EditProfileState extends State<EditProfile>
                                               hintText: "Enter Your Name",
                                             ),
                                             enabled: false,
-                                            autofocus: !_static,
+                                            // autofocus: !_static,
                                           ),
                                         ),
                                       ],
@@ -262,7 +261,7 @@ class _EditProfileState extends State<EditProfile>
                                             controller: TextEditingController()
                                               ..text = userProfile.email,
                                             onChanged: (value) {
-                                              // _email = value;
+                                              _email = value;
                                             },
                                             decoration: const InputDecoration(
                                                 hintText: "Enter Email ID"),
@@ -313,95 +312,99 @@ class _EditProfileState extends State<EditProfile>
                                         ),
                                       ],
                                     )),
-
-                                if(widget.sessionType == SessionType.COMPANY)
+                                if (widget.sessionType == SessionType.COMPANY)
                                   Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 25.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Text(
-                                              'Secondary Mobile Number',
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )),
-                              if(widget.sessionType == SessionType.COMPANY)
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 2.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: TextField(
-                                            controller: TextEditingController()
-                                              ..text = userProfile.phone2,
-                                            onChanged: (value) {
-                                              _mobileNumber = value;
-                                            },
-                                            decoration: const InputDecoration(
-                                                hintText:
-                                                    "Enter Secondary Mobile Number"),
-                                            enabled: !_static,
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 25.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                'Secondary Mobile Number',
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    )),
-                              if(widget.sessionType == SessionType.EMPLOYEE)
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 25.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Text(
-                                              'AGE',
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.bold),
+                                        ],
+                                      )),
+                                if (widget.sessionType == SessionType.COMPANY)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 2.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: TextField(
+                                              controller:
+                                                  TextEditingController()
+                                                    ..text = userProfile.phone2,
+                                              onChanged: (value) {
+                                                _secondNumber = value;
+                                              },
+                                              decoration: const InputDecoration(
+                                                  hintText:
+                                                      "Enter Secondary Mobile Number"),
+                                              enabled: !_static,
                                             ),
-                                          ],
-                                        ),
-                                      ],
-                                    )),
-                              if(widget.sessionType == SessionType.EMPLOYEE)
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 2.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: TextField(
-                                            controller: TextEditingController()
-                                              ..text = userProfile.dob,
-                                            keyboardType: TextInputType.number,
-                                            onChanged: (value) {
-                                              _dob = value;
-                                            },
-                                            decoration: const InputDecoration(
-                                                hintText: "E.g 18"),
-                                            enabled: false,
                                           ),
-                                        ),
-                                      ],
-                                    )),
+                                        ],
+                                      )),
+                                if (widget.sessionType == SessionType.EMPLOYEE)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 25.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                'AGE',
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )),
+                                if (widget.sessionType == SessionType.EMPLOYEE)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 2.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: TextField(
+                                              controller:
+                                                  TextEditingController()
+                                                    ..text = userProfile.dob,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              onChanged: (value) {
+                                                _dob = value;
+                                              },
+                                              decoration: const InputDecoration(
+                                                  hintText: "E.g 18"),
+                                              enabled: false,
+                                            ),
+                                          ),
+                                        ],
+                                      )),
                                 Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 25.0, top: 25.0),
@@ -443,233 +446,234 @@ class _EditProfileState extends State<EditProfile>
                                         ),
                                       ],
                                     )),
-                              if(widget.sessionType == SessionType.EMPLOYEE)
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 25.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Text(
-                                              'Bank Name',
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )),
-                              if(widget.sessionType == SessionType.EMPLOYEE)
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 2.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: TextField(
-                                            controller: TextEditingController()
-                                              ..text = userProfile.bank,
-                                            onChanged: (value) {
-                                              // _cardNo = value;
-                                            },
-                                            decoration: const InputDecoration(
-                                                hintText: "Card No"),
-                                            enabled: false,
-                                          ),
-                                        ),
-                                      ],
-                                    )),
-                              if(widget.sessionType == SessionType.EMPLOYEE)
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 25.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Text(
-                                              'IBAN or Bank Account Number',
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )),
-                              if(widget.sessionType == SessionType.EMPLOYEE)
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 2.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: TextField(
-                                            controller: TextEditingController()
-                                              ..text = userProfile.accountNo,
-                                            onChanged: (value) {
-                                              // _cardNo = value;
-                                            },
-                                            decoration: const InputDecoration(
-                                                hintText: "Card No"),
-                                            enabled: false,
-                                          ),
-                                        ),
-                                      ],
-                                    )),
-                              if(widget.sessionType == SessionType.COMPANY)
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 25.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Text(
-                                              'NIP',
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )),
-                              if(widget.sessionType == SessionType.COMPANY)
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 2.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: TextField(
-                                            controller: TextEditingController()
-                                              ..text = userProfile.nip,
-                                            onChanged: (value) {
-                                              // _mobileNumber = value;
-                                            },
-                                            decoration: const InputDecoration(
-                                                hintText:
-                                                    "NIP"),
-                                            enabled: false,
-                                          ),
-                                        ),
-                                      ],
-                                    )),
-                              
-                              if(widget.sessionType == SessionType.COMPANY)
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 25.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Text(
-                                              'KRS',
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )),
-                              if(widget.sessionType == SessionType.COMPANY)
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 2.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: TextField(
-                                            controller: TextEditingController()
-                                              ..text = userProfile.krs,
-                                            onChanged: (value) {
-                                              // _mobileNumber = value;
-                                            },
-                                            decoration: const InputDecoration(
-                                                hintText:
-                                                    "KRS"),
-                                            enabled: false,
-                                          ),
-                                        ),
-                                      ],
-                                    )),
-
-                                if(widget.sessionType == SessionType.COMPANY)
+                                if (widget.sessionType == SessionType.EMPLOYEE)
                                   Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 25.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Text(
-                                              'Responsible Person',
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )),
-                              if(widget.sessionType == SessionType.COMPANY)
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25.0, right: 25.0, top: 2.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: TextField(
-                                            controller: TextEditingController()
-                                              ..text = userProfile.resPerson,
-                                            onChanged: (value) {
-                                              // _mobileNumber = value;
-                                            },
-                                            decoration: const InputDecoration(
-                                                hintText:
-                                                    "Responsible Person"),
-                                            enabled: false,
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 25.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                'Bank Name',
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    )),
-
-
-
-
-
-
-
+                                        ],
+                                      )),
+                                if (widget.sessionType == SessionType.EMPLOYEE)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 2.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: TextField(
+                                              controller:
+                                                  TextEditingController()
+                                                    ..text = userProfile.bank,
+                                              onChanged: (value) {
+                                                _bank = value;
+                                              },
+                                              decoration: const InputDecoration(
+                                                  hintText: "Bank Name"),
+                                              enabled: false,
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                                if (widget.sessionType == SessionType.EMPLOYEE)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 25.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                'IBAN or Bank Account Number',
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )),
+                                if (widget.sessionType == SessionType.EMPLOYEE)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 2.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: TextField(
+                                              controller:
+                                                  TextEditingController()
+                                                    ..text =
+                                                        userProfile.accountNo,
+                                              onChanged: (value) {
+                                                _accountNo = value;
+                                              },
+                                              decoration: const InputDecoration(
+                                                  hintText: "Account No"),
+                                              enabled: false,
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                                if (widget.sessionType == SessionType.COMPANY)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 25.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                'NIP',
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )),
+                                if (widget.sessionType == SessionType.COMPANY)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 2.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: TextField(
+                                              controller:
+                                                  TextEditingController()
+                                                    ..text = userProfile.nip,
+                                              onChanged: (value) {
+                                                _nip = value;
+                                              },
+                                              decoration: const InputDecoration(
+                                                  hintText: "NIP"),
+                                              enabled: false,
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                                if (widget.sessionType == SessionType.COMPANY)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 25.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                'KRS',
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )),
+                                if (widget.sessionType == SessionType.COMPANY)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 2.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: TextField(
+                                              controller:
+                                                  TextEditingController()
+                                                    ..text = userProfile.krs,
+                                              onChanged: (value) {
+                                                _krs = value;
+                                              },
+                                              decoration: const InputDecoration(
+                                                  hintText: "KRS"),
+                                              enabled: false,
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                                if (widget.sessionType == SessionType.COMPANY)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 25.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                'Responsible Person',
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )),
+                                if (widget.sessionType == SessionType.COMPANY)
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 2.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: TextField(
+                                              controller:
+                                                  TextEditingController()
+                                                    ..text =
+                                                        userProfile.resPerson,
+                                              onChanged: (value) {
+                                                _rperson = value;
+                                              },
+                                              decoration: const InputDecoration(
+                                                  hintText:
+                                                      "Responsible Person"),
+                                              enabled: false,
+                                            ),
+                                          ),
+                                        ],
+                                      )),
                                 !_static
                                     ? Padding(
                                         padding: EdgeInsets.only(
@@ -693,33 +697,19 @@ class _EditProfileState extends State<EditProfile>
                                                               uId: userProfile
                                                                   .uId)
                                                           .updateUser(
-                                                        // name: _name ??
-                                                        //     userProfile.name,
-                                                        imgUrl: _imgUrl ??
-                                                            userProfile.imgUrl,
-                                                        // country: _country ??
-                                                        //     userProfile.country,
-                                                        dob: _dob ??
-                                                            userProfile.dob,
-                                                        // expiry: _expiry ??
-                                                        //     userProfile.expiry,
-                                                        mobileNumber:
-                                                            _mobileNumber ??
-                                                                userProfile
-                                                                    .mobileNumber,
-                                                        // city: _city ??
-                                                        //     userProfile.city,
-                                                        // cardNo: _cardNo ??
-                                                        //     userProfile.cardNo,
-                                                        // address: _address ??
-                                                        //     userProfile.address,
-                                                        // email: _email ??
-                                                        //     userProfile.email,
-                                                        // type: _type ??
-                                                        //     userProfile
-                                                        //         .sessionType,
-                                                        // cvv: _cVV ??
-                                                        //     userProfile.cVV,
+                                                        name: _name ?? userProfile.name,
+                                                        imgUrl: _imgUrl ?? userProfile.imgUrl,
+                                                        dob: _dob ?? userProfile.dob,
+                                                        mobileNumber: _mobileNumber ?? userProfile.mobileNumber,
+                                                        address: _address ?? userProfile.address,
+                                                        email: _email ?? userProfile.email,
+                                                        type: _type ??userProfile.sessionType,
+                                                        bank: _bank ?? userProfile.bank,
+                                                        nip:  _nip ?? userProfile.nip,
+                                                        krs: _krs ?? userProfile.krs,
+                                                        phone2: _secondNumber ?? userProfile.phone2,
+                                                        resPerson: _rperson ?? userProfile.resPerson,
+
                                                       );
                                                       Fluttertoast.showToast(
                                                           msg: "Data Updated");

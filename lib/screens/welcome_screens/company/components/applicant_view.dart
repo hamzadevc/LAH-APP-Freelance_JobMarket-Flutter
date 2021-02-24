@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
+import 'package:flutter_countdown_timer/index.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../modals/job.dart';
 import '../../../../modals/user_profile.dart';
@@ -305,14 +306,17 @@ class _ApplicantViewState extends State<ApplicantView> {
                                       fontSize: 18.0,
                                     ),),
                                     SizedBox(width: 5.0,),
-                                    // CountdownTimer(
-
-                                    //   // endTime: (_getEndTime() / 1000).floor(),
-                                    //   // daysSymbol: Text("days"),
-                                    //   // hoursSymbol: Text("hrs "),
-                                    //   // minSymbol: Text("min "),
-                                    //   // secSymbol: Text("sec"),
-                                    // ),
+                                    CountdownTimer(
+                                      endTime: (_getEndTime() / 1000).floor(),
+                                      widgetBuilder: (_, CurrentRemainingTime time) {
+                                return Text(
+                  'days: [ ${time.days} ], hours: [ ${time.hours} ], min: [ ${time.min} ], sec: [ ${time.sec} ]');
+                              },
+                                      // daysSymbol: Text("days"),
+                                      // hoursSymbol: Text("hrs "),
+                                      // minSymbol: Text("min "),
+                                      // secSymbol: Text("sec"),
+                                    ),
                                   ],
                                 ),
                               Text(
