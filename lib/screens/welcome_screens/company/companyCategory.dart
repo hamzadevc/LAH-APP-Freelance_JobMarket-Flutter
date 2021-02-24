@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/screens/welcome_screens/company/companyCreateJob.dart';
-import 'package:job_application/screens/questions.dart';
+import './companyCreateJob.dart';
+import '../../../screens/questions.dart';
 
 class CompanyCategory extends StatefulWidget {
   @override
@@ -17,19 +17,21 @@ class _CompanyCategoryState extends State<CompanyCategory> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(
-              "What Do You Want",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold),
+            Center(
+              child: Text(
+                "Choose the type of contract",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
             SizedBox(
               height: 22,
             ),
             FlatButton(
               child: Text(
-                "FREELANCER",
+                "Short Term",
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.black,
@@ -44,7 +46,7 @@ class _CompanyCategoryState extends State<CompanyCategory> {
             ),
             FlatButton(
               child: Text(
-                "LABOR CONTRACT",
+                "Long Term",
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.black,

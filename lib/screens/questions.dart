@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:job_application/screens/welcome_screens/company/companyCreateJob.dart';
-import 'package:job_application/screens/welcome_screens/company/components/date_picker.dart';
+import './welcome_screens/company/companyCreateJob.dart';
+import './welcome_screens/company/components/date_picker.dart';
 
 class Questions extends StatefulWidget {
   @override
@@ -16,8 +16,8 @@ class _QuestionsState extends State<Questions> {
   String _price;
 
   List questions = [
-    'How many employees do You need?',
-    'When Do you need the employee in?',
+    'How many professionals do You need?',
+    'When Do you need the professionals in?',
     'How many days?',
     'How many hours per days?',
     'Price per Hour?'

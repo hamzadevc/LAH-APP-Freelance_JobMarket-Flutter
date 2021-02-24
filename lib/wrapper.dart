@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/screens/auth_screens/selectionScreen.dart';
-import 'package:job_application/screens/welcome_screens/welcom_wrapper.dart';
+import './modals/employeeInfo.dart';
+import './screens/auth_screens/selectionScreen.dart';
+import './screens/welcome_screens/welcom_wrapper.dart';
 import 'package:provider/provider.dart';
 
 

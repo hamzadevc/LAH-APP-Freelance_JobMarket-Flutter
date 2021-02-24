@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:job_application/modals/review.dart';
+import '../modals/review.dart';
 
 class ReviewService {
   final String takerId;

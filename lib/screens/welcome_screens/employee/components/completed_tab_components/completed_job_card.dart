@@ -1,11 +1,11 @@
 import 'package:expandable/expandable.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
-import 'package:job_application/modals/review.dart';
-import 'package:job_application/modals/user_profile.dart';
-import 'package:job_application/screens/welcome_screens/employee/components/completed_tab_components/star_display.dart';
-import 'package:job_application/services/database_service.dart';
-import 'package:job_application/services/review_service.dart';
+import '../../../../../modals/review.dart';
+import '../../../../../modals/user_profile.dart';
+import '../../../../welcome_screens/employee/components/completed_tab_components/star_display.dart';
+import '../../../../../services/database_service.dart';
+import '../../../../../services/review_service.dart';
 
 class CompletedCard extends StatefulWidget {
   final String cId;

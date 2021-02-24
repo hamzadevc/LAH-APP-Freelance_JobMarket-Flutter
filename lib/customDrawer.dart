@@ -1,15 +1,15 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/screens/chat/chat_screen.dart';
-import 'package:job_application/screens/profile_screen/editProfile.dart';
-import 'package:job_application/screens/wallet_screen/wallet.dart';
-import 'package:job_application/services/auth_service.dart';
+import 'package:lah_project/screens/welcome_screens/company/companyCategory.dart';
+import './modals/employeeInfo.dart';
+import './screens/chat/chat_screen.dart';
+import './screens/profile_screen/editProfile.dart';
+import './screens/wallet_screen/wallet.dart';
+import './services/auth_service.dart';
 import 'package:provider/provider.dart';
 
 class CustomDrawer {
-  static buildDrawer(BuildContext context) {
+  static buildDrawer(BuildContext context, SessionType sessionType) {
     print("dsd");
     return Drawer(
       child: Container(
@@ -72,7 +72,7 @@ class CustomDrawer {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EditProfile(),
+                          builder: (context) => EditProfile(sessionType),
                         ),
                       );
                     },
@@ -97,21 +97,38 @@ class CustomDrawer {
                 // ),
 
                 _buildDivider(),
-
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Wallet(),
-                      ),
-                    );
-                  },
-                  child: _buildRow(
-                    Icons.attach_money,
-                    "Wallet",
+                if(sessionType == SessionType.EMPLOYEE)
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Wallet(),
+                        ),
+                      );
+                    },
+                    child: _buildRow(
+                      Icons.attach_money,
+                      "Wallet",
+                    ),
                   ),
-                ),
+
+                // _buildDivider(),
+                if(sessionType == SessionType.COMPANY)
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CompanyCategory(),
+                        ),
+                      );
+                    },
+                    child: _buildRow(
+                      Icons.create,
+                      "Create Request",
+                    ),
+                  ),
 
                 _buildDivider(),
 
@@ -129,13 +146,9 @@ class CustomDrawer {
                 SizedBox(
                   height: 30,
                 ),
-                Transform.rotate(
-                  origin: Offset(-0, -0),
-                  angle: pi / 2.5,
-                  child: Image.asset(
-                    "assets/images/mylogo.png",
-                    height: 88,
-                  ),
+                Image.asset(
+                  "assets/images/mylogo.png",
+                  height: 88,
                 ),
               ],
             ),

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/modals/user_profile.dart';
-import 'package:job_application/services/database_service.dart';
+import './../modals/employeeInfo.dart';
+import './../modals/user_profile.dart';
+import './../services/database_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth {
@@ -71,7 +71,22 @@ class Auth {
     return (user != null && user.isEmailVerified);
   }
 
-  Future signUp(String email, String password, SessionType sessionType) async {
+  Future signUp(
+    String email, 
+    String password, 
+    SessionType sessionType, 
+    String name, 
+    String number, 
+    String surname, 
+    String address, 
+    String ibn, 
+    String bank,
+    String dob,
+    String number2,
+    String nip,
+    String krs,
+    String rperson,
+  ) async {
     try {
       await setSessionInfoInSharedPrefs(sessionType: sessionType);
       AuthResult result = await _auth.createUserWithEmailAndPassword(
@@ -80,18 +95,19 @@ class Auth {
       user.sendEmailVerification();
       // create user
       await DatabaseService(uId: user.uid).saveUser(
-        name: 'new user',
+        name: name+''+surname,
         imgUrl: null,
         email: email,
-        country: '',
-        dob: '',
-        expiry: '',
-        mobileNumber: '',
-        city: '',
-        cardNo: '',
-        address: '',
-        cvv: '',
+        dob: dob,
+        mobileNumber: number,
+        accountNo: ibn,
+        address: address,
+        bank: bank,
         type: 0,
+        secondNumber: number2,
+        nip: nip,
+        krs: krs,
+        resPerson: rperson,
       );
 
       // cache user data

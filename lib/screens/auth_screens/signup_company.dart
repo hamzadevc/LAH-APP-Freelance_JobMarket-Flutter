@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:lah_project/screens/welcome_screens/company/components/date_picker.dart';
 import '../../modals/employeeInfo.dart';
 import '../../modals/user_profile.dart';
 import '../../screens/auth_screens/Components/check_box.dart';
@@ -12,30 +11,28 @@ import 'Components/WaveClipPath.dart';
 import 'Components/custom_password_field.dart';
 import 'Components/custom_text_fields.dart';
 import 'Components/doc_pdf_view.dart';
-import 'Components/date_picker_dob.dart';
 
-class SignUp extends StatefulWidget {
+class SignUpCompany extends StatefulWidget {
   final SessionType sessionType;
-  SignUp({this.sessionType});
+  SignUpCompany({this.sessionType});
   @override
-  _SignUpState createState() => _SignUpState();
+  _SignUpCompanyState createState() => _SignUpCompanyState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignUpCompanyState extends State<SignUpCompany> {
   var key = GlobalKey<FormState>();
   bool showSpinner = false;
   bool termsOfUse = false;
   bool privacyPolicy = false;
   String email;
   String password;
-  String cPassword;
+  String krs;
   String name;
-  String sname;
+  String nip;
   String number;
-  String address;
-  String ibn;
-  String bank;
-  String dob;
+  String location;
+  String number2;
+  String rperson;
 
   @override
   Widget build(BuildContext context) {
@@ -72,10 +69,26 @@ class _SignUpState extends State<SignUp> {
                 height: 20,
               ),
               CustomTextField(
-                title: "Surname",
+                title: "NIP",
                 icon: Icons.person,
                 onChanged: (String value) {
-                  sname = value;
+                  nip = value;
+                },
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return '*Required';
+                  }
+                  return '';
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              CustomTextField(
+                title: "KRS",
+                icon: Icons.person,
+                onChanged: (String value) {
+                  krs = value;
                 },
                 validator: (String value) {
                   if (value.isEmpty) {
@@ -104,43 +117,10 @@ class _SignUpState extends State<SignUp> {
                 height: 20,
               ),
               CustomTextField(
-                title: "Phone Number",
+                title: "Primary Phone Number",
                 icon: Icons.phone,
                 onChanged: (String value) {
-                  number = value;
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              CustomTextField(
-                title: "Address",
-                icon: Icons.home,
-                onChanged: (String value) {
-                  address = value;
-                },
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return '*Required';
-                  }
-                  return '';
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              CustomDate(
-                onChanged: (DateTime val) {
-                    dob = val.toString();
-                },
-                question: 'Date of Birth',
-              ),
-              SizedBox(height:  20,),
-              CustomTextField(
-                title: "IBAN or Bank Account Number",
-                icon: Icons.confirmation_number,
-                onChanged: (String value) {
-                  ibn = value;
+                  number = value.trim();
                 },
                 validator: (String value) {
                   if (value.isEmpty) {
@@ -153,10 +133,42 @@ class _SignUpState extends State<SignUp> {
                 height: 20,
               ),
               CustomTextField(
-                title: "Bank Name",
+                title: "Secondary Phone Number",
+                icon: Icons.phone,
+                onChanged: (String value) {
+                  number2 = value;
+                },
+                validator: (String value) {
+                  // if (value.isEmpty) {
+                  //   return '*Required';
+                  // }
+                  return '';
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              CustomTextField(
+                title: "Location",
+                icon: Icons.location_on,
+                onChanged: (String value) {
+                  location = value;
+                },
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return '*Required';
+                  }
+                  return '';
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              CustomTextField(
+                title: "Name of Responsible Person",
                 icon: Icons.business_center,
                 onChanged: (String value) {
-                  bank = value;
+                  rperson = value;
                 },
                 validator: (String value) {
                   if (value.isEmpty) {
@@ -248,6 +260,22 @@ class _SignUpState extends State<SignUp> {
                         ? () async {
                             if (key.currentState.validate()) {
                               key.currentState.save();
+                              // if (
+                              //   email == null ||
+                              //     password == null ||
+                              //     name == null ||
+                              //     rperson == null ||
+                              //     location == null ||
+                              //     number == null ||
+                              //     krs == null ||
+                              //     nip == null 
+                              //   ) {
+                              //   Fluttertoast.showToast(
+                              //     msg: "Fields cannot be empty",
+                              //     toastLength: Toast.LENGTH_LONG,
+                              //   );
+                              //   return;
+                              // }
                               if (email.contains("@") == false) {
                                 print(email.contains("@"));
                                 Fluttertoast.showToast(
@@ -264,16 +292,16 @@ class _SignUpState extends State<SignUp> {
 
                                 try {
                                   User user = await Auth().signUp(
-                                    email,
-                                    password,
+                                    email, 
+                                    password, 
                                     widget.sessionType,
                                     name,
-                                    number,
-                                    sname,
-                                    address,
-                                    ibn,
-                                    bank,
-                                    dob,'','','','',
+                                    number, '',
+                                    location, '', '', '',
+                                    number2,
+                                    nip,
+                                    krs,
+                                    rperson
                                   );
                                   Fluttertoast.showToast(
                                     msg: "Verification Email Sent.",

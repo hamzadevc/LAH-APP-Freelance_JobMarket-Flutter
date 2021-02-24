@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/modals/job.dart';
-import 'package:job_application/screens/welcome_screens/employee/components/jobs_tab_components/recommended_for_you.dart';
-import 'package:job_application/services/job_service.dart';
-import 'job_card.dart';
+import '../../../../../modals/job.dart';
+import '../../../../welcome_screens/employee/components/jobs_tab_components/recommended_for_you.dart';
+import '../../../../../services/job_service.dart';
+import './job_card.dart';
 
 class JobsList extends StatelessWidget {
   final bool toggleJob;

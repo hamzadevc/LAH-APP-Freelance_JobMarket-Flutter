@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/services/job_service.dart';
-import 'package:job_application/wrapper.dart';
+import '../../../modals/employeeInfo.dart';
+import '../../../services/job_service.dart';
+import './../../../wrapper.dart';
 import 'package:provider/provider.dart';
 
 class CreateJob extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/modals/job.dart';
-import 'package:job_application/modals/user_profile.dart';
-import 'package:job_application/services/database_service.dart';
-import 'package:job_application/services/job_service.dart';
+import '../../../../../modals/employeeInfo.dart';
+import '../../../../../modals/job.dart';
+import '../../../../../modals/user_profile.dart';
+import '../../../../../services/database_service.dart';
+import '../../../../../services/job_service.dart';
 import 'package:provider/provider.dart';
 
 import 'jobViewX.dart';
@@ -176,7 +176,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
                                           ],
                                         ),
                                         SizedBox(
-                                          height: 15,
+                                          height: 10,
                                         ),
                                         Column(
                                           crossAxisAlignment:
@@ -215,7 +215,7 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
               } else {
                 return Center(
                   child: CircularProgressIndicator(
-                    backgroundColor: Colors.black87,
+                    backgroundColor: Colors.black,
                   ),
                 );
               }

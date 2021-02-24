@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/screens/welcome_screens/employee/components/completed_tab_components/completed_job_list.dart';
-import 'package:job_application/screens/welcome_screens/employee/components/jobs_tab_components/jobs_list.dart';
+import '../../../modals/employeeInfo.dart';
+import '../../welcome_screens/employee/components/completed_tab_components/completed_job_list.dart';
+import '../../welcome_screens/employee/components/jobs_tab_components/jobs_list.dart';
 import 'package:provider/provider.dart';
-
 import '../../../customDrawer.dart';
 import '../../questions.dart';
 import 'components/applied_tab_components/applied_jobs_list.dart';
 import 'components/completed_tab_components/completed_job_card.dart';
 
+// ignore: must_be_immutable
 class Welcome extends StatefulWidget {
+  SessionType sessionType;
+  Welcome(this.sessionType);
   @override
   _WelcomeState createState() => _WelcomeState();
 }
@@ -28,7 +30,10 @@ class _WelcomeState extends State<Welcome> {
         child: Scaffold(
           key: key1,
           backgroundColor: Colors.white.withOpacity(0.9),
-          drawer: CustomDrawer.buildDrawer(context),
+          drawer: CustomDrawer.buildDrawer(
+            context,
+            widget.sessionType,
+          ),
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(100.0),
             child: AppBar(
@@ -99,6 +104,7 @@ class _WelcomeState extends State<Welcome> {
                 ),
               ),
               bottom: TabBar(
+                isScrollable: true,
                 tabs: <Widget>[
                   Tab(
                     child: Row(
@@ -139,32 +145,32 @@ class _WelcomeState extends State<Welcome> {
               ),
               title: !isSearch
                   ? Text(
-                "LAH",
-                style: TextStyle(fontFamily: 'Spicy Rice'),
-              )
+                      "LAH",
+                      style: TextStyle(fontFamily: 'Spicy Rice'),
+                    )
                   : Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    // myfilter(value);
-                  },
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                  decoration: InputDecoration(
-                    hintText: "Search Jobs",
-                    hintStyle: TextStyle(color: Colors.white),
-                    icon: new Icon(
-                      Icons.search,
-                      color: Colors.white,
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: TextField(
+                        onChanged: (value) {
+                          // myfilter(value);
+                        },
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        decoration: InputDecoration(
+                          hintText: "Search Jobs",
+                          hintStyle: TextStyle(color: Colors.white),
+                          icon: new Icon(
+                            Icons.search,
+                            color: Colors.white,
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white70),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                        ),
+                      ),
                     ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white70),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
               centerTitle: true,
             ),
           ),

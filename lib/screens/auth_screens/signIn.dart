@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/screens/auth_screens/signUp.dart';
-import 'package:job_application/services/auth_service.dart';
-import 'package:job_application/services/database_service.dart';
+import 'package:lah_project/screens/auth_screens/signup_company.dart';
+import '../../modals/employeeInfo.dart';
+import '../../screens/auth_screens/signUp.dart';
+import '../../services/auth_service.dart';
+import '../../services/database_service.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
 import '../../modals/user_profile.dart';
 import 'Components/WaveClipPath.dart';
 import 'Components/custom_password_field.dart';
@@ -28,7 +28,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black87,
+        backgroundColor: Colors.black,
       ),
       backgroundColor: Color(0xffffffff),
       body: ModalProgressHUD(
@@ -45,9 +45,16 @@ class _SignInState extends State<SignIn> {
             ),
             CustomTextField(
               title: "Email",
+              icon: Icons.email,
               onChanged: (String value) {
                 email = value.trim();
               },
+              validator: (String value) {
+                  if (value.isEmpty) {
+                    return '*Required';
+                  }
+                  return '';
+                },
             ),
             SizedBox(
               height: 20,
@@ -57,6 +64,12 @@ class _SignInState extends State<SignIn> {
               onChanged: (String value) {
                 password = value.trim();
               },
+              validator: (String value) {
+                  if (value.isEmpty) {
+                    return '*Required';
+                  }
+                  return '';
+                },
             ),
             SizedBox(
               height: 25,
@@ -76,12 +89,7 @@ class _SignInState extends State<SignIn> {
                         fontSize: 18),
                   ),
                   onPressed: () async {
-                    if (email == null || password == null) {
-                      Fluttertoast.showToast(
-                        msg: "Fields cannot be empty",
-                      );
-                      return;
-                    }
+                    
                     if (email.contains("@") == false) {
                       print(email.contains("@"));
                       Fluttertoast.showToast(
@@ -154,14 +162,25 @@ class _SignInState extends State<SignIn> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignUp(
-                          sessionType: widget.sessionType,
+                    if (widget.sessionType == SessionType.COMPANY) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignUpCompany(
+                            sessionType: widget.sessionType,
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    } else if(widget.sessionType == SessionType.EMPLOYEE){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignUp(
+                            sessionType: widget.sessionType,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   child: Text(
                     "Sign Up ",

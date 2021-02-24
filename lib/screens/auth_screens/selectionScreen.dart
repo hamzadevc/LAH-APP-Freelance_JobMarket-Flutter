@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/screens/auth_screens/signIn.dart';
-
+import '../../modals/employeeInfo.dart';
+import '../../screens/auth_screens/signIn.dart';
 import 'Components/WaveClipPath.dart';
-
-import 'package:job_application/widgets/button_material.dart';
+import '../../widgets/button_material.dart';
 
 class SelectCategory extends StatefulWidget {
   @override
@@ -16,7 +14,7 @@ class _SelectCategoryState extends State<SelectCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black87,
+        backgroundColor: Colors.black,
       ),
       backgroundColor: Colors.white,
       body: Stack(
@@ -28,10 +26,12 @@ class _SelectCategoryState extends State<SelectCategory> {
 
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
+                  SizedBox(height: 20,),
                   MaterialButtonShape(
-                    text: 'EMPLOYEE',
-                    // icon: Icons.home,
+                    text: 'LAH For Professionals',
                     icon: Icons.person_outline,
                     color: Colors.black,
                     textColor: Colors.white,
@@ -52,8 +52,8 @@ class _SelectCategoryState extends State<SelectCategory> {
                   ),
 
                   MaterialButtonShape(
-                    text: 'BUSINESS',
-                    icon: Icons.home,
+                    text: 'LAH for Business',
+                    icon: Icons.business,
                     color: Colors.black,
                     textColor: Colors.white,
                     iconColor: Colors.black,

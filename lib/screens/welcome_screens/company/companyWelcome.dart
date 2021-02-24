@@ -1,18 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/modals/job.dart';
-import 'package:job_application/modals/job_applicant.dart';
-import 'package:job_application/modals/user_profile.dart';
-import 'package:job_application/customDrawer.dart';
-import 'package:job_application/screens/welcome_screens/company/components/applicant_view.dart';
-import 'package:job_application/services/database_service.dart';
-import 'package:job_application/services/job_service.dart';
+import '../../../modals/employeeInfo.dart';
+import '../../../modals/job.dart';
+import '../../../modals/job_applicant.dart';
+import '../../../modals/user_profile.dart';
+import '../../../customDrawer.dart';
+import '../../welcome_screens/company/components/applicant_view.dart';
+import '../../../services/database_service.dart';
+import '../../../services/job_service.dart';
 import 'package:provider/provider.dart';
 import 'companyCategory.dart';
 
+// ignore: must_be_immutable
 class CWelcome extends StatefulWidget {
+  SessionType sessionType;
+  CWelcome(this.sessionType);
   @override
   _CWelcomeState createState() => _CWelcomeState();
 }
@@ -55,7 +58,10 @@ class _CWelcomeState extends State<CWelcome> {
         length: 2,
         child: Scaffold(
           key: key1,
-          drawer: CustomDrawer.buildDrawer(context),
+          drawer: CustomDrawer.buildDrawer(
+            context,
+            widget.sessionType,
+          ),
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(100.0),
             child: AppBar(
@@ -168,7 +174,8 @@ class _CWelcomeState extends State<CWelcome> {
                                     return StreamBuilder<JobApplicant>(
                                       stream: JobService(
                                               uId: allApplicants.uId,
-                                              jId: allApplicants.allApplicants[index])
+                                              jId: allApplicants
+                                                  .allApplicants[index])
                                           .getUserJobApplicationStream(),
                                       builder: (ctx, snapshot) {
                                         if (snapshot.hasData) {
@@ -282,7 +289,6 @@ class _CWelcomeState extends State<CWelcome> {
                                                                         jobApplicant
                                                                             .id,
                                                                   ).updateAcceptTime();
-
                                                                 },
                                                                 color: Colors
                                                                     .blueGrey,
@@ -515,26 +521,26 @@ class _CWelcomeState extends State<CWelcome> {
                             }
                           },
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 30, right: 20),
-                          child: Align(
-                            alignment: Alignment.bottomRight,
-                            child: FloatingActionButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CompanyCategory(),
-                                  ),
-                                );
-                              },
-                              tooltip: "Add New Job",
-                              elevation: 10,
-                              child: Icon(FontAwesomeIcons.pen),
-                              backgroundColor: Colors.blue,
-                            ),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(bottom: 30, right: 20),
+                        //   child: Align(
+                        //     alignment: Alignment.bottomRight,
+                        //     child: FloatingActionButton(
+                        //       onPressed: () {
+                        //         Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //             builder: (context) => CompanyCategory(),
+                        //           ),
+                        //         );
+                        //       },
+                        //       tooltip: "Add New Job",
+                        //       elevation: 10,
+                        //       child: Icon(FontAwesomeIcons.pen),
+                        //       backgroundColor: Colors.blue,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],

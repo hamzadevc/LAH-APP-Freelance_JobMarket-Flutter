@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:job_application/modals/employeeInfo.dart';
-import 'package:job_application/modals/user_profile.dart';
+import '../modals/employeeInfo.dart';
+import '../modals/user_profile.dart';
 
 class DatabaseService {
   final String uId;
@@ -15,14 +15,15 @@ class DatabaseService {
     String email,
     String mobileNumber,
     String address,
-    String country,
-    String city,
     String imgUrl,
     String dob,
-    String cardNo,
-    String cvv,
-    String expiry,
+    String accountNo,
+    String bank,
     int type,
+    String phone2,
+    String nip,
+    String krs,
+    String resPerson,
   }) async {
     try {
       if (_usersRef == null) return;
@@ -31,15 +32,16 @@ class DatabaseService {
             name: name,
             mobileNumber: mobileNumber,
             imgUrl: imgUrl,
-            expiry: expiry,
             email: email,
             dob: dob,
-            cVV: cvv,
-            country: country,
-            city: city,
-            cardNo: cardNo,
+            accountNo: accountNo,
+            bank: bank,
             address: address,
             sessionType: type,
+            phone2: phone2,
+            nip: nip,
+            krs: krs,
+            resPerson: resPerson,
           ).toJson());
     } catch (e) {
       throw e;
@@ -52,14 +54,15 @@ class DatabaseService {
     String email,
     String mobileNumber,
     String address,
-    String country,
-    String city,
     String imgUrl,
     String dob,
-    String cardNo,
-    String cvv,
-    String expiry,
+    String accountNo,
+    String bank,
     int type,
+    String secondNumber,
+    String nip,
+    String krs,
+    String resPerson,
   }) async {
     try {
       if (_usersRef == null) return;
@@ -68,15 +71,15 @@ class DatabaseService {
             name: name,
             mobileNumber: mobileNumber,
             imgUrl: imgUrl,
-            expiry: expiry,
             email: email,
             dob: dob,
-            cVV: cvv,
-            country: country,
-            city: city,
-            cardNo: cardNo,
+            accountNo: accountNo,
             address: address,
             sessionType: type,
+            phone2: secondNumber,
+            nip: nip,
+            krs: krs,
+            resPerson: resPerson,
           ).toJson());
     } catch (e) {
       throw e;

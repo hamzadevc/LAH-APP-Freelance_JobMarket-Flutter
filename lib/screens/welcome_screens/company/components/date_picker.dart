@@ -40,10 +40,16 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
       child: Container(
         alignment: Alignment.center,
         height: 50.0,
+        // width: ,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          // mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Container(
                   child: Row(
@@ -65,13 +71,17 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                 )
               ],
             ),
-            Text(
-              "  Change",
-              style: TextStyle(
-                  color: Colors.teal,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0),
-            ),
+            // Icon(
+            //   Icons.add,
+            //   color: Colors.teal,
+            // ),
+            // Text(
+            //   "  Change",
+            //   style: TextStyle(
+            //       color: Colors.teal,
+            //       fontWeight: FontWeight.bold,
+            //       fontSize: 15.0),
+            // ),
           ],
         ),
       ),
