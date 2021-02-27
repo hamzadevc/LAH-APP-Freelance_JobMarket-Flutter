@@ -24,6 +24,12 @@ class DatabaseService {
     String nip,
     String krs,
     String resPerson,
+    String passport,
+    String nic,
+    String pesel,
+    String license,
+    String swift,
+    String bconfirm,
   }) async {
     try {
       if (_usersRef == null) return;
@@ -42,6 +48,12 @@ class DatabaseService {
             nip: nip,
             krs: krs,
             resPerson: resPerson,
+            passport: passport,
+            pesel: pesel,
+            nic: nic,
+            license: license,
+            swift: swift,
+            bconfirmation: bconfirm,
           ).toJson());
     } catch (e) {
       throw e;
@@ -63,6 +75,12 @@ class DatabaseService {
     String nip,
     String krs,
     String resPerson,
+    String passport,
+    String nic,
+    String pesel,
+    String license,
+    String swift,
+    String bconfirm,
   }) async {
     try {
       if (_usersRef == null) return;
@@ -80,6 +98,12 @@ class DatabaseService {
             nip: nip,
             krs: krs,
             resPerson: resPerson,
+            passport: passport,
+            nic: nic,
+            pesel: pesel,
+            license: license,
+            swift: swift,
+            bconfirmation: bconfirm,
           ).toJson());
     } catch (e) {
       throw e;

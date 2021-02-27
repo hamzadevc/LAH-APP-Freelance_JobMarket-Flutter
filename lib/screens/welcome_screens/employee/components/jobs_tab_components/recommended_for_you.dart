@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import 'jobViewX.dart';
 
 class RecommendedForYou extends StatefulWidget {
+  final String category;
+  RecommendedForYou(this.category);
   @override
   _RecommendedForYouState createState() => _RecommendedForYouState();
 }
@@ -93,8 +95,12 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
                                           cTye: jobs[index].type,
                                           docID: jobs[index].id,
                                           canApply: jobs[index].status < 1,
-                                          neededEmployees: int.parse(jobs[index].limit ?? '0'),
-                                          totalEmployees: jobs[index]?.allApplicants?.length ?? 0,
+                                          neededEmployees: int.parse(
+                                              jobs[index].limit ?? '0'),
+                                          totalEmployees: jobs[index]
+                                                  ?.allApplicants
+                                                  ?.length ??
+                                              0,
                                         ),
                                       ),
                                     );
@@ -162,7 +168,8 @@ class _RecommendedForYouState extends State<RecommendedForYou> {
                                                   horizontal: 12,
                                                   vertical: 4,
                                                 ),
-                                                child: Text(
+                                                child: 
+                                                Text(
                                                   jobs[index].type == 0
                                                       ? 'LABOR CONTRACT'
                                                       : 'FREELANCER',

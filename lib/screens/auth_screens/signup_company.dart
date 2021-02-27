@@ -54,6 +54,7 @@ class _SignUpCompanyState extends State<SignUpCompany> {
               ),
               CustomTextField(
                 title: "Name",
+                inputType: TextInputType.name,
                 icon: Icons.person,
                 onChanged: (String value) {
                   name = value;
@@ -62,13 +63,14 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               CustomTextField(
+                inputType: TextInputType.text,
                 title: "NIP",
                 icon: Icons.person,
                 onChanged: (String value) {
@@ -78,13 +80,14 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               CustomTextField(
+                inputType: TextInputType.text,
                 title: "KRS",
                 icon: Icons.person,
                 onChanged: (String value) {
@@ -94,13 +97,14 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               CustomTextField(
+                inputType: TextInputType.emailAddress,
                 title: "Email",
                 icon: Icons.email,
                 onChanged: (String value) {
@@ -110,45 +114,48 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               CustomTextField(
+                inputType: TextInputType.number,
                 title: "Primary Phone Number",
                 icon: Icons.phone,
                 onChanged: (String value) {
-                  number = value.trim();
+                  number = value;
                 },
                 validator: (String value) {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               CustomTextField(
+                inputType: TextInputType.number,
                 title: "Secondary Phone Number",
                 icon: Icons.phone,
                 onChanged: (String value) {
                   number2 = value;
                 },
-                validator: (String value) {
-                  // if (value.isEmpty) {
-                  //   return '*Required';
-                  // }
-                  return '';
-                },
+                // validator: (String value) {
+                //   // if (value.isEmpty) {
+                //   //   return '*Required';
+                //   // }
+                //   return '';
+                // },
               ),
               SizedBox(
                 height: 20,
               ),
               CustomTextField(
+                inputType: TextInputType.text,
                 title: "Location",
                 icon: Icons.location_on,
                 onChanged: (String value) {
@@ -158,13 +165,14 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               CustomTextField(
+                inputType: TextInputType.name,
                 title: "Name of Responsible Person",
                 icon: Icons.business_center,
                 onChanged: (String value) {
@@ -174,13 +182,14 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
                 height: 25,
               ),
               PasswordField(
+                inputType: TextInputType.text,
                 title: "Password",
                 onChanged: (String value) {
                   password = value.trim();
@@ -189,7 +198,7 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               CheckboxField(
@@ -260,22 +269,6 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                         ? () async {
                             if (key.currentState.validate()) {
                               key.currentState.save();
-                              // if (
-                              //   email == null ||
-                              //     password == null ||
-                              //     name == null ||
-                              //     rperson == null ||
-                              //     location == null ||
-                              //     number == null ||
-                              //     krs == null ||
-                              //     nip == null 
-                              //   ) {
-                              //   Fluttertoast.showToast(
-                              //     msg: "Fields cannot be empty",
-                              //     toastLength: Toast.LENGTH_LONG,
-                              //   );
-                              //   return;
-                              // }
                               if (email.contains("@") == false) {
                                 print(email.contains("@"));
                                 Fluttertoast.showToast(
@@ -292,16 +285,21 @@ class _SignUpCompanyState extends State<SignUpCompany> {
 
                                 try {
                                   User user = await Auth().signUp(
-                                    email, 
-                                    password, 
-                                    widget.sessionType,
                                     name,
-                                    number, '',
-                                    location, '', '', '',
+                                    '',
+                                    email, 
+                                    number,
                                     number2,
+                                    location,
+                                    '',
+                                    '',
+                                    '',
+                                    password,
                                     nip,
                                     krs,
-                                    rperson
+                                    rperson,
+                                    widget.sessionType,
+                                    '','','','',
                                   );
                                   Fluttertoast.showToast(
                                     msg: "Verification Email Sent.",

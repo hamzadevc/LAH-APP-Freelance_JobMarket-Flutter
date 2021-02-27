@@ -5,8 +5,9 @@ import '../../../../../services/job_service.dart';
 import './job_card.dart';
 
 class JobsList extends StatelessWidget {
+  final String category;
   final bool toggleJob;
-  JobsList({this.toggleJob = false});
+  JobsList( this.category, {this.toggleJob = false});
   @override
   Widget build(BuildContext context) {
     var mq = MediaQuery.of(context).size;
@@ -25,7 +26,7 @@ class JobsList extends StatelessWidget {
                   child: Text(
                     "Available \nJobs",
                     style: TextStyle(
-                        fontSize: 32, fontWeight: FontWeight.bold, height: 1.2),
+                        fontSize: 30, fontWeight: FontWeight.bold, height: 1.2),
                   ),
                 ),
               ],
@@ -44,7 +45,7 @@ class JobsList extends StatelessWidget {
               ),
             ),
           ),
-          RecommendedForYou(),
+          RecommendedForYou(category),
           // recommended jobs horizontal lists
 
           Padding(

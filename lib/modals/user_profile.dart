@@ -28,7 +28,12 @@ class UserProfile {
   final List<dynamic> allApplicants;
   final List<dynamic> allChats;
   final List<dynamic> myCompletedJobs; // contains my jobs which
-
+  final String passport;
+  final String nic;
+  final String pesel;
+  final String license;
+  final String swift;
+  final String bconfirmation;
   UserProfile({
     this.nip,
     this.krs,
@@ -37,12 +42,8 @@ class UserProfile {
     this.uId,
     this.address,
     this.accountNo,
-    // this.city,
-    // this.country,
-    // this.cVV,
     this.dob,
     this.email,
-    // this.expiry,
     this.bank,
     this.imgUrl,
     this.mobileNumber,
@@ -57,8 +58,12 @@ class UserProfile {
     this.companyAvgRating,
     this.allApplicants,
     this.allChats,
-
-    ///TODO Start from here....
+    this.license,
+    this.nic,
+    this.passport,
+    this.pesel,
+    this.swift,
+    this.bconfirmation,
   });
 
   Map<String, dynamic> toJson() {
@@ -68,14 +73,10 @@ class UserProfile {
       'email': email,
       'mobile_number': mobileNumber,
       'address': address,
-      // 'country': country,
-      // 'city': city,
       'img': imgUrl,
       'dob': dob,
       'account_no': accountNo,
       'bank_name': bank,
-      // 'cvv': cVV,
-      // 'expiry': expiry,
       'cvLink': cvLink,
       'type': sessionType,
       'completedJobs': myCompletedJobs,
@@ -83,6 +84,12 @@ class UserProfile {
       'nip': nip,
       'krs': krs,
       'responsible_person': resPerson,
+      'passport': passport,
+      'national_card': nic,
+      'license': license,
+      'pesel': pesel,
+      'swift': swift,
+      'bank_confirmation': bconfirmation,
     };
   }
 
@@ -128,13 +135,9 @@ class UserProfile {
       uId: data['id'],
       address: data['address'],
       accountNo: data['account_no'],
-      bank: data['bank'],
-      // city: data['city'],
-      // country: data['country'],
-      // cVV: data['cvv'],
+      bank: data['bank_name'],
       dob: data['dob'],
       email: data['email'],
-      // expiry: data['expiry'],
       imgUrl: data['img'],
       mobileNumber: data['mobile_number'],
       name: data['name'],
@@ -151,6 +154,12 @@ class UserProfile {
       allCompanyRatings: data['all_company_rating'] ?? [],
       companyAvgRating: data['avg_company_rating'],
       allApplicants: data['all_applicants'] ?? [],
+      license: data['license'],
+      pesel: data['pesel'],
+      nic: data['nic'],
+      passport: data['passport'],
+      bconfirmation: data['bank_confirmation'],
+      swift: data['swift'],
     );
   }
 
@@ -161,7 +170,7 @@ class UserProfile {
     await prefs.setString('email', email);
     await prefs.setString('mobile_number', mobileNumber);
     await prefs.setString('address', address);
-    await prefs.setString('phone', phone2);
+    await prefs.setString('phone2', phone2);
     await prefs.setString('nip', nip);
     await prefs.setString('img', imgUrl);
     await prefs.setString('dob', dob);
@@ -171,6 +180,12 @@ class UserProfile {
     await prefs.setString('responsible_person', resPerson);
     await prefs.setString('cvLink', cvLink);
     await prefs.setInt('type', sessionType);
+    await prefs.setString('passport', passport);
+    await prefs.setString("nic", nic);
+    await prefs.setString('pesel', pesel);
+    await prefs.setString('license', license);
+    await prefs.setString('swift', swift);
+    await prefs.setString('bconfirmation', bconfirmation);
   }
 
   Future saveCVLinkInSharedPrefs() async {
@@ -187,7 +202,7 @@ class UserProfile {
       email: prefs.getString('email'),
       mobileNumber: prefs.getString('mobile_number'),
       address: prefs.getString('address'),
-      phone2: prefs.getString('phone'),
+      phone2: prefs.getString('phone2'),
       nip: prefs.getString('nip'),
       imgUrl: prefs.getString('img'),
       dob: prefs.getString('dob'),
@@ -196,6 +211,13 @@ class UserProfile {
       resPerson: prefs.getString('responsible_person'),
       cvLink: prefs.getString('cvLink'),
       sessionType: prefs.getInt('type'),
+      license: prefs.getString('license'),
+      passport: prefs.getString('passport'),
+      pesel: prefs.getString('pesel'),
+      nic: prefs.getString('nic'),
+      bank: prefs.getString('bank'),
+      bconfirmation: prefs.getString('bconfirmation'),
+      swift: prefs.getString('swift'),
     );
   }
 }

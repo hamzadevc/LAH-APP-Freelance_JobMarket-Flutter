@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:lah_project/screens/welcome_screens/company/components/date_picker.dart';
 import '../../modals/employeeInfo.dart';
 import '../../modals/user_profile.dart';
 import '../../screens/auth_screens/Components/check_box.dart';
@@ -56,7 +55,8 @@ class _SignUpState extends State<SignUp> {
                 ],
               ),
               CustomTextField(
-                title: "Name",
+                inputType: TextInputType.name,
+                title: "First Name",
                 icon: Icons.person,
                 onChanged: (String value) {
                   name = value;
@@ -65,14 +65,15 @@ class _SignUpState extends State<SignUp> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               CustomTextField(
-                title: "Surname",
+                inputType: TextInputType.name,
+                title: "Last Name",
                 icon: Icons.person,
                 onChanged: (String value) {
                   sname = value;
@@ -81,13 +82,14 @@ class _SignUpState extends State<SignUp> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               CustomTextField(
+                inputType: TextInputType.emailAddress,
                 title: "Email",
                 icon: Icons.email,
                 onChanged: (String value) {
@@ -97,13 +99,14 @@ class _SignUpState extends State<SignUp> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               CustomTextField(
+                inputType: TextInputType.number,
                 title: "Phone Number",
                 icon: Icons.phone,
                 onChanged: (String value) {
@@ -114,6 +117,7 @@ class _SignUpState extends State<SignUp> {
                 height: 20,
               ),
               CustomTextField(
+                inputType: TextInputType.text,
                 title: "Address",
                 icon: Icons.home,
                 onChanged: (String value) {
@@ -123,7 +127,7 @@ class _SignUpState extends State<SignUp> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
@@ -137,6 +141,7 @@ class _SignUpState extends State<SignUp> {
               ),
               SizedBox(height:  20,),
               CustomTextField(
+                inputType: TextInputType.number,
                 title: "IBAN or Bank Account Number",
                 icon: Icons.confirmation_number,
                 onChanged: (String value) {
@@ -146,13 +151,14 @@ class _SignUpState extends State<SignUp> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               CustomTextField(
+                inputType: TextInputType.text,
                 title: "Bank Name",
                 icon: Icons.business_center,
                 onChanged: (String value) {
@@ -162,13 +168,14 @@ class _SignUpState extends State<SignUp> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               SizedBox(
                 height: 25,
               ),
               PasswordField(
+                inputType: TextInputType.text,
                 title: "Password",
                 onChanged: (String value) {
                   password = value.trim();
@@ -177,7 +184,7 @@ class _SignUpState extends State<SignUp> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
               ),
               CheckboxField(
@@ -264,16 +271,18 @@ class _SignUpState extends State<SignUp> {
 
                                 try {
                                   User user = await Auth().signUp(
-                                    email,
-                                    password,
-                                    widget.sessionType,
                                     name,
-                                    number,
                                     sname,
+                                    email,
+                                    number,
+                                    '',
                                     address,
+                                    dob,
                                     ibn,
                                     bank,
-                                    dob,'','','','',
+                                    password, '', '', '',
+                                    widget.sessionType,
+                                    '','','','',
                                   );
                                   Fluttertoast.showToast(
                                     msg: "Verification Email Sent.",

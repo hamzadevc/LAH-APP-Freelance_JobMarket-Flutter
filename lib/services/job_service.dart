@@ -31,6 +31,7 @@ class JobService {
     @required String numDays,
     @required DateTime needDate,
     @required String limit,
+    // @required String jType,
   }) async {
     try {
       await _jobRef.add(Job(
@@ -47,6 +48,7 @@ class JobService {
         numDays: numDays,
         needDate: needDate,
         limit: limit,
+        // jtype: jType,
       ).toJson());
     } catch (e) {
       throw e;
@@ -71,7 +73,7 @@ class JobService {
   }
 
   // Get Company Specific Jobs
-  Stream<List<Job>> getAllCompanyJobStream() {
+  Stream<List<Job>> getAllCompanyJobStream0() {
     return _jobRef
         .where('companyId', isEqualTo: companyId)
         //.orderBy('creationTime', descending: true)

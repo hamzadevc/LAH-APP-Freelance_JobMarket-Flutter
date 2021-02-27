@@ -5,9 +5,7 @@ import '../../welcome_screens/employee/components/completed_tab_components/compl
 import '../../welcome_screens/employee/components/jobs_tab_components/jobs_list.dart';
 import 'package:provider/provider.dart';
 import '../../../customDrawer.dart';
-import '../../questions.dart';
 import 'components/applied_tab_components/applied_jobs_list.dart';
-import 'components/completed_tab_components/completed_job_card.dart';
 
 // ignore: must_be_immutable
 class Welcome extends StatefulWidget {
@@ -18,6 +16,7 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
+  String category;
   bool isSearch = false;
   GlobalKey<ScaffoldState> key1 = GlobalKey<ScaffoldState>();
   int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 60 * 60;
@@ -39,6 +38,44 @@ class _WelcomeState extends State<Welcome> {
             child: AppBar(
               backgroundColor: Colors.black,
               actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.select_all),
+                  tooltip: 'Select Account Category',
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                            title: Text('Select type of work, you want'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <FlatButton>[
+                                FlatButton(
+                                  color: Colors.black,
+                                  child: Text('Freelance', style: TextStyle(color: Colors.white),),
+                                  onPressed: () {
+                                    category = 'Freelance';
+                                    print(category);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                FlatButton(
+                                  color: Colors.black,
+                                  child: Text('Labour Contract', style: TextStyle(color: Colors.white),),
+                                  onPressed: () {
+                                    category = 'labour';
+                                    print(category);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        });
+                  },
+                )
                 // isSearch
                 //     ? Padding(
                 //   padding: const EdgeInsets.only(right: 8.0),
@@ -179,7 +216,7 @@ class _WelcomeState extends State<Welcome> {
               AppliedJobsList(
                 uId: user.uId,
               ),
-              JobsList(),
+              JobsList(category),
               CompletedJobsList(),
             ],
           ),

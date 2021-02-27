@@ -11,6 +11,7 @@ class CreateJob extends StatefulWidget {
   final DateTime inDate;
   final String numHours;
   final String price;
+  // final String jobType;
 
   CreateJob({
     @required this.numHours,
@@ -18,6 +19,7 @@ class CreateJob extends StatefulWidget {
     @required this.empNeed,
     @required this.inDate,
     @required this.price,
+    // @required this.jobType,
   });
 
   @override
@@ -29,6 +31,7 @@ class _CreateJobState extends State<CreateJob>
   List<ListItem> _dropdownItems = [
     ListItem(0, "Contract"),
     ListItem(1, "Freelancer"),
+    ListItem(2, "Labour"),
   ];
 
   List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
@@ -73,6 +76,7 @@ class _CreateJobState extends State<CreateJob>
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
+    print(user.uId);
     return Scaffold(
       bottomNavigationBar: FlatButton(
         padding: EdgeInsets.all(15),
@@ -361,7 +365,7 @@ class _CreateJobState extends State<CreateJob>
                                         },
                                       ),
                                     ),
-                                    flex: 2,
+                                    flex: 3,
                                   ),
                                 ],
                               ),
@@ -399,6 +403,7 @@ class _CreateJobState extends State<CreateJob>
       needDate: widget.inDate,
       limit: widget.empNeed,
       numDays: widget.numDays,
+      // jType: widget.jobType,
     );
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(

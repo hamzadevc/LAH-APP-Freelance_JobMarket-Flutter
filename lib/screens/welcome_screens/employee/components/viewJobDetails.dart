@@ -214,7 +214,8 @@ class _ViewJobState extends State<ViewJob> {
                   child: Column(
                     children: <Widget>[
                       CircleAvatar(
-                        child: Image.network(widget.uImgUrl),
+                        child: widget.uImgUrl != null ?
+                        Image.network(widget.uImgUrl) : Container(),
                         radius: 50,
                         backgroundColor: Colors.transparent,
                       ),

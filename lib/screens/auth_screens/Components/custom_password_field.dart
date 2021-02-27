@@ -5,11 +5,13 @@ class PasswordField extends StatelessWidget {
   final Function onChanged;
   final TextEditingController controller;
   final Function validator;
+  final TextInputType inputType;
 
   PasswordField(
-      {this.controller, 
+      {this.controller,
       @required this.validator,
-      @required this.title, 
+      @required this.title,
+      @required this.inputType,
       @required this.onChanged});
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,7 @@ class PasswordField extends StatelessWidget {
         elevation: 4.0,
         borderRadius: BorderRadius.all(Radius.circular(30)),
         child: TextFormField(
+          keyboardType: inputType,
           controller: controller,
           obscureText: true,
           onChanged: onChanged,

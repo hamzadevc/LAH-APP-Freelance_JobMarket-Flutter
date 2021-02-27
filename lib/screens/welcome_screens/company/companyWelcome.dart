@@ -475,7 +475,7 @@ class _CWelcomeState extends State<CWelcome> {
                       children: <Widget>[
                         StreamBuilder<List<Job>>(
                           stream: JobService(companyId: user.uId)
-                              .getAllCompanyJobStream(),
+                              .getAllCompanyJobStream0(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               List<Job> companyJobs = snapshot.data;

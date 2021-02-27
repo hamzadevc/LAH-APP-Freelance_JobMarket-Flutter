@@ -44,6 +44,7 @@ class _SignInState extends State<SignIn> {
               height: 30,
             ),
             CustomTextField(
+              inputType: TextInputType.emailAddress,
               title: "Email",
               icon: Icons.email,
               onChanged: (String value) {
@@ -53,13 +54,14 @@ class _SignInState extends State<SignIn> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
             ),
             SizedBox(
               height: 20,
             ),
             PasswordField(
+              inputType: TextInputType.text,
               title: "Password",
               onChanged: (String value) {
                 password = value.trim();
@@ -68,7 +70,7 @@ class _SignInState extends State<SignIn> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
             ),
             SizedBox(

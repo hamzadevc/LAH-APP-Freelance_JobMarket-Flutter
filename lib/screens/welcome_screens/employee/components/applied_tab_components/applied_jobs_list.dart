@@ -18,14 +18,14 @@ class AppliedJobsList extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(
                   right: 32,
-                  left: 0,
-                  top: 40,
-                  bottom: 32,
+                  left: 32,
+                  top: 8,
+                  bottom: 20,
                 ),
                 child: Text(
                   "Your \napplications",
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                     height: 1.2,
                   ),
