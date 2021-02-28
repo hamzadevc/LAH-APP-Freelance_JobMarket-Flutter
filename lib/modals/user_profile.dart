@@ -1,10 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfile {
-  // final String country;
-  // final String city;
-  // final String cVV;
-  // final String expiry;
   final String name;
   final String email;
   final String mobileNumber;

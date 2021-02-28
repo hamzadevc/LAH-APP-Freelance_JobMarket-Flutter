@@ -623,7 +623,7 @@ class _CWelcomeState extends State<CWelcome> {
                 ),
                 Text(" |  "),
                 Text(
-                  type == 0 ? "LABOR CONTRACT" : "FREELANCER",
+                  type == 2 ? "LABOR CONTRACT" : "FREELANCER",
                   textAlign: TextAlign.left,
                 )
               ],

@@ -181,7 +181,7 @@ class _JobViewXState extends State<JobViewX> {
                             ),
                             child: Center(
                               child: Text(
-                                widget.cTye == 0
+                                widget.cTye == 2
                                     ? 'LABOR CONTRACT'
                                     : 'FREELANCER',
                                 style: TextStyle(
@@ -298,7 +298,7 @@ class _JobViewXState extends State<JobViewX> {
                                             : (_fileName ?? "Upload CV"),
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16,
+                                          fontSize: 14,
                                         ),
                                       ),
                                     ),

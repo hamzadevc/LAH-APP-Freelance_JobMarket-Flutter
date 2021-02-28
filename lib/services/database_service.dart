@@ -56,6 +56,7 @@ class DatabaseService {
             bconfirmation: bconfirm,
           ).toJson());
     } catch (e) {
+      print('update user error:' + e.toString());
       throw e;
     }
   }
@@ -106,6 +107,7 @@ class DatabaseService {
             bconfirmation: bconfirm,
           ).toJson());
     } catch (e) {
+      print('save user error:' + e.toString());
       throw e;
     }
   }
@@ -120,6 +122,7 @@ class DatabaseService {
             imgUrl: imgUrl,
           ).toJsonImg());
     } catch (e) {
+      print('update user profile image link error:' + e.toString());
       throw e;
     }
   }
@@ -146,6 +149,7 @@ class DatabaseService {
       await _usersRef.document(uId).updateData(
           UserProfile(uId: uId, appliedJobs: appList).toJson2AppliedJobs());
     } catch (e) {
+      print('update user application error:' + e.toString());
       throw e;
     }
   }
@@ -162,6 +166,7 @@ class DatabaseService {
       await _usersRef.document(uId).updateData(
           UserProfile(uId: uId, appliedJobs: appList).toJson2AppliedJobs());
     } catch (e) {
+      print('Remove user application error:' + e.toString());
       throw e;
     }
   }
@@ -180,7 +185,7 @@ class DatabaseService {
 
       return AllApplicants(id: snapshot.documentID).fromJson(snapshot.data);
     } catch (e) {
-      print(e);
+      print('Get All Applicants Error' + e.toString());
       return null;
     }
   }
@@ -206,6 +211,7 @@ class DatabaseService {
             AllApplicants(applicant: all, completed: completed).toJson(),
           );
     } catch (e) {
+      print('UpdateEmployeeIdinCompanyProfile Error:' + e.toString());
       throw e;
     }
   }
@@ -234,7 +240,7 @@ class DatabaseService {
             allRatings: allRatings,
           ).toJsonRating());
     } catch (e) {
-      print(e);
+      print('Update Rating Error: ' + e.toString());
     }
   }
 
@@ -262,7 +268,7 @@ class DatabaseService {
             allCompanyRatings: allRatings,
           ).toJsonCompanyRating());
     } catch (e) {
-      print(e);
+      print('Company Rating Error' + e.toString());
     }
   }
 
@@ -280,6 +286,7 @@ class DatabaseService {
 
       await _usersRef.document(uId).updateData({});
     } catch (e) {
+      print('update job status in company profile error:' + e.toString());
       throw e;
     }
   }
@@ -298,7 +305,9 @@ class DatabaseService {
 
       // update list in document
       await _usersRef.document(uId).updateData({'completedJobs': jobs});
-    } catch (e) {}
+    } catch (e) {
+      print('update user completed job list error: ' + e.toString());
+    }
   }
 
   List<AllApplicants> _getApplicantsFromStream(QuerySnapshot snapshot) {
@@ -343,6 +352,7 @@ class DatabaseService {
       return UserProfile(uId: documentSnapshot.documentID)
           .fromJson(documentSnapshot.data);
     } catch (e) {
+      print('getUser Error:' + e.toString());
       throw e;
     }
   }

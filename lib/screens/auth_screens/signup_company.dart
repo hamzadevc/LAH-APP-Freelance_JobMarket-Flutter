@@ -300,6 +300,8 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                                     rperson,
                                     widget.sessionType,
                                     '','','','',
+                                    '',
+                                    '',
                                   );
                                   Fluttertoast.showToast(
                                     msg: "Verification Email Sent.",

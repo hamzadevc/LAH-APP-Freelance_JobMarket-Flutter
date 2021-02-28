@@ -24,6 +24,7 @@ class ReviewService {
         givenTime: Timestamp.now(),
       ).toJson());
     } catch (e) {
+      print('create review error:' + e.toString());
       print(e);
     }
   }
@@ -42,6 +43,7 @@ class ReviewService {
 
       return UserReview().fromJson(documentSnapshot.data);
     } catch (e) {
+      print('getreview error:' + e.toString());
       print(e);
       return null;
     }

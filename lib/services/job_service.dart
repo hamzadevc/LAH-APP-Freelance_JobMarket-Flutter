@@ -51,6 +51,7 @@ class JobService {
         // jtype: jType,
       ).toJson());
     } catch (e) {
+      print('create job error: ' + e.toString());
       throw e;
     }
   }
@@ -61,7 +62,9 @@ class JobService {
       DocumentSnapshot snapshot = await _jobRef.document(jId).get();
       return Job(id: snapshot.documentID).fromJson(snapshot.data);
     } catch (e) {
-      throw e;
+      print('get job error: ' + e.toString());
+      return Job();
+      // throw e;
     }
   }
 
@@ -146,6 +149,7 @@ class JobService {
       }
       // add or update applicants
     } catch (e) {
+      print('add applicants with jobs error:' + e.toString());
       print(e);
     }
   }
@@ -163,6 +167,7 @@ class JobService {
       }
       // add or update applicants
     } catch (e) {
+      print('remove applicants with jobs error: ' + e.toString());
       print(e);
     }
   }
@@ -172,6 +177,7 @@ class JobService {
     try {
       await _jobRef.document(jId).delete();
     } catch (e) {
+      print('delete job error: ' + e.toString());
       throw e;
     }
   }
@@ -216,6 +222,7 @@ class JobService {
       // update user application list
       await DatabaseService(uId: uId).updateUserApplications(jId: jId);
     } catch (e) {
+      print('aply for job error: ' + e.toString());
       throw e;
     }
   }
@@ -228,6 +235,7 @@ class JobService {
           .document(jId)
           .updateData(JobApplicant(cvLink: cvLink).toJson2Cv());
     } catch (e) {
+      print('update cv error:' + e.toString());
       throw e;
     }
   }
@@ -242,6 +250,7 @@ class JobService {
             JobApplicant(acceptTime: Timestamp.now()).toJsonAcceptTime(),
           );
     } catch (e) {
+      print('update accept time error:' + e.toString());
       print(e);
     }
   }
@@ -256,6 +265,7 @@ class JobService {
             JobApplicant(completedTime: Timestamp.now()).toJsonCompletedTime(),
           );
     } catch (e) {
+      print('update completed time error:' + e.toString());
       print(e);
     }
   }
@@ -271,6 +281,7 @@ class JobService {
         return JobApplicant(id: snapshot.documentID).fromJson(snapshot.data);
       return null;
     } catch (e) {
+      print('get job applicant error:' + e.toString());
       throw e;
     }
   }
@@ -378,6 +389,7 @@ class JobService {
               JobApplicant(status: status, isCompanyReviewed: isCompReview)
                   .toJson2Status());
     } catch (e) {
+      print('change applicant status error: ' + e.toString());
       throw e;
     }
   }
@@ -393,6 +405,7 @@ class JobService {
               JobApplicant(isEmployeeReviewed: isEmpReview, status: status)
                   .toJsonIsReviewed());
     } catch (e) {
+      print('change applicant review status error: ' + e.toString());
       throw e;
     }
   }
@@ -404,6 +417,7 @@ class JobService {
           .document(jId)
           .updateData(Job(status: status).toJson2Status());
     } catch (e) {
+      print('changejobstatus error:' + e.toString());
       throw e;
     }
   }
@@ -417,6 +431,7 @@ class JobService {
           .document(jId)
           .delete();
     } catch (e) {
+      print('delete applicant error: ' + e.toString());
       throw e;
     }
   }

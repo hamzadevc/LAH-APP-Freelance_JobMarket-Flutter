@@ -282,7 +282,7 @@ class _SignUpState extends State<SignUp> {
                                     bank,
                                     password, '', '', '',
                                     widget.sessionType,
-                                    '','','','',
+                                    '','','','','','',
                                   );
                                   Fluttertoast.showToast(
                                     msg: "Verification Email Sent.",
