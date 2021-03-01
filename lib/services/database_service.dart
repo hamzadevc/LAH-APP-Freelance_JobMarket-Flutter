@@ -193,12 +193,17 @@ class DatabaseService {
   Future updateEmployeeIdInCompanyProfile(
       {String cId, String jId, bool completed}) async {
     try {
+      print('cid' + cId);
+      print('jid' + jId);
+      
       var apps = await getAllApplicants(cId: cId, jId: jId);
-
+      print('apps:' + apps.toString());
       var all = apps.applicant;
+      print('all' + all.toString());
 
       if (all == null || all.isEmpty) {
         all = [uId];
+        print(all);
       } else {
         all.add(uId);
       }

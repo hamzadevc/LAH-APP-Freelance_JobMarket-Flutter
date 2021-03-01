@@ -8,10 +8,11 @@ class JobService {
   final String uId;
   final String jId;
   final String companyId;
+  final String userid;
 
   String _applications = 'applications';
 
-  JobService({this.uId, this.jId, this.companyId});
+  JobService({this.userid,this.uId, this.jId, this.companyId});
 
   final CollectionReference _jobRef = Firestore.instance.collection('jobs');
   final CollectionReference _applicationRef =

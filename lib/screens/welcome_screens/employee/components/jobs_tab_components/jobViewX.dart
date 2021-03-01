@@ -366,9 +366,18 @@ class _JobViewXState extends State<JobViewX> {
                                                     companyId: widget.cId,
                                                   );
 
+                                                  await JobService(
+                                                    userid: userProfile.uId,
+                                                    uId: userProfile.uId,
+                                                    jId: widget.docID,
+                                                    companyId: widget.cId,
+                                                  ).addApplicantsWithJobs(
+                                                    applicantId: userProfile.uId,
+                                                  );
                                                   await DatabaseService(
                                                     uId: userProfile.uId,
-                                                  ).updateEmployeeIdInCompanyProfile(
+                                                  )
+                                                  .updateEmployeeIdInCompanyProfile(
                                                       jId: widget.docID,
                                                       cId: widget.cId,
                                                       completed: false);

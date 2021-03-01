@@ -34,7 +34,7 @@ class AppliedJobsList extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(right: 32, left: 32, bottom: 8),
                 child: Container(
-                  height: MediaQuery.of(context).size.height / 2,
+                  height: MediaQuery.of(context).size.height / .5,
                   child: StreamBuilder<List<dynamic>>(
                     stream: DatabaseService(uId: uId).getApplicantJobs(),
                     builder: (ctx, snapShot) {

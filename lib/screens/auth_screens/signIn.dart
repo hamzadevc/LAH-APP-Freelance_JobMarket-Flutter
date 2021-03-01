@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:lah_project/screens/auth_screens/signup_company.dart';
+import '../auth_screens/signup_company.dart';
 import '../../modals/employeeInfo.dart';
 import '../../screens/auth_screens/signUp.dart';
 import '../../services/auth_service.dart';

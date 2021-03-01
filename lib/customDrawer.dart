@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lah_project/screens/welcome_screens/company/companyCategory.dart';
+import './screens/welcome_screens/company/companyCategory.dart';
 import './modals/employeeInfo.dart';
 import './screens/profile_screen/editProfile.dart';
 import './screens/wallet_screen/wallet.dart';

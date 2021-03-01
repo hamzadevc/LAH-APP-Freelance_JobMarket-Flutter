@@ -10,7 +10,6 @@ import '../../welcome_screens/company/components/applicant_view.dart';
 import '../../../services/database_service.dart';
 import '../../../services/job_service.dart';
 import 'package:provider/provider.dart';
-import 'companyCategory.dart';
 
 // ignore: must_be_immutable
 class CWelcome extends StatefulWidget {
@@ -173,14 +172,13 @@ class _CWelcomeState extends State<CWelcome> {
                                   itemBuilder: (BuildContext ctx, int index) {
                                     return StreamBuilder<JobApplicant>(
                                       stream: JobService(
-                                              uId: allApplicants.uId,
-                                              jId: allApplicants
-                                                  .allApplicants[index])
-                                          .getUserJobApplicationStream(),
+                                        userid: allApplicants.uId,
+                                        uId: allApplicants.uId,
+                                        jId: allApplicants .allApplicants[index])
+                                        .getUserJobApplicationStream(),
                                       builder: (ctx, snapshot) {
                                         if (snapshot.hasData) {
-                                          JobApplicant jobApplicant =
-                                              snapshot.data;
+                                          JobApplicant jobApplicant = snapshot.data;
                                           return jobApplicant.status == 4
                                               ? Text('')
                                               : ListTile(
@@ -189,32 +187,19 @@ class _CWelcomeState extends State<CWelcome> {
                                                       Navigator.of(context)
                                                           .push(
                                                         MaterialPageRoute(
-                                                          builder: (ctx) =>
-                                                              ApplicantView(
-                                                            status: jobApplicant
-                                                                .status,
-                                                            type: jobApplicant
-                                                                .type,
-                                                            aId: jobApplicant
-                                                                .employeeId,
-                                                            aName: jobApplicant
-                                                                .employeeName,
-                                                            email: jobApplicant
-                                                                .email,
-                                                            cvLink: jobApplicant
-                                                                .cvLink,
-                                                            jId: jobApplicant
-                                                                .jobId,
+                                                          builder: (ctx) =>ApplicantView(
+                                                            status: jobApplicant.status,
+                                                            type: jobApplicant.type,
+                                                            aId: jobApplicant.employeeId,
+                                                            aName: jobApplicant.employeeName,
+                                                            email: jobApplicant.email,
+                                                            cvLink: jobApplicant.cvLink,
+                                                            jId: jobApplicant.jobId,
                                                             cId: user.uId,
                                                             compReviewed:
-                                                                jobApplicant
-                                                                    .isCompanyReviewed,
-                                                            empReviewed:
-                                                                jobApplicant
-                                                                    .isEmployeeReviewed,
-                                                            acceptTime:
-                                                                jobApplicant
-                                                                    .acceptTime,
+                                                            jobApplicant.isCompanyReviewed,
+                                                            empReviewed:jobApplicant.isEmployeeReviewed,
+                                                            acceptTime:jobApplicant.acceptTime,
                                                           ),
                                                         ),
                                                       );

@@ -5,7 +5,6 @@ import '../../../../../modals/user_profile.dart';
 import '../../../../../services/database_service.dart';
 import '../../../../../services/job_service.dart';
 import 'package:provider/provider.dart';
-
 import 'jobViewX.dart';
 
 class RecommendedForYou extends StatefulWidget {
