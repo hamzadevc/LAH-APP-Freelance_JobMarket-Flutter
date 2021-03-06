@@ -1,5 +1,4 @@
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:uuid/uuid.dart';
 
 class DocumentService {
   final String uId;
@@ -16,6 +15,7 @@ class DocumentService {
       String url = await (await uploadTask.onComplete).ref.getDownloadURL();
       return url;
     } on Exception catch (e) {
+      print('save pdf error:' + e.toString());
       throw e;
     }
   }

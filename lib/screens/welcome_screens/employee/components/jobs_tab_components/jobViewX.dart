@@ -181,7 +181,7 @@ class _JobViewXState extends State<JobViewX> {
                             ),
                             child: Center(
                               child: Text(
-                                widget.cTye == 0
+                                widget.cTye == 2
                                     ? 'LABOR CONTRACT'
                                     : 'FREELANCER',
                                 style: TextStyle(
@@ -298,7 +298,7 @@ class _JobViewXState extends State<JobViewX> {
                                             : (_fileName ?? "Upload CV"),
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16,
+                                          fontSize: 14,
                                         ),
                                       ),
                                     ),
@@ -366,9 +366,18 @@ class _JobViewXState extends State<JobViewX> {
                                                     companyId: widget.cId,
                                                   );
 
+                                                  await JobService(
+                                                    userid: userProfile.uId,
+                                                    uId: userProfile.uId,
+                                                    jId: widget.docID,
+                                                    companyId: widget.cId,
+                                                  ).addApplicantsWithJobs(
+                                                    applicantId: userProfile.uId,
+                                                  );
                                                   await DatabaseService(
                                                     uId: userProfile.uId,
-                                                  ).updateEmployeeIdInCompanyProfile(
+                                                  )
+                                                  .updateEmployeeIdInCompanyProfile(
                                                       jId: widget.docID,
                                                       cId: widget.cId,
                                                       completed: false);

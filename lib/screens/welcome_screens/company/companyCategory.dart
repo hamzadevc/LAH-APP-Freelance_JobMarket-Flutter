@@ -1,67 +1,59 @@
 import 'package:flutter/material.dart';
-import './companyCreateJob.dart';
-import '../../../screens/questions.dart';
+import '../../questions.dart';
 
-class CompanyCategory extends StatefulWidget {
-  @override
-  _CompanyCategoryState createState() => _CompanyCategoryState();
-}
-
-class _CompanyCategoryState extends State<CompanyCategory> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade300,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Center(
-              child: Text(
-                "Choose the type of contract",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 23,
-                    fontWeight: FontWeight.bold),
-              ),
+categoryDialog(BuildContext context) {
+  showDialog(
+      useSafeArea: true,
+      useRootNavigator: true,
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Center(
+            child: Text(
+              "Choose the type of contract",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold),
             ),
-            SizedBox(
-              height: 22,
-            ),
-            FlatButton(
-              child: Text(
-                "Short Term",
-                style: TextStyle(color: Colors.white),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              FlatButton(
+                child: Text(
+                  "Short Term",
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.black,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Questions(),
+                    ),
+                  );
+                },
               ),
-              color: Colors.black,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Questions(),
-                  ),
-                );
-              },
-            ),
-            FlatButton(
-              child: Text(
-                "Long Term",
-                style: TextStyle(color: Colors.white),
+              FlatButton(
+                child: Text(
+                  "Long Term",
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.black,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Questions(),
+                    ),
+                  );
+                },
               ),
-              color: Colors.black,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Questions(),
-                  ),
-                );
-              },
-            )
-          ],
-        ),
-      ),
-    );
-  }
+            ],
+          ),
+        );
+      });
 }

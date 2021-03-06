@@ -14,6 +14,7 @@ class Auth {
   Future logOut({String uId}) async {
     await _clearSession(uId: uId);
     await _auth.signOut().catchError((e) {
+      print('logout error: ' + e.toString());
       throw e;
     });
   }
@@ -72,20 +73,26 @@ class Auth {
   }
 
   Future signUp(
-    String email, 
-    String password, 
-    SessionType sessionType, 
-    String name, 
-    String number, 
+    String name,
     String surname, 
-    String address, 
+    String email, 
+    String number,
+    String number2,
+    String address,
+    String dob,
     String ibn, 
     String bank,
-    String dob,
-    String number2,
+    String password, 
     String nip,
     String krs,
     String rperson,
+    SessionType sessionType, 
+    String passport,
+    String nic,
+    String pesel,
+    String license,
+    String swift,
+    String bconfirm,
   ) async {
     try {
       await setSessionInfoInSharedPrefs(sessionType: sessionType);
@@ -108,6 +115,12 @@ class Auth {
         nip: nip,
         krs: krs,
         resPerson: rperson,
+        license: license,
+        passport: passport,
+        nic: nic,
+        pesel: pesel,
+        swift: swift,
+        bconfirm: bconfirm,
       );
 
       // cache user data
@@ -118,6 +131,7 @@ class Auth {
       await setUserSessionInFireBase(uId: user.uid, sessionType: sessionType);
       return _userFromFirebaseUser(user);
     } catch (e) {
+      print('sign up error: ' + e.toString());
       throw e;
     }
   }
@@ -138,7 +152,7 @@ class Auth {
       await setUserSessionInFireBase(uId: user.uid, sessionType: sessionType);
       return _userFromFirebaseUser(user);
     } on Exception catch (e) {
-      print(e);
+      print('Sign in error: '+e.toString());
       return null;
     }
   }

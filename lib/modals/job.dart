@@ -16,6 +16,7 @@ class Job {
   final String numDays;
   final String numHours;
   final List<dynamic> allApplicants;
+  final String jtype;
 
   Job({
     this.description,
@@ -33,6 +34,7 @@ class Job {
     this.numDays,
     this.numHours,
     this.allApplicants,
+    this.jtype,
   });
 
   Map<String, dynamic> toJson() => {
@@ -50,6 +52,7 @@ class Job {
         'needDate': needDate,
         'numDays': numDays,
         'numHours': numHours,
+        'jobtype': jtype,
       };
 
   Map<String, dynamic> toJson2Status() => {
@@ -76,6 +79,7 @@ class Job {
         numDays: data['numDays'],
         numHours: data['numHours'],
         allApplicants: data['allApplicants'],
+        jtype: data['jobtype'] 
       );
 }
 

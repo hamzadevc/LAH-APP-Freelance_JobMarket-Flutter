@@ -26,8 +26,8 @@ class _CustomDateState extends State<CustomDate> {
             containerHeight: 210.0,
           ),
           showTitleActions: true,
-          minTime: DateTime.now(),
-          maxTime: DateTime(2022, 12, 31),
+          minTime: DateTime(1970, 12, 31),
+          maxTime: DateTime(2020, 12, 31),
           onConfirm: (date) {
             print('confirm $date');
             _date = '${date.year} - ${date.month} - ${date.day}';

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:lah_project/screens/auth_screens/signup_company.dart';
+import '../auth_screens/signup_company.dart';
 import '../../modals/employeeInfo.dart';
 import '../../screens/auth_screens/signUp.dart';
 import '../../services/auth_service.dart';
@@ -44,6 +44,7 @@ class _SignInState extends State<SignIn> {
               height: 30,
             ),
             CustomTextField(
+              inputType: TextInputType.emailAddress,
               title: "Email",
               icon: Icons.email,
               onChanged: (String value) {
@@ -53,13 +54,14 @@ class _SignInState extends State<SignIn> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
             ),
             SizedBox(
               height: 20,
             ),
             PasswordField(
+              inputType: TextInputType.text,
               title: "Password",
               onChanged: (String value) {
                 password = value.trim();
@@ -68,7 +70,7 @@ class _SignInState extends State<SignIn> {
                   if (value.isEmpty) {
                     return '*Required';
                   }
-                  return '';
+                  return null;
                 },
             ),
             SizedBox(

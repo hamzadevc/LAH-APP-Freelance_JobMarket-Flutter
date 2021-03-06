@@ -6,11 +6,13 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final IconData icon;
   final Function validator;
+  final TextInputType inputType;
 
   CustomTextField(
       {@required this.title,
       @required this.icon,
       @required this.onChanged,
+      @required this.inputType,
       this.validator,
       this.controller});
   @override
@@ -21,6 +23,7 @@ class CustomTextField extends StatelessWidget {
         elevation: 4.0,
         borderRadius: BorderRadius.all(Radius.circular(30)),
         child: TextFormField(
+          keyboardType: inputType,
           controller: controller,
           onChanged: onChanged,
           validator: validator,

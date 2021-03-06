@@ -1,8 +1,6 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:lah_project/screens/welcome_screens/company/companyCategory.dart';
+import './screens/welcome_screens/company/companyCategory.dart';
 import './modals/employeeInfo.dart';
-import './screens/chat/chat_screen.dart';
 import './screens/profile_screen/editProfile.dart';
 import './screens/wallet_screen/wallet.dart';
 import './services/auth_service.dart';
@@ -80,24 +78,9 @@ class CustomDrawer {
                       Icons.person,
                       "Profile",
                     )),
-                // _buildDivider(),
-                //
-                // GestureDetector(
-                //   onTap: () {
-                //     Navigator.of(context).push(
-                //       MaterialPageRoute(
-                //         builder: (ctx) => ChatScreen()
-                //       )
-                //     );
-                //   },
-                //   child: _buildRow(
-                //     Icons.message,
-                //     "Messages",
-                //   ),
-                // ),
 
                 _buildDivider(),
-                if(sessionType == SessionType.EMPLOYEE)
+                if (sessionType == SessionType.EMPLOYEE)
                   InkWell(
                     onTap: () {
                       Navigator.push(
@@ -114,15 +97,16 @@ class CustomDrawer {
                   ),
 
                 // _buildDivider(),
-                if(sessionType == SessionType.COMPANY)
+                if (sessionType == SessionType.COMPANY)
                   InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CompanyCategory(),
-                        ),
-                      );
+                      categoryDialog(context);
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => CompanyCategory(),
+                      //   ),
+                      // );
                     },
                     child: _buildRow(
                       Icons.create,
@@ -131,7 +115,6 @@ class CustomDrawer {
                   ),
 
                 _buildDivider(),
-
                 InkWell(
                   onTap: () {
                     User user = Provider.of<User>(context, listen: false);
@@ -143,6 +126,21 @@ class CustomDrawer {
                   ),
                 ),
                 _buildDivider(),
+                // _buildDivider(),
+                //
+                // GestureDetector(
+                //   onTap: () {
+                //     Navigator.of(context).push(
+                //       MaterialPageRoute(
+                //         builder: (ctx) => ChatScreen()
+                //       )
+                //     );
+                //   },
+                //   child: _buildRow(
+                //     Icons.message,
+                //     "Messages",
+                //   ),
+                // ),
                 SizedBox(
                   height: 30,
                 ),
